@@ -5,6 +5,8 @@ class Voie:
         self.ligne = ligne
         self.temps = temps
         self.Bidirectionnel = Bidirectionnel #Si egale a 0 alors Gare1 -> Gare 2 (besoin pour la ligne 10)
+        Gare1.add_Voie(self)
+        Gare2.add_Voie(self)
 
     def get_attr(self, attr_name):
         return getattr(self, attr_name, None)
