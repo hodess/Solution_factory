@@ -4,7 +4,8 @@ class Line:
         self.liste_Gare=[]
 
     def add_Gare(self,New_gare):
-        self.liste_Gare.append(New_gare)
+        if New_gare not in self.liste_Gare:
+            self.liste_Gare.append(New_gare)
 
     def get_attr(self, attr_name):
         return getattr(self, attr_name, None)
