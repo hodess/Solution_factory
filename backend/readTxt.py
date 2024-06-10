@@ -29,7 +29,7 @@ def CreateAndFillLine(LineOfTxt):
         newLines.append(Line(line_name))
         #print(line_name)
 
-def FillLineWithGare(LineOfTxt,NewLines):
+def FillLineWithGare(LineOfTxt,NewLines,LineOfConnexion):
     for line in LineOfTxt:
         line = line.split(";")
         line_name = line[1].replace(' ','')
@@ -44,6 +44,7 @@ def FillLineWithGare(LineOfTxt,NewLines):
                     gare_name += copyLine[i]
                     print(gare_name)
                 #getCoord
+                
                 
                     
 if __name__ == "__main__":   
