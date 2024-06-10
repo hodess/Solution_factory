@@ -13,3 +13,5 @@ class Line:
     def __str__(self):
         gares = ', '.join(gare.name for gare in self.liste_Gare)
         return f"Line(ligne={self.name}, liste_Gare=[{gares}])"
+
+

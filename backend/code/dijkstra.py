@@ -9,7 +9,9 @@ def print_dico(dico):
         print(f"{key.name}: {value}")
 
 
-def Dijkstra(start, end):
+#filtre_non est une liste de ligne a ne pas prendre en compte
+def Dijkstra(start, end,filtre_voie=[],filtre_line=[]):
+    print(filtre_voie[0])
     T={start}
     distance={start:0}
     parent = {start: None}
@@ -45,7 +47,8 @@ def Dijkstra(start, end):
         # Mettre à jour les distances pour les voisins de t
         for lien in t.voie:
             voisin = lien.get_other(t)
-            if voisin not in T:
+            print("lien : ",lien)
+            if (voisin not in T) and (lien.ligne not in filtre_line) and (lien not in filtre_voie):
                 new_distance = distance[t] + lien.temps
                 if new_distance < distance.get(voisin, float('inf')):
                     distance[voisin] = new_distance
@@ -87,32 +90,32 @@ def main():
 
 
 
-    #gare1 = Gare("Gare du Nord_4", 48.8809, 2.3553)
-    gare1_2 = Gare("Gare du Nord_5", 48.8809, 2.3553)
+    gare1 = Gare("Gare du Nord_4", line_4,48.8809, 2.3553)
+    gare1_2 = Gare("Gare du Nord_5",line_5, 48.8809, 2.3553)
 
-    gare2 = Gare("Gare de Lyon", 50.8462, 3.5335)
+    gare2 = Gare("Gare de Lyon",line_4 ,50.8462, 3.5335)
 
-    gare3 = Gare("Gare de l'est", 48.8809, 2.3553)
+    gare3 = Gare("Gare de l'est", line_5,48.8809, 2.3553)
 
-    gare4 = Gare("Gare Montparnasse", 50.8462, 3.5335)
+    gare4 = Gare("Gare Montparnasse", line_5,50.8462, 3.5335)
 
-    gare7 = Gare("Chatelet", 50.8462, 3.5335)
+    gare7 = Gare("Chatelet", line_5,50.8462, 3.5335)
 
     # Nord -> Nord ligne 0
-    #Voie(gare1, gare1_2, line_0, 60)
+    voie=Voie(gare1, gare1_2, line_0, 60)
 
     # Nord - > Lyon ligne 4
-    #Voie(gare1, gare2, line_4, 180)
+    Voie(gare1, gare2, line_4, 180)
 
     # Nord -> est -> Montparnasse ligne 5
     Voie(gare3, gare4, line_5, 120)
     Voie(gare1_2, gare3, line_5, 300)
 
     start= gare1_2
-    end = gare4
+    end = gare2
 
 
-    chemin,temps=Dijkstra(start, end)
+    chemin,temps=Dijkstra(start, end,[voie],[line_5])
     if chemin:
         print("chemin trouvé entre les gares : ", start.name, " et ", end.name)
         print("Chemin trouvé: ", [gare.name for gare in chemin])
@@ -170,8 +173,9 @@ def sec_main(nb_gare):
 
 
 if __name__ == "__main__":
-    sec_main(10000)
-    #main()
-
+    #sec_main(10000)
+    main()
+    a="0060"
+    print(int(a)==int("60"))
 
 

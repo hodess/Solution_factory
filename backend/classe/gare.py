@@ -1,18 +1,16 @@
 class Gare:
-    def __init__(self, name, x, y):
+    def __init__(self, name,ligne, x, y):
         self.name = name
-        self.ligne = []
+        self.ligne = ligne
         self.cord = [x, y]
         self.voie=[]
+        ligne.add_Gare(self)
 
 
 
     def add_Voie(self,New_Voie):
         self.voie.append(New_Voie)
 
-    def add_line(self, Line):
-        self.ligne.append(Line)
-        Line.add_Gare(self)
 
 
     def __str__(self):

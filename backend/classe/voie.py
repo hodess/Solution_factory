@@ -9,9 +9,6 @@ class Voie:
         self.Bidirectionnel = Bidirectionnel #Si egale a 0 alors Gare1 -> Gare 2 (besoin pour la ligne 10)
         Gare1.add_Voie(self)
         Gare2.add_Voie(self)
-        Gare1.add_line(ligne)
-        Gare2.add_line(ligne)
-
         Voie.nombre_d_elements += 1
 
     def get_attr(self, attr_name):
@@ -30,3 +27,8 @@ class Voie:
                 f"Gare2={self.Gare2.get_attr('name')}, "
                 f"ligne={self.ligne.get_attr('name')}, temps={self.temps}, "
                 f"Bidirectionnel={self.Bidirectionnel})")
+
+    #compare all element with a second voie
+    def __eq__(self, other):
+        print("a")
+        return self.Gare1 == other.Gare1 and self.Gare2 == other.Gare2 and self.ligne == other.ligne and self.temps == other.temps and self.Bidirectionnel == other.Bidirectionnel
