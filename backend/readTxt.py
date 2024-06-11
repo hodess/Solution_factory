@@ -1,5 +1,5 @@
 from  classe.gare import Gare
-#from  backend.classe.voie import Voie
+from classe.voie import Voie
 from classe.line import Line
 import re
 
@@ -13,7 +13,7 @@ def ReadTxtPoints():
     return filtered_lines
 
 def ReadTxtConnexions():
-    file=open('backend/data/connexions.txt','r')
+    file=open('backend/data/metro.txt','r')
     pattern = re.compile(r'^E \d')
     lines=file.readlines()
     filtered_lines = [line for line in lines if pattern.match(line)]
@@ -42,45 +42,71 @@ def GetLinesInPos():
 
 
 
-def FillLineWithGare(LineOfTxt,NewLines,PosTxt):
-    Gares=[]
+def FillLineWithGare(LineOfTxt, NewLines, PosTxt):
+    Gares = []
     for line in LineOfTxt:
         line = line.split(";")
-        line_name = line[1].replace(' ','')
+        line_name = line[1].replace(' ', '')
+        id = line[0][2:6]
         for NewLine in NewLines:
             if NewLine.get_attr('name') == line_name:
-                #print(line_name)
-                #getGare 
-                copyLine=line[0]
-                copyLine=copyLine.split(" ")
-                gare_name=""
-                for i in range(2,len(copyLine)):
-                    gare_name += copyLine[i]
-                    #print(gare_name)
-                
-                #getCoord
-                gareTraited=[]
+                copyLine = line[0].split(" ")
+                gare_name = " ".join(copyLine[2:]).strip()
+                gare_name = re.sub(r'[\s\n]+', ' ', gare_name).strip()
+
+                gareTraited = []
                 for pos in PosTxt:
                     pos = pos.split(";")
-                    if pos[2].replace("\n","") == gare_name:
-                        if pos[2].replace("\n","") not in gareTraited:
-                            gareTraited.append(pos[2].replace("\n",""))
+                    normalized_pos2 = re.sub(r'[\s\n]+', ' ', pos[2]).strip()
+                    if normalized_pos2 == gare_name:
+                        if normalized_pos2 not in gareTraited:
+                            gareTraited.append(normalized_pos2)
                             x = pos[0]
                             y = pos[1]
-                            gare = Gare(gare_name,NewLine,x,y)
+                            gare = Gare(gare_name, NewLine, x, y, id)
                             Gares.append(gare)
-                        
     return Gares
 
 
-# def GetIDGare()
+def CreateAndFillVoies(Connections, Gares):
+    Voies = []
+    for connection in Connections:
+        connection = connection.split(" ")
+        IdGare1 = connection[2]
+        IdGare2 = connection[3]
+        time = connection[1]
+        Gare1 = None
+        Gare2 = None
+        for gare in Gares:
+            if int(gare.get_attr('id')) == int(IdGare1):
+                Gare1 = gare
+            if int(gare.get_attr('id')) == int(IdGare2):
+                Gare2 = gare
+        
+        # Vérification si les gares ont été trouvées
+        if not Gare1 or not Gare2:
+            print(f"Erreur : Gare1 ou Gare2 non trouvée pour la connexion {connection}. Gare1: {Gare1}, Gare2: {Gare2}")
+            continue  # Passe à la connexion suivante
+        else:
+        # Si les deux gares sont trouvées, on crée une Voie
+            Line = Gare1.get_attr('ligne')
+            Voies.append(Voie(Gare1, Gare2, Line, time))
+    return Voies
+
+
+        
                 
                     
 if __name__ == "__main__":   
     LineOfTxt=ReadTxtPoints()
     PosTxt=GetLinesInPos()
     NewLines=CreateAndFillLine(LineOfTxt)
+    # for e in NewLines:
+    #     print(e)
     Gares=FillLineWithGare(LineOfTxt,NewLines,PosTxt)
-    for gare in Gares:
-        print(gare)
+    # for e in Gares:
+    #     print(e)
+    Voies=CreateAndFillVoies(ReadTxtConnexions(),Gares)
+    for voie in Voies:
+        print(voie)
     
