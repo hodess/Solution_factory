@@ -5,38 +5,34 @@ import metroWorldMap from '../assets/metro-world-map.jpg';
 console.log(metroWorldMap); // Vérifiez si le chemin est correct
 </script>
 
-<template>
-  <main>
-    <div :style="{ backgroundImage: `url(${metroWorldMap})` }" class="ImageFond">
-      <SearchBar /> 
-    </div>
+<template >
+  <main class="ImageFond">
+    <SearchBar />
+    <div class="pete_couille" />
   </main>
 </template>
 
 <style scoped>
 .ImageFond {
-  background-size: cover;
+
+  background-image: url("@/assets/metro-world-map-upscaled.jpg");
+  background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
+  background-position: center;
+  z-index: -0.5;
+  background-color: #2c3e50;
+
+}
+
+.pete_couille{
+  background-image: url("@/assets/metro-world-map-upscaled.jpg");
   background-repeat: no-repeat;
-  height: 100vh; /* Ajouté pour assurer que le div ait une hauteur */
+  background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
+  background-position: center;
+  position: fixed ;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
 }
 
-/* Media queries pour la réactivité */
-@media (max-width: 1200px) {
-  .ImageFond {
-    background-size: contain;
-  }
-}
-
-@media (max-width: 768px) {
-  .ImageFond {
-    background-size: contain;
-  }
-}
-
-@media (max-width: 480px) {
-  .ImageFond {
-    background-size: contain;
-    background-position: center;
-  }
-}
 </style>
