@@ -12,11 +12,13 @@ import 'leaflet/dist/leaflet.css';
 export default defineComponent({
   name: 'MetroMap',
   setup() {
+    console.log('Component is being set up');
 
     const stations = ref([]);
     const imageBounds = [[0, 0], [952, 987]];
 
     const fetchStations = async () => {
+      console.log('Fetching stations');
       try {
         const response = await fetch('/stations.txt');
         if (!response.ok) {
@@ -36,11 +38,12 @@ export default defineComponent({
     };
 
     onMounted(async () => {
+      console.log('Component is mounted');
       await fetchStations();
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
-        minZoom: -2,
+        minZoom: -1,
         maxZoom: 1,
       });
 
@@ -50,7 +53,6 @@ export default defineComponent({
 
       stations.value.forEach(station => {
         const latLng = map.unproject([station.x*2, station.y*-2], map.getMaxZoom());
-        console.log(latLng);
         const marker = L.circleMarker(latLng, {
           radius: 5,
           color: 'red',
@@ -73,12 +75,27 @@ export default defineComponent({
 
 <style>
 .map-container {
-  height: 100vh; /* ou une hauteur spécifique en fonction de votre mise en page */
+  height: 100vh; /* Utiliser toute la hauteur de la fenêtre */
   width: 100%;
 }
 
 #map {
   height: 100%;
   width: 100%;
+}
+
+/* Media queries pour gérer différentes tailles d'écran */
+@media (min-width: 1020px) {
+  .map-container {
+    height: 100vh; /* Assurez-vous que la hauteur est bien définie pour les grands écrans */
+    width: 100vh;
+  }
+}
+
+@media (max-width: 1020px) {
+  .map-container {
+    height: 100vh; /* Ajustez la hauteur pour les petits écrans si nécessaire */
+
+  }
 }
 </style>
