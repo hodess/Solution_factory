@@ -1,19 +1,21 @@
-<template>
-  <div id="app">
-    <MetroMap />
-  </div>
-</template>
-
 <script>
-import MetroMap from './components/MetroMap.vue';
+import MainPage from "@/pages/mainPage.vue";
 
 export default {
   name: 'App',
   components: {
-    MetroMap,
+    MainPage,
   },
 };
 </script>
+
+<template>
+  <div id="app">
+    <mainPage />
+  </div>
+</template>
+
+
 
 <style>
 #app {
@@ -22,6 +24,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 </style>

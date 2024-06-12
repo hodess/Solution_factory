@@ -1,9 +1,3 @@
-<template>
-  <div class="map-container">
-    <div id="map"></div>
-  </div>
-</template>
-
 <script>
 import { defineComponent, onMounted, ref } from 'vue';
 import L from 'leaflet';
@@ -73,9 +67,17 @@ export default defineComponent({
 });
 </script>
 
+<template>
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+</template>
+
+
+
 <style>
 .map-container {
-  height: 100vh; /* Utiliser toute la hauteur de la fenêtre */
+  height: 100vh; /* Assurez-vous que la hauteur est bien définie pour les grands écrans */
   width: 100%;
 }
 
@@ -88,14 +90,10 @@ export default defineComponent({
 @media (min-width: 1020px) {
   .map-container {
     height: 100vh; /* Assurez-vous que la hauteur est bien définie pour les grands écrans */
-    width: 100vh;
+    width: 100%;
   }
 }
 
-@media (max-width: 1020px) {
-  .map-container {
-    height: 100vh; /* Ajustez la hauteur pour les petits écrans si nécessaire */
 
-  }
-}
+
 </style>
