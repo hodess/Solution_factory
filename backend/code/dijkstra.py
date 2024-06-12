@@ -1,13 +1,16 @@
+import sys
+import os
+#definir backend comme repertoire parent pour pouvoir importer les classes
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 # import toute mes classes
 from classe.gare import Gare
 from classe.voie import Voie
 from classe.line import Line
 
 
-import sys
-import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 
