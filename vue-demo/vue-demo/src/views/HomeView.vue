@@ -1,30 +1,26 @@
 <script setup>
-import SearchBar from '../components/SearchBar.vue'
+import SearchBar from '../components/SearchBar.vue';
+import metroWorldMap from '../assets/metro-world-map.jpg';
+
+console.log(metroWorldMap); // Vérifiez si le chemin est correct
 </script>
 
 <template>
   <main>
-    <SearchBar />
-    <div class =" ImageFond"> </div>
-  
+    <div :style="{ backgroundImage: `url(${metroWorldMap})` }" class="ImageFond">
+      <SearchBar /> 
+    </div>
   </main>
-
- 
 </template>
 
 <style scoped>
 .ImageFond {
-  background-image: url("../assets/metro-world-map.jpg");
-  background-size: contain;
-  height: 100vh;
-  width: 203.1vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh; /* Ajouté pour assurer que le div ait une hauteur */
 }
 
-/* Media queries for responsiveness */
+/* Media queries pour la réactivité */
 @media (max-width: 1200px) {
   .ImageFond {
     background-size: contain;

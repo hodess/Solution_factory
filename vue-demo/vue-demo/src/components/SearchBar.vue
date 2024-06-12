@@ -9,10 +9,13 @@ console.log(gares.value);
 </script>
 <template>
   
+<header class="navbar">MetroLine</header>
+
   <body>
+    
     <div class="container">
       <div class="Back">
-        <div class = "SearchBar">
+        <div class = "block_input">
           <input
             v-model="searchText"
             @input="updateHomeRouteQuery"
@@ -31,7 +34,7 @@ console.log(gares.value);
 
           />    
         </div>
-        <div class =" DateHours"> 
+        <div class ="block_input"> 
           <input
             v-model="searchText"
             @input="updateHomeRouteQuery"
@@ -59,76 +62,99 @@ console.log(gares.value);
 </template>
 <style scoped>
 
-.container {
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px; /* Ajoute un fond arrondi sur les bords */
-  background-color: rgb(219, 53, 81);
-  padding: 20px; /* Ajoute un espacement à l'intérieur de la div */
-  position: fixed; /* Fixe la position de la div */
-  top: 37%; /* Place la div à 20 pixels du haut de la page */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 18%; /* Largeur de la div */
-  z-index: 3;
-}
 
-.Back {
-  flex : 0 0 30%;
-  height: 90vh;
-  width: 100v; 
-  z-index: 5;
-  color: black;
-
-}
-
-.search {
-  flex-grow: 1;
-  min-width: 0;
-  width: 100%;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 2rem;
-  background-color: rgb(228, 210, 213);
-  height: 5rem; /* Adjust the height as desired */
-  margin-top: 1rem; /* Add margin to create space between text inputs */
-  font-size: 2.2rem;
-  color: black;
-
-} 
-button {
-  background-color: rgb(228, 210, 213);
-  border: none;
-  color: black;
-  padding: 1rem 2rem;
-  font-size: 1.5rem;
-  border-radius: 2rem;
-  cursor: pointer;
-  margin-top: 1rem;
-  font-size: 2.2rem;
-  color: black;
-}
-
-@media (max-width: 768px) {
   .container {
-    width: 90%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    background-color: var(--vt-c-container-color) ;
+    padding: 2rem;
+    position: fixed;
+    transform: translateX(-50%);
+    width: fit-content;
+    box-shadow: 0px 2px 4px var( --vt-c-black);
+    z-index: 3;
+  }
+
+  .Back {
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 30%;
+    height: 90vh;
+    z-index: 5;
+    color: var( --vt-c-black);
   }
   
-  .Back {
-    flex: 0 0 50%;
-    height: 70vh;
-    
+
+  .search {
+    flex-grow: 1;
+    min-width: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: var(--vt-c-white);
+    height: 3.5rem;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    color: var( --vt-c-black);
+  }
+
+  .block_input{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
   }
-  
-  .search {
-    height: 4rem;
-    font-size: 1.6rem;
-  }
-  
 
-}
+
+  button {
+    background-color: var(--vt-c-white);
+    border: none;
+    color: var( --vt-c-black);
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 2rem;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+      
+    
+  }
+
+  .navbar {
+    background-color: var(--vt-c-navbar-color);
+    color: var(--vt-c-white);
+    padding: 1rem;
+    left: 0;
+    top: 3.5vh;
+    transform: translateY(-50%);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: fixed;
+    width: 100%;
+    box-shadow: 0px 2px 4px var( --vt-c-black);
+    z-index: 3;
+  }
+/*
+  @media (max-width: 768px) {
+    .container {
+      width: 50vh;
+      top: 50%;
+    }
+
+    .Back {
+      flex: 0 0 50%;
+      height: 70vh;
+      width: 50vh;
+    }
+
+    .search {
+      height: 2rem;
+      width: 1rem;
+      font-size: 1.6rem;
+
+    }
+  }*/
+
 
 </style>
