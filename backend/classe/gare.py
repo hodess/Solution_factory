@@ -18,3 +18,9 @@ class Gare:
 
     def get_attr(self, attr_name):
         return getattr(self, attr_name, None)
+
+    def find_voie(self,Gare2):
+        for voie in self.voie:
+            if voie.get_other(self) == Gare2:
+                return voie
+        return None
