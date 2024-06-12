@@ -130,10 +130,11 @@ def YenKSP(start, end, k):
 
                     if A[i][j]==spurnode:
                         filtre_voie.append(A[i][j].find_voie(A[i][j+1]))
+                print("filtre_voie",end=" ")
+                print_liste_voie(filtre_voie)
 
 
-
-
+            print_liste_voie(filtre_voie)
             spurPaht,temps= Dijkstra(spurnode,end,filtre_voie)
             if spurPaht is None:
                 continue
@@ -203,27 +204,6 @@ def main():
     start= gare1
     end = gare7
     print("start=",start.name,"end=",end.name)
-
-    """
-    chemin,temps=Dijkstra(start, end,[voie1,voie2])
-    if chemin:
-        print("chemin trouvé entre les gares : ", start.name, " et ", end.name)
-        print("Chemin trouvé: ", [gare.name for gare in chemin])
-        print("Temps: ", temps)
-    else:
-        print("Pas de chemin trouvé entre les gares : ", start.name, " et ", end.name)
-    """
-
-    """
-    chemins,temps=first_Yens(start,end,3)
-    if chemins:
-        print("chemin trouvé entre les gares : ", start.name, " et ", end.name)
-        for chemin in chemins:
-            print("Chemin trouvé: ", [gare.name for gare in chemin])
-        print("Temps: ", temps)
-    else:
-        print("Pas de chemin trouvé entre les gares : ", start.name, " et ", end.name)"""
-
     result,temps=YenKSP(start, end, 3)
 
     print("\n\n")
