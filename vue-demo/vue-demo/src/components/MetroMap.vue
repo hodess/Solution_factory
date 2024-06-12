@@ -6,15 +6,13 @@ import 'leaflet/dist/leaflet.css';
 export default defineComponent({
   name: 'MetroMap',
   setup() {
-    console.log('Component is being set up');
 
     const stations = ref([]);
     const imageBounds = [[0, 0], [952, 987]];
 
     const fetchStations = async () => {
-      console.log('Fetching stations');
       try {
-        const response = await fetch('/stations.txt');
+        const response = await fetch('/pospoints.txt');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -22,9 +20,9 @@ export default defineComponent({
         console.log('Data fetched:', data);
         const lines = data.split('\n').filter(line => line.trim() !== '');
         stations.value = lines.map(line => {
-          const [name, x, y] = line.split(',');
+          const [x, y,name] = line.split(';');
           console.log('Station parsed:', { name, x: parseFloat(x), y: parseFloat(y) });
-          return { name, x: parseFloat(x), y: parseFloat(y) };
+          return { name, x: parseFloat(x), y: 952-parseFloat(y) };
         });
       } catch (error) {
         console.error('Error fetching stations:', error);
@@ -32,13 +30,11 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      console.log('Component is mounted');
       await fetchStations();
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
         minZoom: -1,
-        maxZoom: 1,
       });
 
       L.imageOverlay('/metro-map.png', imageBounds).addTo(map);
@@ -46,9 +42,10 @@ export default defineComponent({
       map.fitBounds(imageBounds);
 
       stations.value.forEach(station => {
-        const latLng = map.unproject([station.x*2, station.y*-2], map.getMaxZoom());
+        const latLng = map.unproject([station.x*2, station.y*-2], 1);
+        console.log(latLng);
         const marker = L.circleMarker(latLng, {
-          radius: 5,
+          radius: 4,
           color: 'red',
         }).addTo(map);
 
