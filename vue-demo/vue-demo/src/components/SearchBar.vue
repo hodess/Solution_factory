@@ -1,64 +1,66 @@
-
-
-
 <script setup>
-import {gares} from "../stockage/gares.js";
+import {gares} from "@/stockage/gares";
 
 console.log(gares.value);
 
 </script>
+
 <template>
-  
-<header class="navbar">MetroLine</header>
+<header class="navbar">
+  <div class="logo-locomotive"/>
+  <div class="title-locomotive">Locomotive</div>
+  <div class="bloc-right"/>
 
-  <body>
-    
-    <div class="container">
-      <div class="Back">
-        <div class = "block_input">
-          <input
-            v-model="searchText"
-            @input="updateHomeRouteQuery"
-            @keypress.enter="navigateToHomeRoute"
-            type="search"
-            class="search"
-            placeholder="Départ"
+</header>
+
+<body>
+  <div class="container">
+    <div class="Back">
+      <div class = "block_input">
+        <div class="title-trip">Start your trip</div>
+        <input
+          v-model="searchText"
+          @input="updateHomeRouteQuery"
+          @keypress.enter="navigateToHomeRoute"
+          type="search"
+          class="search"
+          placeholder="Départ"
+        />
+        <input
+          v-model="searchText"
+          @input="updateHomeRouteQuery"
+          @keypress.enter="navigateToHomeRoute"
+          type="search"
+          class="search"
+          placeholder="Arrivé"
+
+        />
+      </div>
+      <div class ="block_input">
+        <input
+          v-model="searchText"
+          @input="updateHomeRouteQuery"
+          @keypress.enter="navigateToHomeRoute"
+          type="Date"
+          class="search"
+          placeholder="Date"
           />
           <input
-            v-model="searchText"
-            @input="updateHomeRouteQuery"
-            @keypress.enter="navigateToHomeRoute"
-            type="search"
-            class="search"
-            placeholder="Arrivé"
+          v-model="searchText"
+          @input="updateHomeRouteQuery"
+          @keypress.enter="navigateToHomeRoute"
+          type="time"
+          class="search"
+          placeholder="Heure"
+        />
+    </div>
+    <div class =" SearchButton">
+      <button @click="navigateToHomeRoute">Go !</button>
+    </div>
+  </div>
 
-          />    
-        </div>
-        <div class ="block_input"> 
-          <input
-            v-model="searchText"
-            @input="updateHomeRouteQuery"
-            @keypress.enter="navigateToHomeRoute"
-            type="Date"
-            class="search"
-            placeholder="Date"
-            />
-            <input
-            v-model="searchText"
-            @input="updateHomeRouteQuery"
-            @keypress.enter="navigateToHomeRoute"
-            type="time"
-            class="search"
-            placeholder="Heure"
-          />
-      </div>
-      <div class =" SearchButton"> 
-        <button @click="navigateToHomeRoute">Go !</button>
-      </div>
-    </div>
-    
-    </div>
-  </body>
+  </div>
+</body>
 </template>
 <style scoped>
 
@@ -73,7 +75,7 @@ console.log(gares.value);
     position: fixed;
     transform: translateX(-50%);
     width: fit-content;
-    box-shadow: 0px 2px 4px var( --vt-c-black);
+    box-shadow: 0 2px 4px var( --vt-c-black);
     z-index: 3;
   }
 
@@ -92,11 +94,20 @@ console.log(gares.value);
     min-width: 0;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
-    background-color: var(--vt-c-white);
+    background-color: #f8f8f8;
     height: 3.5rem;
     margin-top: 1rem;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: var( --vt-c-black);
+    align-items: center;
+    width: 20rem;
+    border-width: 0;
+  }
+
+  .SearchButton{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
   }
 
   .block_input{
@@ -112,7 +123,6 @@ console.log(gares.value);
     border: none;
     color: var( --vt-c-black);
     padding: 1rem 2rem;
-    font-size: 1rem;
     border-radius: 2rem;
     margin-top: 1rem;
     font-size: 1.5rem;
@@ -127,34 +137,40 @@ console.log(gares.value);
     left: 0;
     top: 3.5vh;
     transform: translateY(-50%);
+    align-items: center;
     text-align: center;
     font-size: 1.5rem;
     font-weight: bold;
     position: fixed;
+    display: flex;
     width: 100%;
-    box-shadow: 0px 2px 4px var( --vt-c-black);
+    box-shadow: 0 2px 4px var( --vt-c-black);
     z-index: 3;
   }
-/*
-  @media (max-width: 768px) {
-    .container {
-      width: 50vh;
-      top: 50%;
-    }
+  .logo-locomotive{
+    background-image: url("@/assets/logo-locomotive.png");
+    background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
+    background-position: center;
+    z-index: -0.5;
+    border-radius: 15px;
+    height: 5rem;
+    width: 5rem;
+    margin-top: 3rem
+  }
+  .bloc-right{
+    height: 5rem;
+    width: 5rem;
+    margin-top: 3rem
+  }
 
-    .Back {
-      flex: 0 0 50%;
-      height: 70vh;
-      width: 50vh;
-    }
+  .title-locomotive {
+    margin-top: 3rem;
+    font-size: 1.8rem;
+    flex: 1;
+  }
 
-    .search {
-      height: 2rem;
-      width: 1rem;
-      font-size: 1.6rem;
-
-    }
-  }*/
-
-
+  .title-trip{
+    color: #f8f8f8;
+    font-size: 1.5rem;
+  }
 </style>

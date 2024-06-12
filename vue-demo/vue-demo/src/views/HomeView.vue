@@ -14,7 +14,6 @@ console.log(metroWorldMap); // Vérifiez si le chemin est correct
 
 <style scoped>
 .ImageFond {
-
   background-image: url("@/assets/metro-world-map-upscaled.jpg");
   background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
   background-position: center;
