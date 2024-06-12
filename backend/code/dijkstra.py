@@ -4,6 +4,14 @@ from classe.voie import Voie
 from classe.line import Line
 
 
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
+
+
 def print_dico(dico):
     for key, value in dico.items():
         print(f"{key.name}: {value}")
