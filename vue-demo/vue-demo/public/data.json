@@ -1,0 +1,62 @@
+{
+    "metro_paris": {
+      "ligne_4": {
+        "stations": [
+          {
+            "nom": "Bagneux - Lucie Aubrac",
+            "coordonnees": {
+              "x": 2,
+              "y": 48
+            }
+          },
+          {
+            "nom": "Mairie de Montrouge",
+            "coordonnees": {
+              "x": 2.318801,
+              "y": 48.818408
+            }
+          },
+          {
+            "nom": "Porte d'Orléans",
+            "coordonnees": {
+              "x": 2.325667,
+              "y": 48.822654
+            }
+          },
+          {
+            "nom": "Saint-Placide",
+            "coordonnees": {
+              "x": 2.325919,
+              "y": 48.84704
+            }
+          },
+          {
+            "nom": "Réaumur - Sébastopol",
+            "coordonnees": {
+              "x": 2.349057,
+              "y": 48.867176
+            }
+          }
+        ]
+      },
+      "ligne_5": {
+        "stations": [
+          {
+            "nom": "Bobigny - Pablo Picasso",
+            "coordonnees": {
+              "x": 2.44322,
+              "y": 48.90976
+            }
+          },
+          {
+            "nom": "Gare du Nord",
+            "coordonnees": {
+              "x": 2.35525,
+              "y": 48.88078
+            }
+          }
+        ]
+      }
+    }
+  }
+  

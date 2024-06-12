@@ -12,18 +12,27 @@ export default defineComponent({
 
     const fetchStations = async () => {
       try {
-        const response = await fetch('/pospoints.txt');
+        const response = await fetch('/data.json'); // récupérer le json ici
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.text();
-        console.log('Data fetched:', data);
-        const lines = data.split('\n').filter(line => line.trim() !== '');
-        stations.value = lines.map(line => {
-          const [x, y,name] = line.split(';');
-          console.log('Station parsed:', { name, x: parseFloat(x), y: parseFloat(y) });
-          return { name, x: parseFloat(x), y: 952-parseFloat(y) };
-        });
+        const data = await response.json();
+        const parsedStations = [];
+
+        for (const line in data.metro_paris) {
+          if (data.metro_paris[line].stations) {
+            data.metro_paris[line].stations.forEach(station => {
+              console.log(station)
+              parsedStations.push({
+                name: station.nom,
+                x: station.coordonnees.x,
+                y: station.coordonnees.y
+              });
+            });
+          }
+        }
+
+        stations.value = parsedStations;
       } catch (error) {
         console.error('Error fetching stations:', error);
       }
@@ -86,7 +95,7 @@ export default defineComponent({
 /* Media queries pour gérer différentes tailles d'écran */
 @media (min-width: 1020px) {
   .map-container {
-    height: 100vh; /* Assurez-vous que la hauteur est bien définie pour les grands écrans */
+    height: 100vh;
     width: 100%;
   }
 }
