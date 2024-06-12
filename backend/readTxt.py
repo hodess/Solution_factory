@@ -90,7 +90,10 @@ def CreateAndFillVoies(Connections, Gares):
         else:
         # Si les deux gares sont trouvées, on crée une Voie
             Line = Gare1.get_attr('ligne')
-            Voies.append(Voie(Gare1, Gare2, Line, time))
+            #si voies ne contients pas déjà un élément avec Gare1 et Gare2 on ajoute
+            if not any(voie.Gare1.name == Gare1.name and voie.Gare2.name == Gare2.name for voie in Voies):
+                Voies.append(Voie(Gare1, Gare2, Line, time))
+            #Voies.append(Voie(Gare1, Gare2, Line, time))
     return Voies
 
 
