@@ -6,8 +6,7 @@ import HeureArrivee from './HeureArrivee.vue';
 
 console.log(gares.value);
 import { ref, onMounted } from 'vue';
-
-
+import DepartDestination from "@/components/DepartDestination.vue";
 </script>
 
 
@@ -21,36 +20,22 @@ import { ref, onMounted } from 'vue';
 
 <body>
   <div class="container">
+
+    <DepartDestination/>
+
+
     <div class="Back">
-      <div class = "block_input">
-        <div class="title-trip">Où voulez-vous aller ?</div>
-        <div class="small-title">De :</div>
-        <input
-          v-model="searchText"
-          @input="updateHomeRouteQuery"
-          @keypress.enter="navigateToHomeRoute"
-          type="search"
-          class="search"
-          placeholder="Gare de départ"
-        />
-
-        <div class="small-title">A : </div>
-        <input
-          v-model="searchText"
-          @input="updateHomeRouteQuery"
-          @keypress.enter="navigateToHomeRoute"
-          type="search"
-          class="search"
-          placeholder="Gare d'arrivée"
-
-        />
+      <div class="title-trip">Heure du trajet</div>
+      <div class="button-date-div">
+        <button class="date-button">Départ</button>
+        <button class="date-button">Arrivée</button>
       </div>
+
 
       <HeureDepart/>
       <!-- <HeureArrivee/> -->
-    <!--<div class =" SearchButton">
-      <button @click="navigateToHomeRoute">Go !</button>
-    </div>-->
+
+
       <div class="wrapper">
         <div class="link_wrapper">
           <a href="#">Démarrer</a>
@@ -95,36 +80,8 @@ import { ref, onMounted } from 'vue';
     z-index: 5;
     color: var( --vt-c-black);
   }
-  
 
-  .search {
-    flex-grow: 1;
-    min-width: 0;
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
-    background-color: #f8f8f8;
-    height: 3.5rem;
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: var( --vt-c-black);
-    align-items: center;
-    width: 20rem;
-    border-width: 0;
-  }
 
-  .SearchButton{
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-  }
-
-  .block_input{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 3.5rem;
-  }
 
 
 
@@ -248,10 +205,37 @@ import { ref, onMounted } from 'vue';
     right: -25%;
   }
 
-  .small-title{
-    margin-top: 1rem;
-    margin-bottom: -0.8rem;
-    color: #f8f8f8;
+
+
+
+  .date-button{
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: whitesmoke;
+    padding: 0.5rem;
+    width: 8rem;
+    border: 0;
   }
 
+  .button-date-div{
+    display: flex;
+    margin-left: 5%;
+    width: 90%;
+    justify-content: space-between; /* Place les composants aux deux extrémités */
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    transition: background-color 0.3s, transform 0.3s;
+    :hover{
+      background-color: #e0e0e0; /* Change la couleur de fond au survol */
+      transform: scale(1.05);
+    }
+  }
+
+  .SearchButton{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+  }
 </style>

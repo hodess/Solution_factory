@@ -43,13 +43,10 @@ const currentTime = ref(getCurrentTime());
 
 
 <template>
-  <div class="button-date-div">
-  <button class="date-button">Départ</button>
-  <button class="date-button">Arrivée</button>
-  </div>
+
 
   <div class="block_input_2">
-  <div class="small-title">Date du départ</div>
+  <div class="small-title">Date de départ :</div>
   <input
       ref="dateInput"
       @input="updateHomeRouteQuery"
@@ -60,7 +57,7 @@ const currentTime = ref(getCurrentTime());
       :value="currentDate"
 
   />
-  <div class="small-title">Heure de départ</div>
+  <div class="small-title">Heure de départ :</div>
   <input
       ref="timeInput"
       @input="updateHomeRouteQuery"
@@ -90,31 +87,9 @@ const currentTime = ref(getCurrentTime());
 
 
 
-.date-button{
-  border-radius: 10px;
-  font-size: 1rem;
-  background-color: whitesmoke;
-  padding: 0.5rem;
-  width: 8rem;
-  border: 0;
-}
 
-.button-date-div{
-  display: flex;
-  margin-left: 5%;
-  width: 90%;
-  justify-content: space-between; /* Place les composants aux deux extrémités */
-  flex-direction: row;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  transition: background-color 0.3s, transform 0.3s;
 
-  :hover{
-    background-color: #e0e0e0; /* Change la couleur de fond au survol */
-    transform: scale(1.05);
-  }
-}
+
 
 .block_input_2{
   display: flex;
