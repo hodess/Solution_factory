@@ -14,6 +14,7 @@ console.log(metroWorldMap); // Vérifiez si le chemin est correct
 
 <style scoped>
 .ImageFond {
+  background-image: url("@/assets/metro-world-map-upscaled.jpg");
   background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
   background-position: center;
   z-index: -0.5;
@@ -24,8 +25,8 @@ console.log(metroWorldMap); // Vérifiez si le chemin est correct
 .pete_couille{
   background-image: url("@/assets/metro-world-map-upscaled.jpg");
   background-repeat: no-repeat;
-  background-position: top;
   background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
+  background-position: center;
   position: fixed ;
   top: 0;
   left: 0;
