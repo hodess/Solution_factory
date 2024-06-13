@@ -32,7 +32,6 @@ showDepart();
 
     <DepartDestination/>
 
-
     <div class="parent">
       <div class="barre"></div>
     </div>
@@ -94,9 +93,6 @@ showDepart();
     border-radius: 15px;
     background-color: var(--vt-c-container-color) ;
     padding: 2rem;
-    position: relative;
-    margin-left: 100%;
-    transform: translate(-50%);
     margin-top: 10rem;
     width: fit-content;
     box-shadow: 0 2px 4px var( --vt-c-black);
@@ -174,7 +170,10 @@ showDepart();
   }
 
   .wrapper{
-    position: fixed;
+    place-items: center;
+    margin-left: 1.25rem;
+    display: flex;
+    position: relative;
     top: 90%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -290,7 +289,7 @@ showDepart();
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .barre {
