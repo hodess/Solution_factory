@@ -111,7 +111,7 @@ const currentTime = ref(getCurrentTime());
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
 }
 
 .date-button{

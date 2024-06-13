@@ -27,9 +27,10 @@ body {
 }
 
 #app {
-  display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 0 2rem;
+  margin-bottom: 3rem;
+
 }
 
 @media (min-width: 1024px) {
@@ -39,8 +40,8 @@ body {
   }
 
   #app {
-    display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
+    margin-bottom: 3rem;
   }
 }
