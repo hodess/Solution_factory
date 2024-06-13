@@ -1,8 +1,8 @@
 <script setup>
+import { ref, watch } from "vue";
+
 
 // Fonction pour obtenir la date actuelle au format ISO (YYYY-MM-DD)
-import {ref} from "vue";
-
 const getCurrentDate = () => {
   const now = new Date();
   const year = now.getFullYear();
@@ -13,6 +13,29 @@ const getCurrentDate = () => {
 
 // Variable réactive pour stocker la date actuelle
 const currentDate = ref(getCurrentDate());
+const minDate = getCurrentDate(); // Date minimale pour l'input
+
+
+// Fonction pour ajouter 1 jour à la date actuelle
+const addOneDay = () => {
+  const date = new Date(currentDate.value);
+  date.setDate(date.getDate() + 1);
+  currentDate.value = date.toISOString().split('T')[0];
+};
+
+// Fonction pour soustraire 1 jour à la date actuelle
+const suprOneDay = () => {
+  const date = new Date(currentDate.value);
+  date.setDate(date.getDate() - 1);
+  currentDate.value = date.toISOString().split('T')[0];
+};
+
+// Empêcher de définir une date antérieure à la date actuelle
+watch(currentDate, (newDate, oldDate) => {
+  if (newDate < minDate) {
+    currentDate.value = minDate;
+  }
+});
 
 // Fonctions pour les événements de mise à jour de la route et de navigation
 const updateHomeRouteQuery = () => {
@@ -34,11 +57,6 @@ const getCurrentTime = () => {
 // Variable réactive pour stocker l'heure actuelle
 const currentTime = ref(getCurrentTime());
 
-
-
-
-
-
 </script>
 
 
@@ -47,16 +65,21 @@ const currentTime = ref(getCurrentTime());
 
   <div class="block_input_2">
   <div class="small-title">Date de départ :</div>
-  <input
-      ref="dateInput"
-      @input="updateHomeRouteQuery"
-      @keypress.enter="navigateToHomeRoute"
-      type="date"
-      class="search"
-      placeholder="Date"
-      :value="currentDate"
 
-  />
+  <div class="conteneur-fleche">
+    <div class="flèche-gauche" @click="suprOneDay"></div>
+    <input
+        ref="dateInput"
+        @input="updateHomeRouteQuery"
+        @keypress.enter="navigateToHomeRoute"
+        type="date"
+        class="search"
+        placeholder="Date"
+        :value="currentDate"
+
+    />
+    <div class="flèche-droite" @click="addOneDay"></div>
+  </div>
   <div class="small-title">Heure de départ :</div>
   <input
       ref="timeInput"
@@ -83,14 +106,6 @@ const currentTime = ref(getCurrentTime());
 
 
 <style scoped>
-
-
-
-
-
-
-
-
 .block_input_2{
   display: flex;
   flex-direction: column;
@@ -145,5 +160,63 @@ button {
   margin-bottom: -0.8rem;
   color: #f8f8f8;
 }
+
+.conteneur-fleche{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  position: relative;
+
+
+  .flèche-droite {
+    background-color: #6a9cf5;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    background-image: url("@/assets/fleche-vers-le-bas.png");
+    background-repeat: no-repeat;
+    background-size: 50% 50%;
+    background-position: center;
+    transform: rotate(-90deg);
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  .flèche-droite:hover {
+    transform: scale(1.2) rotate(-90deg);
+  }
+
+  .flèche-gauche{
+    background-color: #6a9cf5;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    background-image: url("@/assets/fleche-vers-le-bas.png");
+    background-repeat: no-repeat;
+    background-size: 50% 50%;
+    background-position: center;
+    transform: rotate(90deg);
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  .flèche-gauche:hover {
+    transform: scale(1.2) rotate(90deg);
+  }
+
+  input{
+    width: 50%;
+  }
+}
+
+
+
 
 </style>

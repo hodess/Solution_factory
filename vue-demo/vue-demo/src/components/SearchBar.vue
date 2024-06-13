@@ -1,12 +1,21 @@
 <script setup>
-import {gares} from "@/stockage/gares";
+import { ref } from 'vue';
+import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepart from './HeureDepart.vue';
 import HeureArrivee from './HeureArrivee.vue';
 
+const selectedTime = ref('depart');
 
-console.log(gares.value);
-import { ref, onMounted } from 'vue';
-import DepartDestination from "@/components/DepartDestination.vue";
+const showDepart = () => {
+  selectedTime.value = 'depart';
+};
+
+const showArrivee = () => {
+  selectedTime.value = 'arrivee';
+};
+
+// Montre le composant HeureDepart par défaut
+showDepart();
 </script>
 
 
@@ -24,15 +33,37 @@ import DepartDestination from "@/components/DepartDestination.vue";
     <DepartDestination/>
 
 
+    <div class="parent">
+      <div class="barre"></div>
+    </div>
     <div class="Back">
-      <div class="title-trip">Heure du trajet</div>
+      <!-- <div class="title-trip">Heure du trajet</div> -->
       <div class="button-date-div">
-        <button class="date-button">Départ</button>
-        <button class="date-button">Arrivée</button>
+        <button
+            class="date-button"
+            :class="{ 'selected-button': selectedTime === 'depart' }"
+            @click="showDepart">Départ</button>
+        <button
+            class="date-button"
+            :class="{ 'selected-button': selectedTime === 'arrivee' }"
+            @click="showArrivee">Arrivée</button>
       </div>
 
 
-      <HeureDepart/>
+      <!-- <transition name="fade">
+        <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/>
+      </transition> -->
+
+      <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/>
+
+      <!-- <transition name="fade" mode="out-in">
+        <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/>
+      </transition>
+      -->
+      <!--  <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/> -->
+
+
+      <!-- <HeureDepart/> -->
       <!-- <HeureArrivee/> -->
 
 
@@ -228,14 +259,44 @@ import DepartDestination from "@/components/DepartDestination.vue";
     position: relative;
     transition: background-color 0.3s, transform 0.3s;
     :hover{
-      background-color: #e0e0e0; /* Change la couleur de fond au survol */
+      background-color: #6a9cf5; /* Couleur légèrement grisée */
+      color: white;
       transform: scale(1.05);
     }
   }
 
-  .SearchButton{
-    margin-top: 1rem;
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
+  .date-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #f0f0f0; /* Couleur par défaut */
+    cursor: pointer;
+    margin: 0 5px;
+  }
+
+  .date-button.selected-button {
+    background-color: #6a9cf5; /* Couleur légèrement grisée */
+    color: white;
+  }
+
+  .parent {
+    width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
   }
+
+  .barre {
+    width: 100%;
+    height: 2px;
+    background-color: white;
+  }
+
 </style>
