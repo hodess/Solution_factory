@@ -1,58 +1,58 @@
 {
     "metro_paris": {
-      "ligne_4": {
+      "ligne_7": {
         "stations": [
           {
-            "nom": "Bagneux - Lucie Aubrac",
+            "nom": "Porte de Choisy",
             "coordonnees": {
-              "x": 2,
-              "y": 48
+              "x": 669,
+              "y": 858
             }
           },
           {
-            "nom": "Mairie de Montrouge",
+            "nom": "Porte d'Italie",
             "coordonnees": {
-              "x": 2.318801,
-              "y": 48.818408
+              "x": 635,
+              "y": 859
             }
           },
           {
-            "nom": "Porte d'Orléans",
+            "nom": "Maison Blanche",
             "coordonnees": {
-              "x": 2.325667,
-              "y": 48.822654
+              "x": 606,
+              "y": 843
             }
           },
           {
-            "nom": "Saint-Placide",
+            "nom": "Tolbiac",
             "coordonnees": {
-              "x": 2.325919,
-              "y": 48.84704
+              "x": 606,
+              "y": 822
             }
           },
           {
-            "nom": "Réaumur - Sébastopol",
+            "nom": "Place d'Italie",
             "coordonnees": {
-              "x": 2.349057,
-              "y": 48.867176
+              "x": 607,
+              "y": 801
             }
           }
         ]
       },
-      "ligne_5": {
+      "ligne_6": {
         "stations": [
           {
-            "nom": "Bobigny - Pablo Picasso",
+            "nom": "Place d'Italie",
             "coordonnees": {
-              "x": 2.44322,
-              "y": 48.90976
+              "x": 614,
+              "y": 801
             }
           },
           {
-            "nom": "Gare du Nord",
+            "nom": "Nationale",
             "coordonnees": {
-              "x": 2.35525,
-              "y": 48.88078
+              "x": 645,
+              "y": 802
             }
           }
         ]

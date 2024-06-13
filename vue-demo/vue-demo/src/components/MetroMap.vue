@@ -12,21 +12,22 @@ export default defineComponent({
 
     const fetchStations = async () => {
       try {
-        const response = await fetch('/data.json'); // récupérer le json ici
+        const response = await fetch('/data.json');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         const parsedStations = [];
 
+        // mettre tout les station dans une liste
         for (const line in data.metro_paris) {
           if (data.metro_paris[line].stations) {
             data.metro_paris[line].stations.forEach(station => {
-              console.log(station)
               parsedStations.push({
+                ligne:line,
                 name: station.nom,
                 x: station.coordonnees.x,
-                y: station.coordonnees.y
+                y: 952-station.coordonnees.y
               });
             });
           }
@@ -41,31 +42,53 @@ export default defineComponent({
     onMounted(async () => {
       await fetchStations();
 
+      // crée la map
       const map = L.map('map', {
         crs: L.CRS.Simple,
         minZoom: -1,
       });
 
-      L.imageOverlay('/metro-map.png', imageBounds).addTo(map);
-
+      L.imageOverlay('/metro.png', imageBounds).addTo(map);
       map.fitBounds(imageBounds);
 
+      const lineStations = {};
+
+      // ajouter les point a la map
       stations.value.forEach(station => {
+        if (!lineStations[station.ligne]) {
+          lineStations[station.ligne] = [];
+        }
         const latLng = map.unproject([station.x*2, station.y*-2], 1);
-        console.log(latLng);
+        lineStations[station.ligne].push(latLng);
+
+        let color = 'white'; // ajouter de la couleur au station
+        if (station.ligne == 'ligne_6') color = 'green';
+        if (station.ligne == 'ligne_7') color = 'pink';
         const marker = L.circleMarker(latLng, {
           radius: 4,
-          color: 'red',
+          color: color,
         }).addTo(map);
-
         marker.bindPopup(station.name);
       });
 
+      // vérifier que la map se charge
       setTimeout(() => {
         if (!map.getBounds()) {
           console.error('The map did not initialize correctly.');
         }
       }, 1000);
+      
+      console.log(lineStations);
+      // Ajouter des lignes entre les stations
+      for (const line in lineStations) {
+        let color = 'white'; // ajouter de la couleur au ligne
+        if (line == 'ligne_6') color = 'green';
+        if (line == 'ligne_7') color = 'pink';
+        L.polyline(lineStations[line], {
+          color: color,
+          weight: 2
+        }).addTo(map);
+      }
     });
 
     return {};
@@ -83,7 +106,7 @@ export default defineComponent({
 
 <style>
 .map-container {
-  height: 100vh; /* Assurez-vous que la hauteur est bien définie pour les grands écrans */
+  height: 100vh;
   width: 100%;
 }
 
