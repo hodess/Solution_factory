@@ -1,43 +1,11 @@
 <script setup>
 import {gares} from "@/stockage/gares";
+import HeureDepart from './HeureDepart.vue';
+import HeureArrivee from './HeureArrivee.vue';
+
 
 console.log(gares.value);
 import { ref, onMounted } from 'vue';
-
-
-// Fonction pour obtenir la date actuelle au format ISO (YYYY-MM-DD)
-const getCurrentDate = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-// Variable réactive pour stocker la date actuelle
-const currentDate = ref(getCurrentDate());
-
-// Fonctions pour les événements de mise à jour de la route et de navigation
-const updateHomeRouteQuery = () => {
-  // Mettre à jour la route ou effectuer d'autres actions lorsque les valeurs changent
-};
-
-const navigateToHomeRoute = () => {
-  // Naviguer vers la route d'accueil ou effectuer d'autres actions lorsque la touche Entrée est enfoncée
-};
-
-// Fonction pour obtenir l'heure actuelle au format HH:MM
-const getCurrentTime = () => {
-  const now = new Date();
-  const hour = String(now.getHours()).padStart(2, '0');
-  const minute = String(now.getMinutes()).padStart(2, '0');
-  return `${hour}:${minute}`;
-};
-
-// Variable réactive pour stocker l'heure actuelle
-const currentTime = ref(getCurrentTime());
-
-
 
 
 </script>
@@ -56,46 +24,30 @@ const currentTime = ref(getCurrentTime());
     <div class="Back">
       <div class = "block_input">
         <div class="title-trip">Où voulez-vous aller ?</div>
+        <div class="small-title">De :</div>
         <input
           v-model="searchText"
           @input="updateHomeRouteQuery"
           @keypress.enter="navigateToHomeRoute"
           type="search"
           class="search"
-          placeholder="Départ"
+          placeholder="Gare de départ"
         />
+
+        <div class="small-title">A : </div>
         <input
           v-model="searchText"
           @input="updateHomeRouteQuery"
           @keypress.enter="navigateToHomeRoute"
           type="search"
           class="search"
-          placeholder="Arrivée"
+          placeholder="Gare d'arrivée"
 
         />
       </div>
-      <div class="block_input_2">
-        <input
-            ref="dateInput"
-            @input="updateHomeRouteQuery"
-            @keypress.enter="navigateToHomeRoute"
-            type="date"
-            class="search"
-            placeholder="Date"
-            :value="currentDate"
 
-        />
-        <input
-            ref="timeInput"
-            @input="updateHomeRouteQuery"
-            @keypress.enter="navigateToHomeRoute"
-            type="time"
-            class="search"
-            placeholder="Heure"
-            :value="currentTime"
-
-        />
-      </div>
+      <HeureDepart/>
+      <!-- <HeureArrivee/> -->
     <!--<div class =" SearchButton">
       <button @click="navigateToHomeRoute">Go !</button>
     </div>-->
@@ -116,9 +68,9 @@ const currentTime = ref(getCurrentTime());
   </div>
 </body>
 </template>
+
+
 <style scoped>
-
-
   .container {
     display: flex;
     flex-direction: column;
@@ -126,11 +78,13 @@ const currentTime = ref(getCurrentTime());
     border-radius: 15px;
     background-color: var(--vt-c-container-color) ;
     padding: 2rem;
-    position: fixed;
-    transform: translateX(-50%);
+    position: relative;
+    margin-left: 100%;
+    transform: translate(-50%);
+    margin-top: 10rem;
     width: fit-content;
     box-shadow: 0 2px 4px var( --vt-c-black);
-    z-index: 3;
+    z-index: 1;
   }
 
   .Back {
@@ -169,21 +123,13 @@ const currentTime = ref(getCurrentTime());
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 3.5rem;
   }
 
-  .block_input_2{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 2rem;
-    margin-bottom: 5rem;
-  }
 
 
   button {
     background-color: var(--vt-c-white);
-
     color: var( --vt-c-black);
     padding: 1rem 2rem;
     border-radius: 2rem;
@@ -230,6 +176,7 @@ const currentTime = ref(getCurrentTime());
     flex: 1;
   }
 
+
   .title-trip{
     color: #f8f8f8;
     font-size: 1.2rem;
@@ -243,6 +190,7 @@ const currentTime = ref(getCurrentTime());
     top: 90%;
     left: 50%;
     transform: translate(-50%, -50%);
+
   }
 
   .link_wrapper{
@@ -298,6 +246,12 @@ const currentTime = ref(getCurrentTime());
   a:hover + .icon{
     border: 3px solid #2ecc71;
     right: -25%;
+  }
+
+  .small-title{
+    margin-top: 1rem;
+    margin-bottom: -0.8rem;
+    color: #f8f8f8;
   }
 
 </style>
