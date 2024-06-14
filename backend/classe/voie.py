@@ -6,7 +6,7 @@ class Voie:
         self.Gare2 = Gare2
         self.ligne = ligne
         self.temps = temps
-        self.Bidirectionnel = Bidirectionnel #Si egale a 0 alors Gare1 -> Gare 2 (besoin pour la ligne 10)
+        self.Bidirectionnel = Bidirectionnel  #Si egale a 0 alors Gare1 -> Gare 2 (besoin pour la ligne 10)
         Gare1.add_Voie(self)
         Gare2.add_Voie(self)
         Voie.nombre_d_elements += 1
@@ -30,5 +30,4 @@ class Voie:
 
     #compare all element with a second voie
     def __eq__(self, other):
-        print("a")
         return self.Gare1 == other.Gare1 and self.Gare2 == other.Gare2 and self.ligne == other.ligne and self.temps == other.temps and self.Bidirectionnel == other.Bidirectionnel
