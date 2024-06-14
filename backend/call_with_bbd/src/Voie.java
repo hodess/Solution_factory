@@ -17,6 +17,18 @@ public class Voie {
         gare2.addVoie(this);
         nombreDElements++;
     }
+
+    public Voie(Line ligne, int temps, int bidirectionnel) {
+        this.gare1 = null;
+        this.gare2 = null;
+        this.ligne = ligne;
+        this.temps = temps;
+        this.bidirectionnel = bidirectionnel;
+        gare1.addVoie(this);
+        gare2.addVoie(this);
+        nombreDElements++;
+    }
+
     public Gare getOther(Gare gare) {
         if (gare == gare1) {
             return gare2;
@@ -60,4 +72,11 @@ public class Voie {
         return temps;
     }
 
+    public void setGare1(Gare gare1) {
+        this.gare1 = gare1;
+    }
+
+    public void setGare2(Gare gare2) {
+        this.gare2 = gare2;
+    }
 }

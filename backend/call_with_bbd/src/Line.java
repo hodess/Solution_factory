@@ -16,6 +16,24 @@ public class Line {
         }
     }
 
+    public Gare findGare_with_id(int id) {
+        for (Gare g : listeGare) {
+            if (g.getId() == id) {
+                return g;
+            }
+        }
+        return null;
+    }
+
+    public Gare findGare_with_name(String name) {
+        for (Gare g : listeGare) {
+            if (g.getName().equals(name)) {
+                return g;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder gares = new StringBuilder();
@@ -28,5 +46,9 @@ public class Line {
 
     public String getName() {
         return name;
+    }
+
+    public List<Gare> getListeGare() {
+        return listeGare;
     }
 }

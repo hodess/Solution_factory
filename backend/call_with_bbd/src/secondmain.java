@@ -20,7 +20,7 @@ public class secondmain {
         // Créer des gares
         List<Gare> gares = new ArrayList<>();
         for (int i = 0; i < nbGare; i++) {
-            gares.add(new Gare("Gare " + i, lines.get(0), (int)(48 + (i * 0.01)), (int)(2 + (i * 0.01))));
+            gares.add(new Gare(i,"Gare " + i, lines.get(0)));
         }
 
         // Créer des voies aléatoires entre les gares

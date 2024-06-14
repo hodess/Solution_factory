@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Gare {
+    private int id;
     private String name;
     private Line ligne;
-    private int[] cord;
     private List<Voie> voie;
 
-    public Gare(String name, Line ligne, int x, int y) {
+    public Gare(int id,String name, Line ligne) {
+        this.id=id;
         this.name = name;
         this.ligne = ligne;
-        this.cord = new int[]{x, y};
         this.voie = new ArrayList<>();
         ligne.addGare(this);
     }
@@ -21,10 +21,13 @@ public class Gare {
 
     @Override
     public String toString() {
-        return String.format("Gare(name=%s, ligne=%s, nb de voie=%d, coord=(%d, %d))",
-                name, ligne.getName(), voie.size(), cord[0], cord[1]);
+        return String.format(" Gare(id = %d, name=%s, ligne=%s, nb de voie=%d",
+                id, name, ligne.getName(), voie.size());
     }
 
+    public int getId() {
+        return id;
+    }
     public List<Voie> getVoie() {
         return voie;
     }
