@@ -42,6 +42,10 @@ public class Gare {
         return null;
     }
 
+    public Line getLigne() {
+        return ligne;
+    }
+
     public String getName() {
         return name;
     }

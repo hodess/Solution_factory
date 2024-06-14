@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class YenKSP {
     public static class Result {
@@ -103,5 +104,45 @@ public class YenKSP {
             }
         }
         return totalTime;
+    }
+
+    public static List<Gare> findGare(Map<Integer, Line> linesMap, String name_start,String name_end) {
+        Gare start = null;
+        Gare end = null;
+        for (Integer id : linesMap.keySet()) {
+            Line line = linesMap.get(id);
+            Gare start_temp = line.findGare_with_name(name_start);
+            if (start_temp != null) {
+                start = start_temp;
+            }
+            Gare end_temp = line.findGare_with_name(name_end);
+            if (end_temp != null) {
+                end = end_temp;
+            }
+        }
+        List<Gare> gares = new ArrayList<>();
+        gares.add(start);
+        gares.add(end);
+        return gares;
+    }
+
+    public static void affichage(Gare start,Gare end,List<Line> filtreLine){
+        System.out.println("\nYens\n");
+        System.out.println("Start: " + start + "\nEnd: " + end);
+        if (start != null && end != null) {
+
+            YenKSP.Result result = YenKSP.yenKSP(start, end,3,filtreLine);
+            if (result.chemins != null && result.temps != null) {
+                for (int i = 0; i < result.chemins.size(); i++) {
+                    System.out.println("Chemin " + (i + 1) + ":");
+                    for (Gare gare : result.chemins.get(i)) {
+                        System.out.print(gare.getName() +","+gare.getLigne().getName() + " -> ");
+                    }
+                    System.out.println("\nDistance totale: " + result.temps.get(i));
+                }
+            } else {
+                System.out.println("Aucun chemin trouvé.");
+            }
+        }
     }
 }
