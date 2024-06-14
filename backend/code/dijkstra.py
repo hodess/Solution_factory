@@ -6,16 +6,9 @@ import math
 #definir backend comme repertoire parent pour pouvoir importer les classes
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-
-# import toute mes classes
-from classe.gare import Gare
+from  classe.gare import Gare
 from classe.voie import Voie
 from classe.line import Line
-
-
-
-
-
 
 
 def print_dico(dico):
@@ -61,8 +54,8 @@ def Dijkstra(start, end,filtre_voie=[],filtre_line=[]):
 
         for gare, dist in distance.items():
             if gare not in T and dist < min_distance:
-                min_distance = dist
                 t = gare
+                min_distance = dist
 
         if t == end:
             break
@@ -145,19 +138,9 @@ def YenKSP(start, end, k):
             totalPath = rootpath + spurPaht
             rootpath.append(spurnode)
             temps+=find_temps(rootpath)
-
-
-            print(spurnode.name)
-            print_liste_voie(filtre_voie)
-            print_liste(totalPath)
-            print(temps)
-            print()
-
             if totalPath not in B:
                 B.append(totalPath)
                 B_temp.append(temps)
-
-        print("__________________________________________________________________________________\n")
         if len(B) == 0:
             break
 
@@ -187,16 +170,16 @@ def main():
 
 
 
-    gare1 = Gare("Gare du Nord", line_4,48.8809, 2.3553)
-    gare1_2 = Gare("Gare du Nord",line_5, 48.8809, 2.3553)
+    gare1 = Gare("Gare du Nord", line_4,48.8809, 2.3553,1)
+    gare1_2 = Gare("Gare du Nord",line_5, 48.8809, 2.3553,2)
 
-    gare2 = Gare("Gare de Lyon",line_4 ,50.8462, 3.5335)
+    gare2 = Gare("Gare de Lyon",line_4 ,50.8462, 3.5335,3)
 
-    gare3 = Gare("Gare de l'est", line_5,48.8809, 2.3553)
+    gare3 = Gare("Gare de l'est", line_5,48.8809, 2.3553,4)
 
-    gare4 = Gare("Gare Montparnasse", line_5,50.8462, 3.5335)
+    gare4 = Gare("Gare Montparnasse", line_5,50.8462, 3.5335,5)
 
-    gare7 = Gare("Chatelet", line_5,50.8462, 3.5335)
+    gare7 = Gare("Chatelet", line_5,50.8462, 3.5335,6)
 
     # Nord -> Nord ligne 0
     Voie(gare1, gare1_2, line_0, 60)

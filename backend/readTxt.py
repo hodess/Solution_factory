@@ -1,7 +1,9 @@
 from  classe.gare import Gare
 from classe.voie import Voie
 from classe.line import Line
+from code.dijkstra import *
 import re
+import random
 
 def ReadTxtPoints():
     file=open('data/metro.txt','r')
@@ -75,7 +77,7 @@ def CreateAndFillVoies(Connections, Gares):
         connection = connection.split(" ")
         IdGare1 = connection[2]
         IdGare2 = connection[3]
-        time = connection[1]
+        time = int(connection[1])
         Gare1 = None
         Gare2 = None
         for gare in Gares:
@@ -115,4 +117,24 @@ if __name__ == "__main__":
     Voies=CreateAndFillVoies(ReadTxtConnexions(),Gares)
     for voie in Voies:
         print(voie)
+
+    num_start = random.randint(0, 375)
+    start = Gares[num_start]
+    num_end = random.randint(0, 375)
+    while num_end == num_start:
+        num_end = random.randint(0, 375)
+    end = Gares[num_end]
+
+    print("\n\n-----------------------------------------------------------------------------------------")
+    print(f"Start: {start.name}, End: {end.name}")
+    result, temps=YenKSP(start, end, 3)
+
+    if temps[0] is None:
+        print("Pas de chemin trouvé entre les gares : ", start.name, " et ", end.name)
+    else:
+        for i in range(len(result)):
+            for j in range(len(result[i])):
+                print(result[i][j].name , result[i][j].ligne.name , end=" -> ")
+            print("Temps: ", temps[i])
+            print("\n")
     
