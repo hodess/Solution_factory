@@ -1,5 +1,8 @@
 import sys
 import os
+import random
+import time
+import math
 #definir backend comme repertoire parent pour pouvoir importer les classes
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -32,7 +35,7 @@ def print_liste_with_time(liste):
 
 def print_liste_voie(liste):
     for i in liste:
-        print(i.Gare1.name," ",i.Gare2.name,end=" -> ")
+        print(i.Gare1.name," ",i.Gare2.name,end="\t\t ")
     print()
 
 
@@ -126,15 +129,15 @@ def YenKSP(start, end, k):
                 for j in range(len(A[i])-1):
                     for l in rootpath:
                         if l == A[i][j]:
-                            filtre_voie.append(A[i][j].find_voie(A[i][j+1]))
+                            temp_voie=A[i][j].find_voie(A[i][j + 1])
+                            if temp_voie not in filtre_voie:
+                                filtre_voie.append(temp_voie)
 
                     if A[i][j]==spurnode:
-                        filtre_voie.append(A[i][j].find_voie(A[i][j+1]))
-                print("filtre_voie",end=" ")
-                print_liste_voie(filtre_voie)
+                        temp_voie = A[i][j].find_voie(A[i][j + 1])
+                        if temp_voie not in filtre_voie:
+                            filtre_voie.append(temp_voie)
 
-
-            print_liste_voie(filtre_voie)
             spurPaht,temps= Dijkstra(spurnode,end,filtre_voie)
             if spurPaht is None:
                 continue
@@ -143,13 +146,21 @@ def YenKSP(start, end, k):
             rootpath.append(spurnode)
             temps+=find_temps(rootpath)
 
+
+            print(spurnode.name)
+            print_liste_voie(filtre_voie)
+            print_liste(totalPath)
+            print(temps)
+            print()
+
             if totalPath not in B:
                 B.append(totalPath)
                 B_temp.append(temps)
 
-
+        print("__________________________________________________________________________________\n")
         if len(B) == 0:
             break
+
 
         #trouver le chemin le plus court
         index_min_time=0
@@ -176,8 +187,8 @@ def main():
 
 
 
-    gare1 = Gare("Gare du Nord_4", line_4,48.8809, 2.3553)
-    gare1_2 = Gare("Gare du Nord_5",line_5, 48.8809, 2.3553)
+    gare1 = Gare("Gare du Nord", line_4,48.8809, 2.3553)
+    gare1_2 = Gare("Gare du Nord",line_5, 48.8809, 2.3553)
 
     gare2 = Gare("Gare de Lyon",line_4 ,50.8462, 3.5335)
 
@@ -257,17 +268,42 @@ def sec_main(nb_gare,nb_de_demande):
         print("Pas de chemin trouvé entre les gares : ", start.name, " et ", end.name)
     else:
         for i in range(len(result)):
-            print_liste_with_time(result[i])
+            print_liste(result[i])
             print("Temps: ", temps[i])
             print("\n")
 
 
+def main_dijstart(nb_gare):
+    lines = [Line(str(i)) for i in range(5)]
 
+    gares = []
+    for i in range(nb_gare):
+        gares.append(Gare(f"Gare {i}", lines[0], 48.8809 + i * 0.01, 2.3553 + i * 0.01))
+
+    for i in range(nb_gare * 2):
+        sec_gare = random.choice(gares)
+        while gares[int(i / 2)] == sec_gare:  # Assurez-vous que start et end ne sont pas les mêmes
+            sec_gare = random.choice(gares)
+        rand_temp = random.randint(60, 300)
+        rand_ligne = random.choice(lines)
+        Voie(gares[int(i / 2)], sec_gare, rand_ligne, rand_temp)  # Voie bidirectionnelle seulement
+
+    start = random.choice(gares)
+    end = random.choice(gares)
+
+    while start == end:  # Assurez-vous que start et end ne sont pas les mêmes
+        end = random.choice(gares)
+
+    debut = time.time()
+    chemin, temps = Dijkstra(start, end)
+    fin = time.time()
+
+    duration = fin - debut
+    print("Temps d'execution : ", duration, end=" ")
+    return duration
 
 
 if __name__ == "__main__":
-    random.seed(87)
-    sec_main(308,5)
-    #main()
+    main()
 
 
