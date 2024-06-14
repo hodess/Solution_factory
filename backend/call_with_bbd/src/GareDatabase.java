@@ -37,12 +37,12 @@ public class GareDatabase {
             // Fermeture de la connexion
             resultSet.close();
 
-            resultSet = statement.executeQuery("SELECT id,name,id_1 FROM gare;");
+            resultSet = statement.executeQuery("SELECT id,name,id_ligne FROM gare;");
 
             while (resultSet.next()) {
                 int id  = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                int id_ligne = resultSet.getInt("id_1");
+                int id_ligne = resultSet.getInt("id_ligne");
                 new Gare(id,name,linesMap.get(id_ligne));
             }
 
@@ -54,7 +54,7 @@ public class GareDatabase {
                 System.out.println("Gares: " +linesMap.get(id).getListeGare());
             }
 
-            resultSet = statement.executeQuery("SELECT c.id_Gare1, c.id_Gare2, temps,bidirectionnel,id_1 FROM contient c, voie v where v.id=c.id_Voie;");
+            resultSet = statement.executeQuery("SELECT c.id_Gare1, c.id_Gare2, temps,bidirectionnel,id_ligne FROM contient c, voie v where v.id=c.id_Voie and v.id_ligne!=0;");
 
             // Traitement des résultats
             while (resultSet.next()) {
@@ -62,18 +62,13 @@ public class GareDatabase {
                 int id_Gare2  = resultSet.getInt("id_Gare2");
                 int temps  = resultSet.getInt("temps");
                 int bidirectionnel  = resultSet.getInt("bidirectionnel");
-                int id_1  = resultSet.getInt("id_1");
-                if (id_1 == 0) {
-                    System.out.println("Line not found: " + id_1 + "\n\n/");
-                    continue;
-                }
+                int id_1  = resultSet.getInt("id_ligne");
                 Line line_for_voie = linesMap.get(id_1);
-                System.out.println("Line: " + line_for_voie + " id: " + id_1);
                 Gare gare1= line_for_voie.findGare_with_id(id_Gare1);
-                System.out.println("Gare1: " + gare1 + " id: " + id_Gare1);
                 Gare gare2= line_for_voie.findGare_with_id(id_Gare2);
                 new Voie(gare1,gare2,line_for_voie,temps,bidirectionnel);
             }
+
             System.out.println("\n");
             for (Integer id : linesMap.keySet()) {
                 System.out.println("lines: " +linesMap.get(id));
@@ -81,10 +76,45 @@ public class GareDatabase {
             }
 
             resultSet.close();
+
+
+            String query = "SELECT " +
+                    "c.id_Gare1, g1.id_ligne AS id_Ligne_Gare1, " +
+                    "c.id_Gare2, g2.id_ligne AS id_Ligne_Gare2, " +
+                    "v.temps, v.bidirectionnel, v.id_ligne AS id_Ligne_Voie " +
+                    "FROM " +
+                    "contient c " +
+                    "JOIN Gare g1 ON c.id_Gare1 = g1.id " +
+                    "JOIN Gare g2 ON c.id_Gare2 = g2.id " +
+                    "JOIN Voie v ON c.id_Voie = v.id " +
+                    "WHERE v.id_ligne = 0";
+
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                int idGare1 = resultSet.getInt("id_Gare1");
+                int idLigneGare1 = resultSet.getInt("id_Ligne_Gare1");
+                int idGare2 = resultSet.getInt("id_Gare2");
+                int idLigneGare2 = resultSet.getInt("id_Ligne_Gare2");
+                int temps = resultSet.getInt("temps");
+                int bidirectionnel = resultSet.getInt("bidirectionnel");
+                int idLigneVoie = resultSet.getInt("id_Ligne_Voie");
+
+                Line line_for_gare1 = linesMap.get(idLigneGare1);
+                Gare gare1= line_for_gare1.findGare_with_id(idGare1);
+                Line line_for_gare2 = linesMap.get(idLigneGare2);
+                Gare gare2= line_for_gare2.findGare_with_id(idGare2);
+                Line line_for_voie = linesMap.get(idLigneVoie);
+                new Voie(gare1,gare2,line_for_voie,temps,bidirectionnel);
+            }
+
+
+
+
             statement.close();
             connection.close();
 
-            String name_start = "Gare du Nord_5";
+            String name_start = "Gare du Nord_4";
             String name_end = "Chatelet";
 
             System.out.println("\nYens\n");
