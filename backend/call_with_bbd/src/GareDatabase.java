@@ -6,7 +6,7 @@ import java.sql.Statement;
 
 public class GareDatabase {
     public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:3306/locomtive";
+        String url = "jdbc:mysql://localhost:3306/locomotive";
         String user = "root";
         String password = "Romain_09";
 
@@ -20,19 +20,21 @@ public class GareDatabase {
 
             // Création d'une requête
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM gares");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Gare");
 
             // Traitement des résultats
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String nom = resultSet.getString("nom");
-                String ville = resultSet.getString("ville");
-                int nombreDeQuais = resultSet.getInt("nombre_de_quais");
+                String nom = resultSet.getString("name");
+                int x = resultSet.getInt("x");
+                int y = resultSet.getInt("y");
+                int id_ligne = resultSet.getInt("id_1");
 
                 System.out.println("Gare ID: " + id);
                 System.out.println("Nom: " + nom);
-                System.out.println("Ville: " + ville);
-                System.out.println("Nombre de quais: " + nombreDeQuais);
+                System.out.println("x: " + x);
+                System.out.println("y: " + y);
+                System.out.println("id_ligne: " + id_ligne);
                 System.out.println();
             }
 
