@@ -4,7 +4,7 @@ from classe.line import Line
 import re
 
 def ReadTxtPoints():
-    file=open('backend/data/metro.txt','r')
+    file=open('data/metro.txt','r')
     pattern = re.compile(r'^V \d{4}')
     lines=file.readlines()
     filtered_lines = [line for line in lines if pattern.match(line)]
@@ -13,7 +13,7 @@ def ReadTxtPoints():
     return filtered_lines
 
 def ReadTxtConnexions():
-    file=open('backend/data/metro.txt','r')
+    file=open('data/metro.txt','r')
     pattern = re.compile(r'^E \d')
     lines=file.readlines()
     filtered_lines = [line for line in lines if pattern.match(line)]
@@ -36,7 +36,7 @@ def CreateAndFillLine(LineOfTxt):
     return newLines
 
 def GetLinesInPos():
-    file=open('backend/data/pospoints.txt','r')
+    file=open('data/pospoints.txt','r')
     lines=file.readlines()
     return lines
 
@@ -70,6 +70,7 @@ def FillLineWithGare(LineOfTxt, NewLines, PosTxt):
 
 def CreateAndFillVoies(Connections, Gares):
     Voies = []
+    line0=Line("0")
     for connection in Connections:
         connection = connection.split(" ")
         IdGare1 = connection[2]
@@ -89,10 +90,12 @@ def CreateAndFillVoies(Connections, Gares):
             continue  # Passe à la connexion suivante
         else:
         # Si les deux gares sont trouvées, on crée une Voie
-            Line = Gare1.get_attr('ligne')
+            Line_voie = Gare1.get_attr('ligne')
             #si voies ne contients pas déjà un élément avec Gare1 et Gare2 on ajoute
             if not any(voie.Gare1.name == Gare1.name and voie.Gare2.name == Gare2.name for voie in Voies):
-                Voies.append(Voie(Gare1, Gare2, Line, time))
+                if (Gare1.name== Gare2.name):
+                    Line_voie=line0
+                Voies.append(Voie(Gare1, Gare2, Line_voie, time))
             #Voies.append(Voie(Gare1, Gare2, Line, time))
     return Voies
 
