@@ -25,9 +25,12 @@ public class Dijkstra {
             if (!filtreLine.contains(lien.getLigne()) && !filtreVoie.contains(lien)) {
 
                 Gare voisin = lien.getOther(start);
-                distance.put(voisin, lien.getTemps());
-                //System.out.println("Voie " + lien +" " +filtreVoie.contains(lien) + "  " + lien.getTemps() + "\n " + " " + distance.get(voisin));
-                parent.put(voisin, start);
+                if((lien.getBidirectionnel()==1) || (lien.getBidirectionnel()==0 && lien.getGare1()==start && lien.getGare2()==voisin))
+                {
+                    distance.put(voisin, lien.getTemps());
+                    //System.out.println("Voie " + lien +" " +filtreVoie.contains(lien) + "  " + lien.getTemps() + "\n " + " " + distance.get(voisin));
+                    parent.put(voisin, start);
+                }
             }
         }
 
@@ -57,8 +60,12 @@ public class Dijkstra {
                 if (!T.contains(voisin) && !filtreLine.contains(lien.getLigne()) && !filtreVoie.contains(lien)) {
                     int newDistance = distance.get(t) + lien.getTemps();
                     if (newDistance < distance.getOrDefault(voisin, Integer.MAX_VALUE)) {
-                        distance.put(voisin, newDistance);
-                        parent.put(voisin, t);
+                        if((lien.getBidirectionnel()==1) || (lien.getBidirectionnel()==0 && lien.getGare1()==t && lien.getGare2()==voisin))
+                        {
+                            distance.put(voisin, newDistance);
+                            parent.put(voisin, t);
+                        }
+
                         //System.out.println("Voie " + lien +" " +filtreVoie.contains(lien) + "  " + lien.getTemps() + "\n " + distance.get(voisin) + "  "+ distance.get(t) + " "+t.getName());
                     }
                 }
@@ -80,7 +87,7 @@ public class Dijkstra {
             return new Result(null, null);
         }
 
-        //System.out.println("Chemin: " + chemin + "\nDistance: " + distance.get(end));
+        //System.out.println("Chemin: " + chemin + "\nDistance: " + distance.get(end)+"\n\n");
 
         return new Result(chemin, distance.get(end));
     }

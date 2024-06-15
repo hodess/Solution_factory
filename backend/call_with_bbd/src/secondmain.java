@@ -47,7 +47,8 @@ public class secondmain {
 
         // Appeler l'algorithme YenKSP
         List<Line> filtreLine = new ArrayList<>();
-        YenKSP.Result result = YenKSP.yenKSP(start, end, 2,filtreLine);  // Trouver les 3 plus courts chemins
+        List<Voie> filtreVoie = new ArrayList<>();
+        YenKSP.Result result = YenKSP.yenKSP(start, end, 2,filtreVoie,filtreLine);  // Trouver les 3 plus courts chemins
 
         // Afficher le résultat
         if (result.chemins != null && result.temps != null) {

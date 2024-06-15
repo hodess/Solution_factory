@@ -116,13 +116,17 @@ public class GareDatabase {
 
         Map<Integer, Line> linesMap=fill_all(url, user, password);
 
-        String name_start = "Gare du Nord_4";
+        String name_start = "Gare Montparnasse";
         String name_end = "Chatelet";
 
-        List<Gare> gares = YenKSP.findGare(linesMap, name_start, name_end);
-        Gare start = gares.get(0);
-        Gare end = gares.get(1);
+        List<List<Gare>> gares = YenKSP.findGare(linesMap, name_start, name_end);
+        List<Gare> start = gares.get(0);
+        List<Gare> end = gares.get(1);
 
+        if (start == null || end == null) {
+            System.out.println("Gare de départ ou d'arrivée introuvable.");
+            return;
+        }
         List<Line> filtreLine = new ArrayList<>();
         YenKSP.affichage(start, end, filtreLine);
     }

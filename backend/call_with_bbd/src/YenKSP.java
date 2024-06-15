@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class YenKSP {
     public static class Result {
@@ -11,13 +13,24 @@ public class YenKSP {
             this.chemins = chemins;
             this.temps = temps;
         }
+
+        public Result() {
+            this.chemins = null;
+            this.temps = null;
+        }
     }
 
-    public static Result yenKSP(Gare start, Gare end, int k,List<Line> filtreLine) {
+    public static Result yenKSP(Gare start, Gare end, int k,List<Voie> filtreVoie_before,List<Line> filtreLine) {
         List<List<Gare>> A = new ArrayList<>();
         List<Integer> tempsAll = new ArrayList<>();
+        List<Voie> filtreVoie = new ArrayList<>();
+        for (Voie voie : filtreVoie_before) {
+            if (!filtreVoie.contains(voie)) {
+                filtreVoie.add(voie);
+            }
+        }
 
-        Dijkstra.Result dijkstraResult = Dijkstra.dijkstra(start, end, new ArrayList<>(), filtreLine);
+        Dijkstra.Result dijkstraResult = Dijkstra.dijkstra(start, end, filtreVoie, filtreLine);
         if (dijkstraResult.chemin == null) {
             return new Result(null, null);
         }
@@ -32,7 +45,7 @@ public class YenKSP {
                 Gare spurnode = A.get(i).get(j);
                 List<Gare> rootpath = new ArrayList<>(A.get(i).subList(0, j + 1));
 
-                List<Voie> filtreVoie = new ArrayList<>();
+                filtreVoie = new ArrayList<>();
                 for (int m = 0; m < A.size(); m++) {
                     for (int n = 0; n < A.get(m).size() - 1; n++) {
                         if (rootpath.contains(A.get(m).get(n))) {
@@ -50,12 +63,16 @@ public class YenKSP {
                         }
                     }
                 }
+                for (Voie voie : filtreVoie_before) {
+                    if (!filtreVoie.contains(voie)) {
+                        filtreVoie.add(voie);
+                    }
+                }
 
                 /*System.out.println("FiltreVoie: " + filtreVoie);
                 System.out.println("Rootpath: " + rootpath);
                 System.out.println("Spurnode: " + spurnode);
                 System.out.println();*/
-
                 Dijkstra.Result spurResult = Dijkstra.dijkstra(spurnode, end, filtreVoie, filtreLine);
                 if (spurResult.chemin == null) {
                     continue;
@@ -106,32 +123,88 @@ public class YenKSP {
         return totalTime;
     }
 
-    public static List<Gare> findGare(Map<Integer, Line> linesMap, String name_start,String name_end) {
-        Gare start = null;
-        Gare end = null;
+    public static List<List<Gare>> findGare(Map<Integer, Line> linesMap, String name_start,String name_end) {
+        List<Gare> start = new ArrayList<>();
+        List<Gare> end = new ArrayList<>();
         for (Integer id : linesMap.keySet()) {
             Line line = linesMap.get(id);
             Gare start_temp = line.findGare_with_name(name_start);
             if (start_temp != null) {
-                start = start_temp;
+                start.add(start_temp);
             }
             Gare end_temp = line.findGare_with_name(name_end);
             if (end_temp != null) {
-                end = end_temp;
+                end.add(end_temp);
             }
         }
-        List<Gare> gares = new ArrayList<>();
+        List<List<Gare>> gares = new ArrayList<>();
         gares.add(start);
         gares.add(end);
         return gares;
     }
 
-    public static void affichage(Gare start,Gare end,List<Line> filtreLine){
+
+    public static Result yenKSP_multiple_start_end(List<Gare> start, List<Gare> end, int k,List<Line> filtreLine){
+        List<Voie> filtreVoie = new ArrayList<>();
+        for (Voie voie_start : start.get(0).getVoie()) {
+            //enlever toute les voie entre les start
+            if(voie_start.getLigne().getName().equals("Ligne 0")){
+                filtreVoie.add(voie_start);
+            }
+        }
+        for (Voie voie_end : end.get(0).getVoie()) {
+            //enlever toute les voie entre les end
+            if(voie_end.getLigne().getName().equals("Ligne 0")){
+                filtreVoie.add(voie_end);
+            }
+        }
+
+        Result result_all = new Result();
+        for (Gare gare_start : start) {
+            for (Gare gare_end : end) {
+                Result result = yenKSP(gare_start, gare_end, k,filtreVoie, filtreLine);
+
+                if (result_all.chemins == null) {
+                    result_all = result;
+                } else {
+                    if (result.chemins != null && result.temps != null){
+                        result_all.chemins.addAll(result.chemins);
+                        result_all.temps.addAll(result.temps);
+                    }
+                }
+            }
+        }
+
+        //prendre juste les 5 meuilleur temps
+        List<List<Gare>> chemin = new ArrayList<>();
+        List<Integer> temps = new ArrayList<>();
+        int i = 0;
+        while (i < 5 && result_all.temps.size() > 0) {
+            int indexMinTime = 0;
+            for (int m = 1; m < result_all.temps.size(); m++) {
+                if (result_all.temps.get(m) < result_all.temps.get(indexMinTime)) {
+                    indexMinTime = m;
+                }
+            }
+            chemin.add(result_all.chemins.get(indexMinTime));
+            temps.add(result_all.temps.get(indexMinTime));
+            result_all.chemins.remove(indexMinTime);
+            result_all.temps.remove(indexMinTime);
+            i++;
+        }
+
+        return new Result(chemin,temps);
+    }
+
+    public static void affichage(List<Gare> start,List<Gare> end,List<Line> filtreLine){
+
+        int nb_result = 4;
+
         System.out.println("\nYens\n");
         System.out.println("Start: " + start + "\nEnd: " + end);
         if (start != null && end != null) {
 
-            YenKSP.Result result = YenKSP.yenKSP(start, end,3,filtreLine);
+            YenKSP.Result result = YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine);
             if (result.chemins != null && result.temps != null) {
                 for (int i = 0; i < result.chemins.size(); i++) {
                     System.out.println("Chemin " + (i + 1) + ":");

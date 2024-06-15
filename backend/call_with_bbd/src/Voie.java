@@ -72,6 +72,18 @@ public class Voie {
         return temps;
     }
 
+    public int getBidirectionnel() {
+        return bidirectionnel;
+    }
+
+    public Gare getGare1() {
+        return gare1;
+    }
+
+    public Gare getGare2() {
+        return gare2;
+    }
+
     public void setGare1(Gare gare1) {
         this.gare1 = gare1;
     }

@@ -33,7 +33,7 @@ public class Main {
         List<Voie> filtreVoie = new ArrayList<>();
         //filtreVoie.add(voie);
         List<Line> filtreLine = new ArrayList<>();
-        YenKSP.Result result = YenKSP.yenKSP(start, end,3,filtreLine);
+        YenKSP.Result result = YenKSP.yenKSP(start, end,3,filtreVoie,filtreLine);
 
         if (result.chemins != null && result.temps != null) {
             for (int i = 0; i < result.chemins.size(); i++) {
