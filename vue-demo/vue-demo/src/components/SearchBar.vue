@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios'; // Assurez-vous d'importer axios si ce n'est pas déjà fait
+
+// Vos imports de composants ici
 import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepart from './HeureDepart.vue';
 import HeureArrivee from './HeureArrivee.vue';
@@ -14,8 +17,43 @@ const showArrivee = () => {
   selectedTime.value = 'arrivee';
 };
 
-// Montre le composant HeureDepart par défaut
+// Appel initial pour montrer le composant HeureDepart par défaut
 showDepart();
+
+// Fonction pour envoyer les données au backend
+async function calculerSomme(variable1, variable2) {
+  try {
+    const response = await axios.post('http://localhost:8080/calculer', {
+      variable1: variable1,
+      variable2: variable2
+    });
+    console.log(response.data); // Affiche la réponse du backend dans la console
+    return response.data; // Retourne la réponse du backend si nécessaire
+  } catch (error) {
+    console.error('Erreur lors de la requête au backend:', error);
+    throw error; // Gérer l'erreur de manière appropriée dans votre application
+  }
+}
+
+// Méthode pour lancer calculerSomme avec les valeurs 1 et 2
+const onClickCalculer = async () => {
+  try {
+    const result = await calculerSomme(1, 2);
+    // Faire quelque chose avec le résultat si nécessaire
+    console.log('Résultat du calcul:', result);
+  } catch (error) {
+    // Gérer les erreurs ici
+    console.error('Erreur lors du calcul:', error);
+  }
+};
+
+
+
+
+
+
+
+
 </script>
 
 
@@ -31,7 +69,7 @@ showDepart();
   <div class="container">
 
     <DepartDestination/>
-
+    <button @click="onClickCalculer">Calculer Somme</button>
     <div class="parent">
       <div class="barre"></div>
     </div>
@@ -47,6 +85,8 @@ showDepart();
             :class="{ 'selected-button': selectedTime === 'arrivee' }"
             @click="showArrivee">Arrivée</button>
       </div>
+      <div id="calculer" @click="effectuerCalcul">Calculer la somme de 1 et 2</div>
+
 
 
       <!-- <transition name="fade">
@@ -65,17 +105,15 @@ showDepart();
       <!-- <HeureDepart/> -->
       <!-- <HeureArrivee/> -->
 
-
       <div class="wrapper">
         <div class="link_wrapper">
           <a href="#">Démarrer</a>
           <div class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
-              <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
-            </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+            <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
+          </svg>
           </div>
         </div>
-
       </div>
 
   </div>
