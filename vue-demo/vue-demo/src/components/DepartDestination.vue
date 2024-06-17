@@ -2,6 +2,35 @@
   import { ref, computed } from 'vue';
   import { stations } from "@/stockage/gares";
 
+
+  //Pour la navigation avec boutons
+  const selectedDepartIndex = ref(-1);
+  const selectedArriveeIndex = ref(-1);
+
+
+  function navigateResults(type, direction) {
+    if (type === 'depart') {
+      if (searchResultsDepart.value.length === 0) return;
+      selectedDepartIndex.value = (selectedDepartIndex.value + direction + searchResultsDepart.value.length) % searchResultsDepart.value.length;
+    } else if (type === 'arrivee') {
+      if (searchResultsArrivee.value.length === 0) return;
+      selectedArriveeIndex.value = (selectedArriveeIndex.value + direction + searchResultsArrivee.value.length) % searchResultsArrivee.value.length;
+    }
+  }
+
+  function selectHighlightedResult(type) {
+    if (type === 'depart' && selectedDepartIndex.value !== -1) {
+      selectStation(searchResultsDepart.value[selectedDepartIndex.value], 'depart');
+      selectedDepartIndex.value = -1;
+    } else if (type === 'arrivee' && selectedArriveeIndex.value !== -1) {
+      selectStation(searchResultsArrivee.value[selectedArriveeIndex.value], 'arrivee');
+      selectedArriveeIndex.value = -1;
+    }
+  }
+
+
+
+
   const { searchText: searchTextDepart, searchResults: searchResultsDepart } = useSearch(stations);
   const { searchText: searchTextArrivee, searchResults: searchResultsArrivee } = useSearch(stations);
 
@@ -94,6 +123,9 @@
         v-model="searchTextDepart"
         @focus="isDepartFocused = true"
         @blur="() => setTimeout(() => isDepartFocused = false, 100)"
+        @keydown.down.prevent="navigateResults('depart', 1)"
+        @keydown.up.prevent="navigateResults('depart', -1)"
+        @keydown.enter.prevent="selectHighlightedResult('depart')"
         type="search"
         class="search"
         placeholder="Gare de départ"
@@ -101,10 +133,10 @@
 
     <ul v-if="isDepartFocused && searchResultsDepart.length">
       <li
-          v-for="result in searchResultsDepart"
+          v-for="(result, index) in searchResultsDepart"
           :key="result.name"
           @click="selectStation(result, 'depart')"
-          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length }"
+          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length, 'highlighted': index === selectedDepartIndex }"
       >
         <strong>{{ result.name }}</strong><br>
         <div class="lines-container">
@@ -122,22 +154,26 @@
       </li>
     </ul>
 
+
     <!-- Arrival input -->
     <div class="small-title">À :</div>
     <input
         v-model="searchTextArrivee"
         @focus="isArriveeFocused = true"
         @blur="() => setTimeout(() => isArriveeFocused = false, 100)"
+        @keydown.down.prevent="navigateResults('arrivee', 1)"
+        @keydown.up.prevent="navigateResults('arrivee', -1)"
+        @keydown.enter.prevent="selectHighlightedResult('arrivee')"
         type="search"
         class="search"
         placeholder="Gare d'arrivée"
     />
     <ul v-if="isArriveeFocused && searchResultsArrivee.length">
       <li
-          v-for="result in searchResultsArrivee"
+          v-for="(result, index) in searchResultsArrivee"
           :key="result.name"
           @click="selectStation(result, 'arrivee')"
-          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length }"
+          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length, 'highlighted': index === selectedArriveeIndex }"
       >
         <strong>{{ result.name }}</strong><br>
         <div class="lines-container">
@@ -156,6 +192,9 @@
     </ul>
   </div>
 </template>
+
+
+
 <style scoped>
 .search {
   flex-grow: 1;
@@ -245,5 +284,34 @@ strong{
   height: 4rem; /* Adjust this value as needed */
 }
 
+
+<style scoped>
+ .lines-container {
+   display: flex;
+   flex-direction: column;
+ }
+
+.metro-lines,
+.rer-lines {
+  display: flex;
+}
+
+.logo-line {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  margin-right: 4px;
+}
+
+.double-height {
+  height: 80px; /* Adjust this value as needed */
+}
+
+.highlighted {
+  background-color: #e0e0e0; /* Highlight color */
+  border-radius: 5px;
+}
 </style>
+
+
 
