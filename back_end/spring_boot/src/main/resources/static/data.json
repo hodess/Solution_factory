@@ -1,0 +1,62 @@
+{
+    "metro_paris": {
+      "ligne_7": {
+        "stations": [
+          {
+            "nom": "Porte de Choisy",
+            "coordonnees": {
+              "x": 669,
+              "y": 858
+            }
+          },
+          {
+            "nom": "Porte d'Italie",
+            "coordonnees": {
+              "x": 635,
+              "y": 859
+            }
+          },
+          {
+            "nom": "Maison Blanche",
+            "coordonnees": {
+              "x": 606,
+              "y": 843
+            }
+          },
+          {
+            "nom": "Tolbiac",
+            "coordonnees": {
+              "x": 606,
+              "y": 822
+            }
+          },
+          {
+            "nom": "Place d'Italie",
+            "coordonnees": {
+              "x": 607,
+              "y": 801
+            }
+          }
+        ]
+      },
+      "ligne_6": {
+        "stations": [
+          {
+            "nom": "Place d'Italie",
+            "coordonnees": {
+              "x": 608,
+              "y": 801
+            }
+          },
+          {
+            "nom": "Nationale",
+            "coordonnees": {
+              "x": 645,
+              "y": 802
+            }
+          }
+        ]
+      }
+    }
+  }
+  

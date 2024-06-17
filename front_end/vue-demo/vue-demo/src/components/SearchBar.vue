@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepart from './HeureDepart.vue';
 import HeureArrivee from './HeureArrivee.vue';
+import hello_world from '../components/hello_world.vue';
 
 const selectedTime = ref('depart');
 
@@ -34,6 +35,7 @@ showDepart();
   <div class="container">
 
     <DepartDestination/>
+    <hello_world/>
 
     <div class="parent">
       <div class="barre"></div>
