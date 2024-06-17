@@ -1,6 +1,7 @@
 package com.example.spring_boot;
 
 import model.GareDatabase;
+import model.YenKSP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +15,22 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String sayHello() {
+        logger.info("hello");
         return "hello world!";
     }
 
-    @GetMapping("/gare")
+    @GetMapping("/init")
     public String callGareDatabase() {
-        GareDatabase.main_gare_databse();  // Appel de la méthode principale
-        return "Gare database processed!";
+        logger.info("init");
+        GareDatabase.create_all_class();
+        return "create_all_class() initialized";
+    }
+
+    @GetMapping("/find_gare")
+    public YenKSP.Result find_chemin() {
+        GareDatabase.create_all_class();
+        logger.info("find gare");
+        return GareDatabase.find_chemin_start_end("Gare Montparnasse", "Chatelet");
     }
 
     @GetMapping("/multiply/{num1}/{num2}")

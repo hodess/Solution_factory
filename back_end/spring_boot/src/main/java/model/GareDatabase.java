@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class GareDatabase {
 
+    public static Map<Integer, Line> linesMap = new HashMap<>();
+
     public static void fill_ligne(Statement statement, Map<Integer, Line> linesMap) throws SQLException {
         ResultSet resultSet = statement.executeQuery("SELECT id,name FROM Ligne;");
         while (resultSet.next()) {
@@ -109,17 +111,16 @@ public class GareDatabase {
         return null;
     }
 
-    public static void main_gare_databse() {
+    public static void create_all_class(){
         String name_bdd = "locomotive";
         String url = "jdbc:mysql://localhost:3306/" + name_bdd;
         String user = "root";
         String password = "Romain_09";
 
+        linesMap=fill_all(url, user, password);
+    }
 
-        Map<Integer, Line> linesMap=fill_all(url, user, password);
-
-        String name_start = "Gare Montparnasse";
-        String name_end = "Chatelet";
+    public static YenKSP.Result find_chemin_start_end(String name_start, String name_end) {
 
         List<List<Gare>> gares = YenKSP.findGare(linesMap, name_start, name_end);
         List<Gare> start = gares.get(0);
@@ -127,9 +128,10 @@ public class GareDatabase {
 
         if (start == null || end == null) {
             System.out.println("Gare de départ ou d'arrivée introuvable.");
-            return;
+            return null;
         }
         List<Line> filtreLine = new ArrayList<>();
         YenKSP.affichage(start, end, filtreLine);
+        return YenKSP.ret_yens(start, end, filtreLine);
     }
 }

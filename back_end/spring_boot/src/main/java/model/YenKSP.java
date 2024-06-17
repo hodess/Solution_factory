@@ -3,8 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
 
 public class YenKSP {
     public static class Result {
@@ -196,6 +194,23 @@ public class YenKSP {
         }
 
         return new Result(chemin,temps);
+    }
+
+    public static Result ret_yens(List<Gare> start,List<Gare> end,List<Line> filtreLine){
+
+        int nb_result = 4;
+
+        System.out.println("\nYens\n");
+        System.out.println("Start: " + start + "\nEnd: " + end);
+        if (start != null && end != null) {
+
+            Result result =  YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine);
+            return result;
+
+        }
+        else{
+            return new Result();
+        }
     }
 
     public static void affichage(List<Gare> start,List<Gare> end,List<Line> filtreLine){
