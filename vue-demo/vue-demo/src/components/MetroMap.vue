@@ -10,6 +10,7 @@ export default defineComponent({
     const stations = ref([]);
     const imageBounds = [[0, 0], [952, 987]];
 
+    // recuperer les station d'un .json
     const fetchStations = async () => {
       try {
         const response = await fetch('/data.json');
@@ -52,6 +53,7 @@ export default defineComponent({
       map.fitBounds(imageBounds);
 
       const lineStations = {};
+      const allLatLngs = [];
 
       // ajouter les point a la map
       stations.value.forEach(station => {
@@ -60,8 +62,10 @@ export default defineComponent({
         }
         const latLng = map.unproject([station.x*2, station.y*-2], 1);
         lineStations[station.ligne].push(latLng);
+        allLatLngs.push(latLng);
 
-        let color = 'white'; // ajouter de la couleur au station
+        // ajouter de la couleur au station
+        let color = 'white'; 
         if (station.ligne == 'ligne_6') color = 'green';
         if (station.ligne == 'ligne_7') color = 'pink';
         const marker = L.circleMarker(latLng, {
@@ -78,7 +82,6 @@ export default defineComponent({
         }
       }, 1000);
       
-      console.log(lineStations);
       // Ajouter des lignes entre les stations
       for (const line in lineStations) {
         let color = 'white'; // ajouter de la couleur au ligne
@@ -88,6 +91,16 @@ export default defineComponent({
           color: color,
           weight: 2
         }).addTo(map);
+      }
+
+      // Ajuster le zoom 
+      if (allLatLngs.length) {
+        let bounds = L.latLngBounds(allLatLngs);
+        let southWest = map.project(bounds.getSouthWest(), map.getMaxZoom());
+        southWest.y += 20;
+        const newSouthWest = map.unproject(southWest, map.getMaxZoom());
+        bounds = L.latLngBounds(newSouthWest, bounds.getNorthEast());
+        map.fitBounds(bounds);
       }
     });
 
@@ -105,6 +118,9 @@ export default defineComponent({
 
 
 <style>
+#app{
+  padding: 0;
+}
 .map-container {
   height: 100vh;
   width: 100%;
@@ -114,7 +130,10 @@ export default defineComponent({
   height: 100%;
   width: 100%;
 }
-
+.leaflet-container {
+    background: #000;
+    outline-offset: 1px;
+}
 /* Media queries pour gérer différentes tailles d'écran */
 @media (min-width: 1020px) {
   .map-container {
@@ -122,7 +141,6 @@ export default defineComponent({
     width: 100%;
   }
 }
-
 
 
 </style>
