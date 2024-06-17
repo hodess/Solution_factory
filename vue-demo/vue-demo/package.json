@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "flatpickr": "^4.6.13",
+    "leaflet": "^1.9.4",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },

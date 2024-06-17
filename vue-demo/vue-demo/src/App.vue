@@ -1,21 +1,25 @@
-<script setup>
+<script>
+import MainPage from "@/pages/mainPage.vue";
 
+export default {
+  name: 'App',
+  components: {
+    MainPage,
+  },
+};
 </script>
 
 <template>
   <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
 
 
-nav {
-  width: 100%;
-  font-size: 12px;
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 2rem;
 }
