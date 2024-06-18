@@ -254,14 +254,14 @@ li:last-child {
 }
 
 strong{
-  min-width: 50%;
+  max-width: 60%;
 }
 
 .logo-line {
   background-size: cover;
   background-repeat: no-repeat;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   margin-top: 3px;
   margin-right: 3px;
   margin-bottom: 3px;
@@ -285,26 +285,28 @@ strong{
 }
 
 
-<style scoped>
  .lines-container {
-   display: flex;
+
    flex-direction: column;
  }
 
 .metro-lines,
 .rer-lines {
   display: flex;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .logo-line {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   background-size: cover;
   margin-right: 4px;
+
 }
 
 .double-height {
-  height: 80px; /* Adjust this value as needed */
+  height: fit-content; /* Adjust this value as needed */
 }
 
 .highlighted {
