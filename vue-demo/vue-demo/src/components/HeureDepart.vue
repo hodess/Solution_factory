@@ -90,16 +90,6 @@ const currentTime = ref(getCurrentTime());
       placeholder="Heure"
       :value="currentTime"
   />
-  <!--
-  <div class="small-title">Heure d'arrivée</div>
-  <input
-      ref="timeInput"
-      @input="updateHomeRouteQuery"
-      @keypress.enter="navigateToHomeRoute"
-      type="time"
-      class="search"
-      placeholder="Heure"
-  />-->
   </div>
 
 </template>

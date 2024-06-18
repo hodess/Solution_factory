@@ -20,38 +20,6 @@ const showArrivee = () => {
 // Appel initial pour montrer le composant HeureDepart par défaut
 showDepart();
 
-// Fonction pour envoyer les données au backend
-async function calculerSomme(variable1, variable2) {
-  try {
-    const response = await axios.post('http://localhost:8080/calculer', {
-      variable1: variable1,
-      variable2: variable2
-    });
-    console.log(response.data); // Affiche la réponse du backend dans la console
-    return response.data; // Retourne la réponse du backend si nécessaire
-  } catch (error) {
-    console.error('Erreur lors de la requête au backend:', error);
-    throw error; // Gérer l'erreur de manière appropriée dans votre application
-  }
-}
-
-// Méthode pour lancer calculerSomme avec les valeurs 1 et 2
-const onClickCalculer = async () => {
-  try {
-    const result = await calculerSomme(1, 2);
-    // Faire quelque chose avec le résultat si nécessaire
-    console.log('Résultat du calcul:', result);
-  } catch (error) {
-    // Gérer les erreurs ici
-    console.error('Erreur lors du calcul:', error);
-  }
-};
-
-
-
-
-
-
 
 
 </script>
@@ -62,7 +30,6 @@ const onClickCalculer = async () => {
   <div class="logo-locomotive"/>
   <div class="title-locomotive">Locomotive</div>
   <div class="bloc-right"/>
-
 </header>
 
 <body>
@@ -116,9 +83,10 @@ const onClickCalculer = async () => {
         </div>
       </div>
 
-  </div>
+    </div>
 
   </div>
+
 </body>
 </template>
 
