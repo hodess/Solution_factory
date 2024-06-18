@@ -69,6 +69,7 @@
 
   function getStationLines(lines) {
     const lineMap = {
+      // Metro lines
       'M1': 'src/components/lines/metro-1.png',
       'M2': 'src/components/lines/metro-2.png',
       'M3': 'src/components/lines/metro-3.png',
@@ -83,34 +84,74 @@
       'M12': 'src/components/lines/metro-12.png',
       'M13': 'src/components/lines/metro-13.png',
       'M14': 'src/components/lines/metro-14.png',
+      // RER lines
       'RER A': 'src/components/lines/rer-a.png',
       'RER B': 'src/components/lines/rer-b.png',
       'RER C': 'src/components/lines/rer-c.png',
       'RER D': 'src/components/lines/rer-d.png',
-      'RER E': 'src/components/lines/rer-e.png'
+      'RER E': 'src/components/lines/rer-e.png',
+      // Tram lines
+      'Tram 1': 'src/components/lines/tram-1.png',
+      'Tram 2': 'src/components/lines/tram-2.png',
+      'Tram 3a': 'src/components/lines/tram-3a.png',
+      'Tram 3b': 'src/components/lines/tram-3b.png',
+      'Tram 4': 'src/components/lines/tram-4.png',
+      'Tram 5': 'src/components/lines/tram-5.png',
+      'Tram 6': 'src/components/lines/tram-6.png',
+      'Tram 7': 'src/components/lines/tram-7.png',
+      'Tram 8': 'src/components/lines/tram-8.png',
+      'Tram 9': 'src/components/lines/tram-9.png',
+      'Tram 10': 'src/components/lines/tram-10.png',
+      'Tram 11': 'src/components/lines/tram-11.png',
+      'Tram 12': 'src/components/lines/tram-12.png',
+      'Tram 13': 'src/components/lines/tram-13.png',
+      'Tram 14': 'src/components/lines/tram-14.png',
+      // Transilien lines
+      'transilien H': 'src/components/lines/transilien-h.png',
+      'transilien J': 'src/components/lines/transilien-j.png',
+      'transilien K': 'src/components/lines/transilien-k.png',
+      'transilien L': 'src/components/lines/transilien-l.png',
+      'transilien N': 'src/components/lines/transilien-n.png',
+      'transilien P': 'src/components/lines/transilien-p.png',
+      'transilien R': 'src/components/lines/transilien-r.png',
+      'transilien U': 'src/components/lines/transilien-u.png',
+      'transilien V': 'src/components/lines/transilien-v.png',
+      //logo
+      'Logo Metro' : 'src/components/lines/logo-metro.png',
+      'Logo RER' : 'src/components/lines/logo-RER.png',
+      'Logo tram' : 'src/components/lines/logo-tram.png',
+      'Logo transilien' : 'src/components/lines/logo-transilien.png'
     };
 
     const metroLines = [];
     const rerLines = [];
-    lines.split(', ').map(l => l.trim()).forEach(l => {
-      if (lineMap[l]) {
-        if (l.startsWith('M')) {
-          metroLines.push(lineMap[l]);
-        } else if (l.startsWith('RER')) {
-          rerLines.push(lineMap[l]);
+    const tramLines = [];
+    const transilienLines = [];
+
+    lines.split(', ').forEach(line => {
+      const formattedLine = line.trim();
+      if (lineMap[formattedLine]) {
+        if (formattedLine.startsWith('M')) {
+          metroLines.push(lineMap[formattedLine]);
+        } else if (formattedLine.startsWith('RER')) {
+          rerLines.push(lineMap[formattedLine]);
+        } else if (formattedLine.startsWith('Tram')) {
+          tramLines.push(lineMap[formattedLine]);
+        } else if (formattedLine.startsWith('transilien')) {
+          transilienLines.push(lineMap[formattedLine]);
         }
       } else {
-        console.log(`Image not found for line: ${l}`);
+        console.log(`Image not found for line: ${line}`);
       }
     });
 
     return {
       metroLines,
-      rerLines
+      rerLines,
+      tramLines,
+      transilienLines
     };
   }
-
-
 </script>
 
 <template>
@@ -136,24 +177,42 @@
           v-for="(result, index) in searchResultsDepart"
           :key="result.name"
           @click="selectStation(result, 'depart')"
-          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length, 'highlighted': index === selectedDepartIndex }"
+          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length && getStationLines(result.line).tramLines.length && getStationLines(result.line).transilienLines.length, 'highlighted': index === selectedDepartIndex }"
       >
         <strong>{{ result.name }}</strong><br>
         <div class="lines-container">
           <div class="metro-lines" v-if="getStationLines(result.line).metroLines.length">
-            <template v-for="image in getStationLines(result.line).metroLines">
-              <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-metro.png) `}"></div>
+            <template v-for="line in getStationLines(result.line).metroLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+              <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
             </template>
           </div>
           <div class="rer-lines" v-if="getStationLines(result.line).rerLines.length">
-            <template v-for="image in getStationLines(result.line).rerLines">
-              <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-RER.png) `}"></div>
+            <template v-for="line in getStationLines(result.line).rerLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+              <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
             </template>
           </div>
+          <div class="tram-lines" v-if="getStationLines(result.line).tramLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-tram.png) `}"></div>
+            <template v-for="line in getStationLines(result.line).tramLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+              <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
+            </template>
+          </div>
+          <div class="transilien-lines" v-if="getStationLines(result.line).transilienLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-transilien.png) `}"></div>
+            <template v-for="line in getStationLines(result.line).transilienLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+              <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
+            </template>
+          </div>
+
         </div>
       </li>
     </ul>
-
 
     <!-- Arrival input -->
     <div class="small-title">À :</div>
@@ -173,17 +232,31 @@
           v-for="(result, index) in searchResultsArrivee"
           :key="result.name"
           @click="selectStation(result, 'arrivee')"
-          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length, 'highlighted': index === selectedArriveeIndex }"
+          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length && getStationLines(result.line).tramLines.length && getStationLines(result.line).transilienLines.length, 'highlighted': index === selectedArriveeIndex }"
       >
         <strong>{{ result.name }}</strong><br>
         <div class="lines-container">
           <div class="metro-lines" v-if="getStationLines(result.line).metroLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-metro.png) `}"></div>
             <template v-for="image in getStationLines(result.line).metroLines">
               <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
             </template>
           </div>
           <div class="rer-lines" v-if="getStationLines(result.line).rerLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-RER.png) `}"></div>
             <template v-for="image in getStationLines(result.line).rerLines">
+              <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
+            </template>
+          </div>
+          <div class="tram-lines" v-if="getStationLines(result.line).tramLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-tram.png) `}"></div>
+            <template v-for="image in getStationLines(result.line).tramLines">
+              <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
+            </template>
+          </div>
+          <div class="transilien-lines" v-if="getStationLines(result.line).transilienLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-transilien.png) `}"></div>
+            <template v-for="image in getStationLines(result.line).transilienLines">
               <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
             </template>
           </div>
@@ -273,10 +346,7 @@ strong{
   flex-direction: column;
 }
 
-.metro-lines,
-.rer-lines {
-  display: flex;
-}
+
 
 
 
@@ -291,8 +361,9 @@ strong{
  }
 
 .metro-lines,
+.tram-lines,
+.transilien-lines,
 .rer-lines {
-  display: flex;
   display: flex;
   justify-content: flex-end;
 }

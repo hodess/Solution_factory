@@ -7,8 +7,9 @@ export const stations = [
     { name: 'Villepreux - Les Clayes', address: 'Avenue Henri Barbusse, 78340, Les Clayes-sous-Bois', line: 'RER A' },
     { name: 'Villejuif Léo Lagrange', address: '46, Avenue de Paris, 94800, Villejuif', line: 'M7' },
     { name: 'Mairie des Lilas', address: '46, Avenue de Paris, 94800, Villejuif', line: 'M11' },
-    { name: 'Chatelet - Les Halles', address: '46, Avenue de Paris, 94800, Villejuif', line: 'M1, M4, M7, M11, M14, RER A, RER B, RER D' },
-    { name: 'Gare du Nord', address: '46, Avenue de Paris, 94800, Villejuif', line: 'M4, M5, M7, RER B, RER D, RER E' }
+    { name: 'Cité Universitaire', address: '46, Avenue de Paris, 94800, Villejuif', line: 'RER B, Tram 3a, Tram 3b, transilien N' },
+    { name: 'Chatelet - Les Halles', address: '46, Avenue de Paris, 94800, Villejuif', line: 'M1, M4, M7, M11, M14, RER A, RER B, RER D,  Tram 3a' },
+    { name: 'Gare du Nord', address: '46, Avenue de Paris, 94800, Villejuif', line: 'M4, M5, M7, RER B, RER D, RER E, transilien N' }
 
 ];
 
