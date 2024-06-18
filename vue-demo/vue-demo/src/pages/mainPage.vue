@@ -7,12 +7,23 @@
 <template>
 
   <main>
-    <pathBar/>
-    <MetroMap/>
+    <!--  <div class="div1"><pathBar/></div> -->
+
+    <div class="div2"><MetroMap/></div>
   </main>
 
 </template>
 
 <style scoped>
+  .div1{
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex; /* Utilise flexbox pour le contenu de div1 */
+    z-index: 1000; /* Définit la priorité d'affichage au-dessus de div2 */
+    width: 100%; /* Ajuste la largeur pour occuper toute la largeur de l'écran */
+  }
+  .div2{
 
+  }
 </style>

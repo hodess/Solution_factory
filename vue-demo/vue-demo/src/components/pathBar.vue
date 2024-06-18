@@ -18,7 +18,7 @@
     flex-direction: row;
     height: 20vh;
     width: 100%;
-    background-color: rgb(0, 0, 0);
+    background-color: transparent;
     justify-content: center;
     position: relative;
   }

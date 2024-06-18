@@ -1,147 +1,201 @@
-<script>
-import { defineComponent, onMounted, ref } from 'vue';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
-export default defineComponent({
-  name: 'MetroMap',
-  setup() {
-
-    const stations = ref([]);
-    const imageBounds = [[0, 0], [952, 987]];
-
-    // recuperer les station d'un .json
-    const fetchStations = async () => {
-      try {
-        const response = await fetch('/data.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const parsedStations = [];
-
-        // mettre tout les station dans une liste
-        for (const line in data.metro_paris) {
-          if (data.metro_paris[line].stations) {
-            data.metro_paris[line].stations.forEach(station => {
-              parsedStations.push({
-                ligne:line,
-                name: station.nom,
-                x: station.coordonnees.x,
-                y: 952-station.coordonnees.y
-              });
-            });
-          }
-        }
-
-        stations.value = parsedStations;
-      } catch (error) {
-        console.error('Error fetching stations:', error);
-      }
-    };
-
-    onMounted(async () => {
-      await fetchStations();
-
-      // crée la map
-      const map = L.map('map', {
-        crs: L.CRS.Simple,
-        minZoom: -1,
-      });
-
-      L.imageOverlay('/metro.png', imageBounds).addTo(map);
-      map.fitBounds(imageBounds);
-
-      const lineStations = {};
-      const allLatLngs = [];
-
-      // ajouter les point a la map
-      stations.value.forEach(station => {
-        if (!lineStations[station.ligne]) {
-          lineStations[station.ligne] = [];
-        }
-        const latLng = map.unproject([station.x*2, station.y*-2], 1);
-        lineStations[station.ligne].push(latLng);
-        allLatLngs.push(latLng);
-
-        // ajouter de la couleur au station
-        let color = 'white'; 
-        if (station.ligne == 'ligne_1') color = 'yellow';
-        if (station.ligne == 'ligne_2') color = 'blue';
-        if (station.ligne == 'ligne_3') color = 'green';
-        if (station.ligne == 'ligne_4') color = 'purple';
-        if (station.ligne == 'ligne_5') color = 'orange';
-        if (station.ligne == 'ligne_6') color = 'green';
-        if (station.ligne == 'ligne_7') color = 'pink';
-        const marker = L.circleMarker(latLng, {
-          radius: 5,
-          color: color,
-          fillColor: color,
-          fillOpacity: 1,
-        }).addTo(map);
-        marker.bindPopup(station.name);
-      });
-      
-      // Ajouter des lignes entre les stations
-      for (const line in lineStations) {
-        let color = 'white'; // ajouter de la couleur au ligne
-        if (line == 'ligne_1') color = 'yellow';
-        if (line == 'ligne_2') color = 'blue';
-        if (line == 'ligne_3') color = 'green';
-        if (line == 'ligne_4') color = 'purple';
-        if (line == 'ligne_5') color = 'orange';
-        if (line == 'ligne_6') color = 'green';
-        if (line == 'ligne_7') color = 'pink';
-        L.polyline(lineStations[line], {
-          color: color,
-          weight: 2
-        }).addTo(map);
-      }
-
-      // Ajuster le zoom 
-      if (allLatLngs.length) {
-        let bounds = L.latLngBounds(allLatLngs);
-        map.fitBounds(bounds);
-      }
-    });
-
-    return {};
-  },
-});
-</script>
-
 <template>
-  <div class="map-container">
+  <div>
     <div id="map"></div>
+    <div>
+      <button @click="showAllLines">Afficher toutes les stations</button>
+      <button v-for="(color, line) in lineColors" :key="line" @click="toggleLine(line)">
+        {{ line }}
+      </button>
+      <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
+    </div>
   </div>
 </template>
+<script>
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import data from '/Users/theotime/WebstormProjects/Solution_factory/vue-demo/vue-demo/public/data.json';
+
+export default {
+  name: 'LeafletMap',
+  data() {
+    return {
+      markersLayer: null,
+      linesLayerGroup: null,
+      metroMarkers: [],
+      triangleIcon: null,
+      currentLine: null
+    };
+  },
+  computed: {
+    lineColors() {
+      return {
+        ligne_1: '#FFCD00',     // Jaune
+        ligne_2: '#003CA6',     // Bleu foncé
+        ligne_3: '#837902',     // Vert olive
+        ligne_3bis: '#6EC4E8',  // Bleu ciel
+        ligne_4: '#CF009E',     // Fuchsia
+        ligne_5: '#FF7E2E',     // Orange
+        ligne_6: '#6ECA97',     // Vert clair
+        ligne_7: '#FA9ABA',     // Rose
+        ligne_7bis: '#B5BD00',  // Jaune vert
+        ligne_8: '#E19BDF',     // Lilas
+        ligne_9: '#B6BD00',     // Vert pomme
+        ligne_10: '#C9910D',    // Orange clair
+        ligne_11: '#704B1C',    // Marron
+        ligne_12: '#007852',    // Vert bouteille
+        ligne_13: '#6EC4E8',    // Bleu ciel (identique à la 3bis)
+        ligne_14: '#62259D'     // Violet
+      };
+    }
+  },
+  mounted() {
+    this.initMap();
+    this.createTriangleIcon();
+    this.showAllLines(); // Appel de la méthode pour afficher les triangles noirs par défaut
+  },
+  methods: {
+    initMap() {
+      this.map = L.map('map').setView([48.8566, 2.3522], 13);
+
+      L.tileLayer('https://api.maptiler.com/maps/positron/{z}/{x}/{y}.png?key=kGzEOK5vmVP8dEjh59c5', {
+        attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
+        tileSize: 512,
+        zoomOffset: -1,
+        minZoom: 0,
+        maxZoom: 18,
+        accessToken: 'kGzEOK5vmVP8dEjh59c5'
+      }).addTo(this.map);
+
+      this.linesLayerGroup = L.layerGroup().addTo(this.map);
+      this.markersLayer = L.layerGroup().addTo(this.map);
+
+      this.addMarkersAsTriangles(data.metro_paris);
+    },
+    addMarkersAsTriangles(metroData) {
+      if (!this.triangleIcon) {
+        return; // Si triangleIcon n'est pas encore initialisé, ne rien faire
+      }
+
+      const triangleIcon = this.triangleIcon;
+
+      for (const line in metroData) {
+        const stations = metroData[line].stations;
+        stations.forEach(station => {
+          const { latitude, longitude, nom } = station.coordonnees;
+          const marker = L.marker([latitude, longitude], { icon: triangleIcon })
+              .bindPopup(nom); // Bind popup with station name
+
+          marker.on('click', () => {  // Add click event to open popup
+            marker.openPopup();
+          });
+
+          this.markersLayer.addLayer(marker);
+          this.metroMarkers.push({ line, marker });
+        });
+      }
+    },
 
 
+    addMetroLines(metroData, line) {
+      const lineColor = this.lineColors[line] || 'black';
 
-<style>
-#app{
-  padding: 0;
-}
-.map-container {
-  height: 100vh;
-  width: 100%;
-}
+      for (const lineKey in metroData) {
+        const stations = metroData[lineKey].stations;
+        const polyline = L.polyline(stations.map(station => [station.coordonnees.latitude, station.coordonnees.longitude]), { color: lineColor });
 
-#map {
-  height: 100%;
-  width: 100%;
-}
-.leaflet-container {
-    background: #000;
-    outline-offset: 1px;
-}
-/* Media queries pour gérer différentes tailles d'écran */
-@media (min-width: 1020px) {
-  .map-container {
-    height: 100vh;
-    width: 100%;
+        if (lineKey === line) {
+          this.linesLayerGroup.addLayer(polyline);
+        }
+      }
+    },
+    createTriangleIcon() {
+      this.triangleIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: "<div class='triangle-icon'></div>",
+        iconSize: [10, 10],
+        iconAnchor: [5, 5]
+      });
+    },
+    toggleLine(line) {
+      this.currentLine = line;
+      this.linesLayerGroup.clearLayers();
+      this.markersLayer.clearLayers();
+
+      if (this.currentLine) {
+        this.addMetroLines(data.metro_paris, this.currentLine);
+        this.addMarkersWithColor(data.metro_paris, this.currentLine);
+      } else {
+        this.addMarkersAsTriangles(data.metro_paris);
+      }
+    },
+    addMarkersWithColor(metroData, line) {
+      const lineColor = this.lineColors[line] || 'black';
+
+      for (const lineKey in metroData) {
+        const stations = metroData[lineKey].stations;
+        stations.forEach(station => {
+          const { latitude, longitude, nom } = station.coordonnees;
+          const customIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `<div style="background-color: ${lineColor}" class="marker-point"></div>`,
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+          });
+
+          if (lineKey === line) {
+            const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(nom);
+            this.markersLayer.addLayer(marker);
+            this.metroMarkers.push({ line, marker });
+          }
+        });
+      }
+    },
+    showAllLines() {
+      this.currentLine = null; // Réinitialise la ligne actuelle
+      this.linesLayerGroup.clearLayers(); // Efface toutes les lignes affichées
+      this.markersLayer.clearLayers(); // Efface tous les marqueurs affichés
+
+      this.addMarkersAsTriangles(data.metro_paris); // Réaffiche tous les triangles noirs
+    },
+    showAllMetroLines() {
+      this.currentLine = null; // Réinitialise la ligne actuelle
+      this.linesLayerGroup.clearLayers(); // Efface toutes les lignes affichées
+      this.markersLayer.clearLayers(); // Efface tous les marqueurs affichés
+
+      // Affiche toutes les lignes de métro disponibles
+      for (const line in data.metro_paris) {
+        this.addMetroLines(data.metro_paris, line);
+        this.addMarkersWithColor(data.metro_paris, line); // Ajoute les marqueurs de couleur
+      }
+    }
   }
+};
+</script>
+<style>
+#map {
+  height: 800px;
 }
 
+.marker-point {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: transform 0.2s ease-in-out;
+}
 
+.marker-point:hover {
+  transform: scale(1.8);
+}
+
+.triangle-icon {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid black;
+}
+
+.custom-div-icon {
+  cursor: pointer;
+}
 </style>
