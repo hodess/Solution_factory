@@ -4,6 +4,7 @@ import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepart from './HeureDepart.vue';
 import HeureArrivee from './HeureArrivee.vue';
 import hello_world from '../components/hello_world.vue';
+import chemin from '../components/hello_world copy.vue';
 
 const selectedTime = ref('depart');
 
@@ -36,6 +37,7 @@ showDepart();
 
     <DepartDestination/>
     <hello_world/>
+    <chemin/>
 
     <div class="parent">
       <div class="barre"></div>

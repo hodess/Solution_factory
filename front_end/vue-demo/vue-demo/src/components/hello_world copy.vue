@@ -1,6 +1,8 @@
 <template>
   <div>
-    <button @click="fetchAndLogResult">bouton_hello</button>
+    <input type="text" v-model="start" placeholder="Nom de la gare de départ">
+    <input type="text" v-model="end" placeholder="Nom de la gare d'arrivée">
+    <button @click="fetchAndLogResult">Fetch and Log Result</button>
   </div>
 </template>
 
@@ -8,9 +10,15 @@
 import axios from 'axios';
 
 export default {
+  data() {
+    return {
+      start: '',
+      end: ''
+    };
+  },
   methods: {
     fetchAndLogResult() {
-      axios.get('http://localhost:8081/hello')
+      axios.get(`http://localhost:8081/find_gare?start=${this.start}&end=${this.end}`)
         .then(response => {
           console.log(response.data); // Affiche la réponse dans la console
         })
