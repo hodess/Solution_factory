@@ -66,25 +66,30 @@ export default defineComponent({
 
         // ajouter de la couleur au station
         let color = 'white'; 
+        if (station.ligne == 'ligne_1') color = 'yellow';
+        if (station.ligne == 'ligne_2') color = 'blue';
+        if (station.ligne == 'ligne_3') color = 'green';
+        if (station.ligne == 'ligne_4') color = 'purple';
+        if (station.ligne == 'ligne_5') color = 'orange';
         if (station.ligne == 'ligne_6') color = 'green';
         if (station.ligne == 'ligne_7') color = 'pink';
         const marker = L.circleMarker(latLng, {
-          radius: 4,
+          radius: 5,
           color: color,
+          fillColor: color,
+          fillOpacity: 1,
         }).addTo(map);
         marker.bindPopup(station.name);
       });
-
-      // vérifier que la map se charge
-      setTimeout(() => {
-        if (!map.getBounds()) {
-          console.error('The map did not initialize correctly.');
-        }
-      }, 1000);
       
       // Ajouter des lignes entre les stations
       for (const line in lineStations) {
         let color = 'white'; // ajouter de la couleur au ligne
+        if (line == 'ligne_1') color = 'yellow';
+        if (line == 'ligne_2') color = 'blue';
+        if (line == 'ligne_3') color = 'green';
+        if (line == 'ligne_4') color = 'purple';
+        if (line == 'ligne_5') color = 'orange';
         if (line == 'ligne_6') color = 'green';
         if (line == 'ligne_7') color = 'pink';
         L.polyline(lineStations[line], {
@@ -96,10 +101,6 @@ export default defineComponent({
       // Ajuster le zoom 
       if (allLatLngs.length) {
         let bounds = L.latLngBounds(allLatLngs);
-        let southWest = map.project(bounds.getSouthWest(), map.getMaxZoom());
-        southWest.y += 20;
-        const newSouthWest = map.unproject(southWest, map.getMaxZoom());
-        bounds = L.latLngBounds(newSouthWest, bounds.getNorthEast());
         map.fitBounds(bounds);
       }
     });

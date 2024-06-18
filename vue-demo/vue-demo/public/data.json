@@ -39,12 +39,12 @@
           }
         ]
       },
-      "ligne_6": {
+      "ligne_4": {
         "stations": [
           {
             "nom": "Place d'Italie",
             "coordonnees": {
-              "x": 608,
+              "x": 607,
               "y": 801
             }
           },
