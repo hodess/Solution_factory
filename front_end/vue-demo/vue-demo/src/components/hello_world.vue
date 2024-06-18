@@ -1,9 +1,6 @@
 <template>
   <div>
-    <input type="number" v-model.number="number1" placeholder="Enter first number">
-    <input type="number" v-model.number="number2" placeholder="Enter second number">
-    <button @click="multiplyNumbers">Multiply</button>
-    <h1 class="white-text">Result: {{ result }}</h1>
+    <button @click="fetchAndLogResult">Fetch and Log Result</button>
   </div>
 </template>
 
@@ -11,37 +8,20 @@
 import axios from 'axios';
 
 export default {
-  data() {
-    return {
-      number1: null,
-      number2: null,
-      result: null
-    };
-  },
   methods: {
-    multiplyNumbers() {
-      if (!this.number1 || !this.number2) {
-        alert('Please enter both numbers.');
-        return;
-      }
-      
-      axios.get(`http://localhost:8081/multiply/${this.number1}/${this.number2}`)
+    fetchAndLogResult() {
+      axios.get('http://localhost:8081/gares')
         .then(response => {
-          this.result = response.data;
+          console.log(response.data); // Affiche la réponse dans la console
         })
         .catch(error => {
-          console.error("There was an error!", error);
+          console.error('Error fetching data:', error);
         });
     }
-  },
-  mounted() {
-    // You can optionally perform some initialization here
   }
 };
 </script>
 
 <style scoped>
-.white-text {
-  color: white;
-}
+/* Styles spécifiques au composant si nécessaire */
 </style>
