@@ -10,10 +10,11 @@
     </div>
   </div>
 </template>
+
 <script>
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import data from '/Users/theotime/WebstormProjects/Solution_factory/vue-demo/vue-demo/public/data.json';
+import data from '../../public/data.json';
 
 export default {
   name: 'LeafletMap',

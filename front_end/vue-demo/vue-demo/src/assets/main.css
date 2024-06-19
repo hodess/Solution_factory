@@ -22,7 +22,7 @@ a,
 }
 
 body {
-  /* display: flex; */
+  display: flex;
   place-items: center;
   flex-direction: column;
 }
