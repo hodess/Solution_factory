@@ -1,9 +1,9 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
+  /*max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem;*/
 
   font-weight: normal;
 }
@@ -22,8 +22,9 @@ a,
 }
 
 body {
-  display: flex;
+  /* display: flex; */
   place-items: center;
+  flex-direction: column;
 }
 
 #app {
@@ -34,10 +35,6 @@ body {
 }
 
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
 
   #app {
     grid-template-columns: 1fr 1fr;
