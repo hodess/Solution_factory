@@ -1,12 +1,15 @@
 <script setup>
   import location from "@/components/location.vue";
   import paths from "@/components/paths.vue";
+  import DepartDestination from "@/components/DepartDestination.vue";
+  import SearchBar from "@/components/SearchBar.vue";
 
 </script>
 
 <template>
   <div id = 'all_nav_components'>
-    <location />
+    <div class="left-component"><SearchBar/></div>
+    <!-- <location /> -->
     <div id="separate" />
     <paths />
   </div>
@@ -24,6 +27,10 @@
   }
 
   #separate{
-    width: 30%;
+  flex-grow: 1;
+  }
+
+  .left-component{
+    margin-top: 1rem;
   }
 </style>

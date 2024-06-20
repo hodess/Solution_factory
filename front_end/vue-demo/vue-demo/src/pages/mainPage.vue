@@ -7,7 +7,7 @@
 <template>
 
   <main>
-    <!--  <div class="div1"><pathBar/></div> -->
+    <div class="div1"><pathBar/></div>
 
     <div class="div2"><MetroMap/></div>
   </main>
