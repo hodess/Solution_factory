@@ -7,6 +7,7 @@
         {{ line }}
       </button>
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
+      <hello_world/>
     </div>
   </div>
 </template>
@@ -15,9 +16,12 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import data from '../../public/data.json';
+import hello_world from "@/components/hello_world.vue";
+import Hello_world from "@/components/hello_world.vue";
 
 export default {
   name: 'LeafletMap',
+  components: {Hello_world},
   data() {
     return {
       markersLayer: null,
@@ -193,7 +197,7 @@ export default {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-bottom: 10px solid black;
+  border-bottom: 10px solid grey;
 }
 
 .custom-div-icon {
