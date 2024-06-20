@@ -27,10 +27,10 @@
   }
 
   #separate{
-  flex-grow: 1;
+    flex-grow: 1;
   }
 
   .left-component{
-    margin-top: 1rem;
+    padding: 1rem;
   }
 </style>

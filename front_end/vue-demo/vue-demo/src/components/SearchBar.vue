@@ -71,7 +71,6 @@
       box-shadow: 0 2px 4px var( --vt-c-black);
       z-index: 1;
       height: fit-content;
-      margin-left: 1rem;
     }
 
     .Back {
