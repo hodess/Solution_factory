@@ -113,6 +113,7 @@ export default {
     },
     addMetroLines(metroData, line) {
       const lineColor = this.lineColors[line] || 'black';
+      let bounds = [];
 
       for (const lineKey in metroData) {
         const stations = metroData[lineKey].stations;
@@ -120,8 +121,11 @@ export default {
 
         if (lineKey === line) {
           this.linesLayerGroup.addLayer(polyline);
+          bounds = polyline.getBounds();
         }
       }
+
+      return bounds;
     },
     createTriangleIcon() {
       this.triangleIcon = L.divIcon({
@@ -137,12 +141,14 @@ export default {
       this.markersLayer.clearLayers();
 
       if (this.currentLine) {
-        this.addMetroLines(data.metro_paris, this.currentLine);
+        const bounds = this.addMetroLines(data.metro_paris, this.currentLine);
         this.addMarkersWithColor(data.metro_paris, this.currentLine);
+        this.zoomToBounds(bounds);
       } else {
         this.addMarkersAsTriangles(data.metro_paris);
       }
     },
+
     addMarkersWithColor(metroData, line) {
       const lineColor = this.lineColors[line] || 'black';
 
@@ -189,6 +195,11 @@ export default {
         this.toggleLine(line);
       } else {
         this.showAllLines();
+      }
+    },
+    zoomToBounds(bounds) {
+      if (bounds && bounds.isValid && bounds.isValid()) {
+        this.map.fitBounds(bounds);
       }
     }
   }
