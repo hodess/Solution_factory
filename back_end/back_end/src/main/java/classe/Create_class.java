@@ -1,23 +1,24 @@
 package classe;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class Create_class {
 
     public static Map<Integer, Line> linesMap = new HashMap<>();
 
     public static void fill_ligne(Statement statement, Map<Integer, Line> linesMap) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT id,name FROM Ligne;");
+        ResultSet resultSet = statement.executeQuery("SELECT id, name FROM Ligne;");
         while (resultSet.next()) {
-            int id  = resultSet.getInt("id");
+            int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             linesMap.put(id, new Line(name));
         }
@@ -25,32 +26,33 @@ public class Create_class {
     }
 
     public static void fill_gare(Statement statement, Map<Integer, Line> linesMap) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT id,name,id_ligne,x,y FROM gare;");
+        ResultSet resultSet = statement.executeQuery("SELECT id, name, id_ligne, x, y FROM gare;");
         while (resultSet.next()) {
-            int id  = resultSet.getInt("id");
+            int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             int id_ligne = resultSet.getInt("id_ligne");
             int x = resultSet.getInt("x");
             int y = resultSet.getInt("y");
-            new Gare(id,name,linesMap.get(id_ligne),x,y);
+            new Gare(id, name, linesMap.get(id_ligne), x, y);
         }
         resultSet.close();
     }
 
     public static void fill_voie(Statement statement, Map<Integer, Line> linesMap) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT c.id_Gare1, c.id_Gare2, temps,bidirectionnel,id_ligne FROM contient c, voie v where v.id=c.id_Voie and v.id_ligne!=0;");
+        ResultSet resultSet = statement.executeQuery("SELECT c.id_Gare1, c.id_Gare2, temps, bidirectionnel, id_ligne FROM contient c, voie v WHERE v.id = c.id_Voie AND v.id_ligne != 0;");
         while (resultSet.next()) {
-            int id_Gare1  = resultSet.getInt("id_Gare1");
-            int id_Gare2  = resultSet.getInt("id_Gare2");
-            int temps  = resultSet.getInt("temps");
-            int bidirectionnel  = resultSet.getInt("bidirectionnel");
-            int id_1  = resultSet.getInt("id_ligne");
+            int id_Gare1 = resultSet.getInt("id_Gare1");
+            int id_Gare2 = resultSet.getInt("id_Gare2");
+            int temps = resultSet.getInt("temps");
+            int bidirectionnel = resultSet.getInt("bidirectionnel");
+            int id_1 = resultSet.getInt("id_ligne");
             Line line_for_voie = linesMap.get(id_1);
-            Gare gare1= line_for_voie.findGare_with_id(id_Gare1);
-            Gare gare2= line_for_voie.findGare_with_id(id_Gare2);
-            new Voie(gare1,gare2,line_for_voie,temps,bidirectionnel);
+            Gare gare1 = line_for_voie.findGare_with_id(id_Gare1);
+            Gare gare2 = line_for_voie.findGare_with_id(id_Gare2);
+            new Voie(gare1, gare2, line_for_voie, temps, bidirectionnel);
         }
         resultSet.close();
+
         String query = "SELECT " +
                 "c.id_Gare1, g1.id_ligne AS id_Ligne_Gare1, " +
                 "c.id_Gare2, g2.id_ligne AS id_Ligne_Gare2, " +
@@ -74,11 +76,11 @@ public class Create_class {
             int idLigneVoie = resultSet.getInt("id_Ligne_Voie");
 
             Line line_for_gare1 = linesMap.get(idLigneGare1);
-            Gare gare1= line_for_gare1.findGare_with_id(idGare1);
+            Gare gare1 = line_for_gare1.findGare_with_id(idGare1);
             Line line_for_gare2 = linesMap.get(idLigneGare2);
-            Gare gare2= line_for_gare2.findGare_with_id(idGare2);
+            Gare gare2 = line_for_gare2.findGare_with_id(idGare2);
             Line line_for_voie = linesMap.get(idLigneVoie);
-            new Voie(gare1,gare2,line_for_voie,temps,bidirectionnel);
+            new Voie(gare1, gare2, line_for_voie, temps, bidirectionnel);
         }
     }
 
@@ -113,13 +115,27 @@ public class Create_class {
         return null;
     }
 
-    public static void create_all_class(){
-        String name_bdd = "locomotive";
-        String url = "jdbc:mysql://localhost:3306/" + name_bdd;
-        String user = "root";
-        String password = "Romain_09";
+    public static void create_all_class() {
+        Properties properties = new Properties();
+        try (InputStream input = Create_class.class.getClassLoader().getResourceAsStream("application.properties")) {
+            if (input == null) {
+                System.out.println("Sorry, unable to find application.properties");
+                return;
+            }
 
-        linesMap=fill_all(url, user, password);
-        Fonction.setLinesMap(linesMap);
+            // load a properties file from class path, inside static method
+            properties.load(input);
+
+            // get the property value and print it out
+            String url = properties.getProperty("spring.datasource.url");
+            String user = properties.getProperty("spring.datasource.username");
+            String password = properties.getProperty("spring.datasource.password");
+
+            linesMap = fill_all(url, user, password);
+            Fonction.setLinesMap(linesMap);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
