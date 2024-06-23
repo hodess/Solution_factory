@@ -280,8 +280,7 @@
   color: var(--vt-c-black);
   align-items: center;
   width: 20rem;
-
-  border: 2px solid white; /* Bordure de 5px de couleur #ff5733 */
+  border: 1px solid #000000;
 
 }
 
