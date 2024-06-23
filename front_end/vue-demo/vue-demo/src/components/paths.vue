@@ -1,19 +1,34 @@
 <template>
   <div class="container">
     <div class="glass-effect">
-      <div class="heure">
-        <div class="hda">{{ formatHeureDepart }} - {{ formatHeureArrivee }}</div>
-        <div class="duree">{{ tempsEnMinutes() }} min</div>
-      </div>
-      <div class="trajet">
-        <div v-for="(ligne, index) in lignes" :key="index" class="lignes">
-          <img src="../components/icons/arrow.png" alt="Arrow Image" class="fleche" />
-          <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
+      <!-- Utilisation de v-for pour itérer sur chaque station -->
+      <div v-for="(station, stationIndex) in stations" :key="stationIndex" class="chemin">
+        <div class="heure">
+          <!-- Utilisation de méthodes pour obtenir l'heure de départ et d'arrivée spécifiques à chaque chemin -->
+          <div class="hda">{{ getHeureDepart(station) }} - {{ getHeureArrivee(station) }}</div>
+          <!-- Appel à la méthode tempsEnMinutes pour calculer la durée spécifique à chaque chemin -->
+          <div class="duree">{{ tempsEnMinutes(station) }} min</div>
         </div>
+        <div class="trajet">
+          <!-- Utilisation de méthodes pour obtenir les lignes spécifiques à chaque chemin -->
+          <template v-for="(ligne, index) in getLignes(station)" :key="index">
+            <div class="lignes">
+              <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
+              <!-- Vérifier si ce n'est pas la dernière itération -->
+              <img v-if="index < getLignes(station).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
+            </div>
+          </template>
+        </div>
+        <!-- Afficher le diviseur sauf si c'est le dernier élément -->
+        <div v-if="stationIndex < stations.length - 1" class="divider"></div>
       </div>
     </div>
   </div>
 </template>
+
+
+
+
 
 <script>
 import { ref } from "vue";
@@ -51,7 +66,7 @@ export default {
     const formatHeureArrivee = ref('');
 
     // Fonction pour calculer le temps total en minutes
-    const tempsEnMinutes = () => {
+    /*const tempsEnMinutes = () => {
       let total = 0;
       stations.forEach(station => {
         if (station.chemins) {
@@ -63,7 +78,19 @@ export default {
         }
       });
       return Math.round(total / 60);
-    };
+    };*/
+      // Fonction pour calculer le temps total en minutes pour un chemin spécifique
+      const tempsEnMinutes = (station) => {
+        let total = 0;
+        if (station && station.chemins) {
+          station.chemins.forEach(chemin => {
+            chemin.forEach(segment => {
+              total += segment.temps;
+            });
+          });
+        }
+        return Math.round(total / 60);
+      };
 
     // Fonction pour récupérer les noms des lignes
     const recupererNomsLignes = () => {
@@ -108,12 +135,47 @@ export default {
       return lineMap[ligne] || '';
     }
 
+    // Fonction pour obtenir l'heure de départ pour un chemin spécifique
+    const getHeureDepart = () => {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    };
+
+    // Fonction pour obtenir l'heure d'arrivée pour un chemin spécifique
+    const getHeureArrivee = (station) => {
+      const now = new Date();
+      const timeInMinutes = tempsEnMinutes(station);
+      now.setMinutes(now.getMinutes() + timeInMinutes);
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    };
+    // Fonction pour récupérer les noms des lignes pour un chemin spécifique
+    const getLignes = (station) => {
+      const lignes = [];
+      if (station && station.chemins) {
+        station.chemins.forEach(chemin => {
+          chemin.forEach(segment => {
+            Object.keys(segment).forEach(key => {
+              if (key !== 'temps') {
+                lignes.push(key);
+              }
+            });
+          });
+        });
+      }
+      return lignes;
+    };
+
     return {
+      stations,
       tempsEnMinutes,
-      lignes,
+      getLignes,
       getLineImage,
-      formatHeureDepart,
-      formatHeureArrivee
+      getHeureDepart,
+      getHeureArrivee
     };
   }
 };
@@ -134,7 +196,7 @@ export default {
 
 .glass-effect {
   border-radius: 15px;
-  padding: 2rem;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -145,13 +207,13 @@ export default {
 }
 
 .trajet {
+  padding: 1rem;
   width: fit-content;
-  height: 10vh;
+  height: fit-content;
   border-width: 2px;
-  background-color: rgba(234, 165, 165, 0.62);
+  background-color: rgb(252, 193, 193, 0.5);
   margin-bottom: 1rem;
   margin-top: 1rem;
-  padding-right: 1rem;
   border-color: black;
   border-radius: 1rem;
   display: flex;
@@ -176,7 +238,6 @@ img {
 
 .fleche {
   filter: invert(1);
-  transform: rotate(-90deg);
   width: 1rem;
   height: 1rem;
   margin-left: 1rem;
@@ -185,7 +246,6 @@ img {
 
 .heure {
   font-weight: bold;
-  padding: 0.4rem;
   display: flex; /* Utilisation de Flexbox pour le conteneur */
   justify-content: space-between;
 }
@@ -194,5 +254,13 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.divider{
+width: 100%; /* Largeur de la barre */
+  height: 2px; /* Hauteur de la barre */
+  background-color: white; /* Couleur de la barre */
+  margin: 20px 0; /* Marge autour de la barre */
+
 }
 </style>
