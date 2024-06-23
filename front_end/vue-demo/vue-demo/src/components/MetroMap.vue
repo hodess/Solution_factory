@@ -86,21 +86,21 @@ export default {
       this.linesLayerGroup = L.layerGroup().addTo(this.map);
       this.markersLayer = L.layerGroup().addTo(this.map);
 
-      this.addMarkersAsTriangles(data.metro_paris);
+      this.addMarkersAsCircles(data.metro_paris);
     },
-    addMarkersAsTriangles(metroData) {
-      if (!this.triangleIcon) {
-        return; // Si triangleIcon n'est pas encore initialisé, ne rien faire
-      }
-
-      const triangleIcon = this.triangleIcon;
-
+    addMarkersAsCircles(metroData) {
       for (const line in metroData) {
         const stations = metroData[line].stations;
         stations.forEach(station => {
           const { latitude, longitude, nom } = station.coordonnees;
-          const marker = L.marker([latitude, longitude], { icon: triangleIcon })
-              .bindPopup(nom); // Bind popup with station name
+          const marker = L.circleMarker([latitude, longitude], {
+            radius: 5,
+            fillColor: 'Grey',
+            color: 'grey',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 1
+          }).bindPopup(nom); // Bind popup with station name
 
           marker.on('click', () => {  // Add click event to open popup
             marker.openPopup();
@@ -110,8 +110,7 @@ export default {
           this.metroMarkers.push({ line, marker });
         });
       }
-    },
-    addMetroLines(metroData, line) {
+    },    addMetroLines(metroData, line) {
       const lineColor = this.lineColors[line] || 'black';
       let bounds = [];
 
@@ -156,15 +155,16 @@ export default {
         const stations = metroData[lineKey].stations;
         stations.forEach(station => {
           const { latitude, longitude, nom } = station.coordonnees;
-          const customIcon = L.divIcon({
-            className: 'custom-div-icon',
-            html: `<div style="background-color: ${lineColor}" class="marker-point"></div>`,
-            iconSize: [12, 12],
-            iconAnchor: [6, 6]
-          });
+          const marker = L.circleMarker([latitude, longitude], {
+            radius: 6,
+            fillColor: lineColor,
+            color: lineColor,
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 1
+          }).bindPopup(nom);
 
           if (lineKey === line) {
-            const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(nom);
             this.markersLayer.addLayer(marker);
             this.metroMarkers.push({ line, marker });
           }
@@ -176,7 +176,7 @@ export default {
       this.linesLayerGroup.clearLayers(); // Efface toutes les lignes affichées
       this.markersLayer.clearLayers(); // Efface tous les marqueurs affichés
 
-      this.addMarkersAsTriangles(data.metro_paris); // Réaffiche tous les triangles noirs
+      this.addMarkersAsCircles(data.metro_paris); // Réaffiche tous les ronds noirs
     },
     showAllMetroLines() {
       this.currentLine = null; // Réinitialise la ligne actuelle
@@ -190,22 +190,20 @@ export default {
       }
     },
     selectLine(line) {
-      this.selectedLine = line;
-      if (line) {
-        this.toggleLine(line);
+      if (this.currentLine === line) {
+        this.showAllLines(); // Si la ligne est déjà sélectionnée, afficher toutes les stations
       } else {
-        this.showAllLines();
+        this.toggleLine(line); // Sinon, afficher la ligne sélectionnée
       }
     },
     zoomToBounds(bounds) {
       if (bounds && bounds.isValid && bounds.isValid()) {
-        this.map.fitBounds(bounds);
+        this.map.fitBounds(bounds, { paddingTopLeft: [window.innerWidth * 0.2, 0] });
       }
     }
   }
 };
 </script>
-
 
 <template>
   <div>
@@ -222,14 +220,10 @@ export default {
     <div>
       <button @click="showAllLines">Afficher toutes les stations</button>
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
-
-
-
       <hello_world/>
     </div>
   </div>
 </template>
-
 
 
 <style>
