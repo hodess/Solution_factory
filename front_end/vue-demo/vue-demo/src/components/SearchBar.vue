@@ -1,4 +1,4 @@
-  <script setup>
+<script setup>
   import { ref } from 'vue';
   import DepartDestination from "@/components/DepartDestination.vue";
   import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
@@ -35,23 +35,28 @@
 
   <template>
     <div class="container">
-      <DepartDestination/>
-      <div class="dropdown-button-container">
-        <div class="dropdown-button-container-sticky">
-          <div class="dropdown-button-text">Quand :</div>
-          <button  ref="dropdownButton" @click="handleClick" class="dropdown-button"></button>
+      <div class="glass-effect">
+        <div class="title-trip-wrapper">
+          <div class="title-trip">Où voulez-vous aller ?</div>
         </div>
-      </div>
-      <transition name="fade">
-        <HeureDepartArrivee v-if="showHeureDepartArrivee"/>
-      </transition>
-      <div class="wrapper">
-        <div class="link_wrapper">
-          <a class="green-button" href="#">Démarrer</a>
-          <div class="icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
-            <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
-          </svg>
+        <DepartDestination/>
+        <div class="dropdown-button-container">
+          <div class="dropdown-button-container-sticky">
+            <div class="dropdown-button-text">Quand :</div>
+            <button  ref="dropdownButton" @click="handleClick" class="dropdown-button"></button>
+          </div>
+        </div>
+        <transition name="fade">
+          <HeureDepartArrivee v-if="showHeureDepartArrivee"/>
+        </transition>
+        <div class="wrapper">
+          <div class="link_wrapper">
+            <a class="green-button" href="#">Démarrer</a>
+            <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+              <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
+            </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -65,35 +70,58 @@
       flex-direction: column;
       align-items: center;
       border-radius: 15px;
+      /*
       background-color: var(--vt-c-container-color) ;
-      padding: 2rem;
+      background-color: rgba(255, 137, 0, 0.62);
+      background-color: rgba(106, 156, 245, 0.89);
+      background: #6a9cf5;*/
+
       width: fit-content;
-      box-shadow: 0 2px 4px var( --vt-c-black);
       z-index: 1;
       height: fit-content;
+
+      margin: 0;
+      justify-content: center;
+      background: linear-gradient(135deg, rgb(40, 123, 255, 0.6), rgba(4, 7, 90, 0.78));
+/*
+      background-color: linear-gradient(135deg, #00b4db, #0083b0);
+      background-color: rgb(40, 123, 255, 0.1);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgb(255, 255, 255);
+      color: rgba(255, 137, 0, 0.74);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);*/
+
     }
 
-    .Back {
-      flex-direction: column;
+
+
+    .glass-effect{
+      border-radius: 15px;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 1);
       align-items: center;
-      flex: 0 0 30%;
-      height: 90vh;
-      z-index: 5;
-      color: var( --vt-c-black);
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
+
 
 
 
     .dropdown-button {
       padding: 1.2rem 1.2rem;
-      background-color: rgb(255, 102, 102);
+      background-color: rgb(255, 255, 255);
       color: white;
-      border-radius: 15px;
+      border-radius: 2rem;
       border-width: 0;
       background-image: url("../assets/fleche-vers-le-bas.png");
       background-position: center;
       background-size: 1.2rem;
       background-repeat: no-repeat;
+      filter: invert(1);
       height: 1rem;
       width: 1rem;
       margin-top: -0.5rem;
@@ -151,12 +179,10 @@
       width: 250px;
       height: 50px;
       line-height: 50px;
-      font-weight: bold;
       text-decoration: none;
-      background: #6a9cf5;
+      background: rgb(124, 164, 236);
       text-align: center;
       color: #ffffff;
-      text-transform: uppercase;
       letter-spacing: 1px;
       border: 1px solid;
       transition: all .35s;
@@ -197,6 +223,22 @@
       right: -25%;
     }
 
+
+    .title-trip {
+      color: white;
+      font-size: 1.2rem;
+      border-bottom: black;
+      border-bottom: 1px;
+      border-radius: 1px;
+    }
+
+    .title-trip-wrapper{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
 
 
   </style>

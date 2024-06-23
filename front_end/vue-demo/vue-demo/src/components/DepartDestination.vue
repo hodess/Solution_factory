@@ -156,10 +156,9 @@
 
 <template>
   <div class="block_input">
-    <div class="title-trip">Où voulez-vous aller ?</div>
 
     <!-- Departure input -->
-    <div class="small-title">De :</div>
+    <!-- <div class="small-title">De :</div> -->
     <input
         v-model="searchTextDepart"
         @focus="isDepartFocused = true"
@@ -215,7 +214,7 @@
     </ul>
 
     <!-- Arrival input -->
-    <div class="small-title">À :</div>
+    <!-- <div class="small-title">À :</div> -->
     <input
         v-model="searchTextArrivee"
         @focus="isArriveeFocused = true"
@@ -281,7 +280,9 @@
   color: var(--vt-c-black);
   align-items: center;
   width: 20rem;
-  border-width: 0;
+
+  border: 2px solid white; /* Bordure de 5px de couleur #ff5733 */
+
 }
 
 .block_input {
@@ -292,10 +293,7 @@
   margin-bottom: 2rem;
 }
 
-.title-trip {
-  color: #f8f8f8;
-  font-size: 1.2rem;
-}
+
 
 .small-title {
   margin-top: 1rem;

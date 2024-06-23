@@ -60,7 +60,7 @@ showDepart();
   flex-direction: column;
   align-items: center;
   flex: 0 0 30%;
-  height: 90vh;
+  height: fit-content;
   z-index: 5;
   color: var( --vt-c-black);
 }
