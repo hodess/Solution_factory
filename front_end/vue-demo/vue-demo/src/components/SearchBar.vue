@@ -1,108 +1,68 @@
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import axios from 'axios'; // Assurez-vous d'importer axios si ce n'est pas déjà fait
 
-  // Vos imports de composants ici
+<script setup>
+  import { ref } from 'vue';
   import DepartDestination from "@/components/DepartDestination.vue";
-  import HeureDepart from './HeureDepart.vue';
-  import HeureArrivee from './HeureArrivee.vue';
+  import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
 
-  const svgElementRef = ref(null);
-
-  let Depart = ref(DepartDestination.searchTextDepart);
-  let Arrivee = ref(DepartDestination.searchTextArrive);
-
-  onMounted(() => {
-  if (svgElementRef.value) {
-    svgElementRef.value.addEventListener("click", function() {
-      console.log(DepartDestination)
-      console.log(Depart.value);
-      console.log(Arrivee);
-
-    });
-  }
-});
-
-
-  const selectedTime = ref('depart');
-
-  const showDepart = () => {
-    selectedTime.value = 'depart';
+  const dropdownButton = ref(null);
+  const handleClick = () => {
+    toggleHeureDepartArrivee();
+    rotateButton();
   };
 
-  const showArrivee = () => {
-    selectedTime.value = 'arrivee';
+  const showHeureDepartArrivee = ref(false);
+  const toggleHeureDepartArrivee = () => {
+    showHeureDepartArrivee.value = !showHeureDepartArrivee.value;
   };
 
-  // Appel initial pour montrer le composant HeureDepart par défaut
-  showDepart();
+  const rotateButton = () => {
+    if (dropdownButton.value) {
+      // Définir la transition CSS
+      dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
 
-
+      if (!dropdownButton.value.classList.contains('rotated')) {
+        // Si le bouton n'est pas déjà tourné, le tourner
+        dropdownButton.value.style.transform = 'rotate(180deg)';
+        dropdownButton.value.classList.add('rotated');
+      } else {
+        // Sinon, le remettre à sa position d'origine
+        dropdownButton.value.style.transform = '';
+        dropdownButton.value.classList.remove('rotated');
+      }
+    }
+  };
 
   </script>
 
 
   <template>
-  <header class="navbar">
-    <div class="logo-locomotive"/>
-    <div class="title-locomotive">Locomotive</div>
-    <div class="bloc-right"/>
-  </header>
-
-  <body>
     <div class="container">
-
-      <DepartDestination/>
-      <div class="parent">
-        <div class="barre"></div>
-      </div>
-      <div class="Back">
-        <!-- <div class="title-trip">Heure du trajet</div> -->
-        <div class="button-date-div">
-          <button
-              class="date-button"
-              :class="{ 'selected-button': selectedTime === 'depart' }"
-              @click="showDepart">Départ</button>
-          <button
-              class="date-button"
-              :class="{ 'selected-button': selectedTime === 'arrivee' }"
-              @click="showArrivee">Arrivée</button>
+      <div class="glass-effect">
+        <div class="title-trip-wrapper">
+          <div class="title-trip">Où voulez-vous aller ?</div>
         </div>
-
-
-
-        <!-- <transition name="fade">
-          <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/>
-        </transition> -->
-
-        <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/>
-
-        <!-- <transition name="fade" mode="out-in">
-          <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/>
+        <DepartDestination/>
+        <div class="dropdown-button-container">
+          <div class="dropdown-button-container-sticky">
+            <div class="dropdown-button-text">Quand :</div>
+            <button  ref="dropdownButton" @click="handleClick" class="dropdown-button"></button>
+          </div>
+        </div>
+        <transition name="fade">
+          <HeureDepartArrivee v-if="showHeureDepartArrivee"/>
         </transition>
-        -->
-        <!--  <component :is="selectedTime === 'depart' ? HeureDepart : HeureArrivee"/> -->
-
-
-        <!-- <HeureDepart/> -->
-        <!-- <HeureArrivee/> -->
-
         <div class="wrapper">
-          <div class="link_wrapper" ref="svgElementRef" id="mySVG">
-            <a href="#" ref="svgElementRef" id="mySVG">Démarrer</a>
+          <div class="link_wrapper">
+            <a class="green-button" href="#">Démarrer</a>
             <div class="icon">
-            <svg   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
               <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
             </svg>
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
-
-  </body>
   </template>
 
 
@@ -112,80 +72,91 @@
       flex-direction: column;
       align-items: center;
       border-radius: 15px;
+      /*
       background-color: var(--vt-c-container-color) ;
-      padding: 2rem;
-      margin-top: 10rem;
+      background-color: rgba(255, 137, 0, 0.62);
+      background-color: rgba(106, 156, 245, 0.89);
+      background: #6a9cf5;*/
+
       width: fit-content;
-      box-shadow: 0 2px 4px var( --vt-c-black);
       z-index: 1;
+      height: fit-content;
+
+      margin: 0;
+      justify-content: center;
+      background: linear-gradient(135deg, rgb(40, 123, 255, 0.6), rgba(4, 7, 90, 0.78));
+/*
+      background-color: linear-gradient(135deg, #00b4db, #0083b0);
+      background-color: rgb(40, 123, 255, 0.1);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgb(255, 255, 255);
+      color: rgba(255, 137, 0, 0.74);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);*/
+
     }
 
-    .Back {
-      flex-direction: column;
+
+
+    .glass-effect{
+      border-radius: 15px;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 1);
       align-items: center;
-      flex: 0 0 30%;
-      height: 90vh;
-      z-index: 5;
-      color: var( --vt-c-black);
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
 
 
 
 
-
-    button {
-      background-color: var(--vt-c-white);
-      color: var( --vt-c-black);
-      padding: 1rem 2rem;
+    .dropdown-button {
+      padding: 1.2rem 1.2rem;
+      background-color: rgb(255, 255, 255);
+      color: white;
       border-radius: 2rem;
-      margin-top: 1rem;
-      font-size: 1.5rem;
+      border-width: 0;
+      background-image: url("../assets/fleche-vers-le-bas.png");
+      background-position: center;
+      background-size: 1.2rem;
+      background-repeat: no-repeat;
+      filter: invert(1);
+      height: 1rem;
+      width: 1rem;
+      margin-top: -0.5rem;
+      transition: transform 0.3s, background-color 0.3s;
+      margin-left: 1rem;
+    }
+    .dropdown-button:hover {
+      transform: scale(1.05);
     }
 
-    .navbar {
-      background-color: var(--vt-c-navbar-color);
-      color: var(--vt-c-white);
-      padding: 1rem;
-      left: 0;
-      top: 3.5vh;
-      transform: translateY(-50%);
-      align-items: center;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      position: fixed;
+
+    .dropdown-button-text{
+      color: white;
+    }
+
+    .dropdown-button-container{
+      right: 0;
       display: flex;
       width: 100%;
-      box-shadow: 0 2px 4px var( --vt-c-black);
-      z-index: 3;
-    }
-    .logo-locomotive{
-      background-image: url("@/assets/logo-locomotive.png");
-      background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
-      background-position: center;
-      z-index: -0.5;
-      border-radius: 15px;
-      height: 5rem;
-      width: 5rem;
-      margin-top: 3rem
-    }
-    .bloc-right{
-      height: 5rem;
-      width: 5rem;
-      margin-top: 3rem
+      align-items: center;
+      position: relative;
+      height: 2.5rem; /* Par exemple, pour illustrer la hauteur */
     }
 
-    .title-locomotive {
-      margin-top: 3rem;
-      font-size: 1.8rem;
-      flex: 1;
+    .dropdown-button-container-sticky{
+      display: flex;
+      position: absolute;
+      top: 0;
+      right: 0;
     }
 
 
-    .title-trip{
-      color: #f8f8f8;
-      font-size: 1.2rem;
-    }
+
     body{
       font-family: 'Lato', sans-serif;
     }
@@ -197,27 +168,28 @@
       position: relative;
       top: 90%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%);
+
 
     }
 
     .link_wrapper{
       position: relative;
+      margin-right: 2.75rem;
     }
 
-    a{
+    .green-button{
+
       display: block;
       width: 250px;
       height: 50px;
       line-height: 50px;
-      font-weight: bold;
       text-decoration: none;
-      background: #6a9cf5;
+      background: rgb(124, 164, 236);
       text-align: center;
       color: #ffffff;
-      text-transform: uppercase;
       letter-spacing: 1px;
-      border: 3px solid;
+      border: 1px solid;
       transition: all .35s;
       border-radius: 15px;
     }
@@ -244,79 +216,35 @@
       transition: all .35s;
     }
 
-    a:hover{
+    .green-button:hover{
       width: 200px;
       border: 3px solid #2ecc71;
       background: transparent;
       color: #2ecc71;
     }
 
-    a:hover + .icon{
+    .green-button:hover + .icon{
       border: 3px solid #2ecc71;
       right: -25%;
     }
 
 
-
-
-    .date-button{
-      border-radius: 10px;
-      font-size: 1rem;
-      background-color: whitesmoke;
-      padding: 0.5rem;
-      width: 8rem;
-      border: 0;
-    }
-
-    .button-date-div{
-      display: flex;
-      margin-left: 5%;
-      width: 90%;
-      justify-content: space-between; /* Place les composants aux deux extrémités */
-      flex-direction: row;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      transition: background-color 0.3s, transform 0.3s;
-      :hover{
-        background-color: #6a9cf5; /* Couleur légèrement grisée */
-        color: white;
-        transform: scale(1.05);
-      }
-    }
-
-    .fade-enter-active, .fade-leave-active {
-      transition: opacity .3s;
-    }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-      opacity: 0;
-    }
-
-    .date-button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #f0f0f0; /* Couleur par défaut */
-      cursor: pointer;
-      margin: 0 5px;
-    }
-
-    .date-button.selected-button {
-      background-color: #6a9cf5; /* Couleur légèrement grisée */
+    .title-trip {
       color: white;
+      font-size: 1.2rem;
+      border-bottom: black;
+      border-bottom: 1px;
+      border-radius: 1px;
     }
 
-    .parent {
-      width: 100%;
+    .title-trip-wrapper{
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 3rem;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 2rem;
     }
 
-    .barre {
-      width: 100%;
-      height: 2px;
-      background-color: white;
-    }
+
 
   </style>

@@ -7,7 +7,7 @@
 <template>
 
   <main>
-    <!--  <div class="div1"><pathBar/></div> -->
+    <div class="div1"><pathBar/></div>
 
     <div class="div2"><MetroMap/></div>
   </main>
@@ -21,9 +21,9 @@
     left: 0;
     display: flex; /* Utilise flexbox pour le contenu de div1 */
     z-index: 1000; /* Définit la priorité d'affichage au-dessus de div2 */
-    width: 100%; /* Ajuste la largeur pour occuper toute la largeur de l'écran */
+    width: fit-content; /* Ajuste la largeur pour occuper toute la largeur de l'écran */
   }
   .div2{
-
+    width: fit-content;
   }
 </style>
