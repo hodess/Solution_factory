@@ -57,13 +57,11 @@
         <transition name="fade">
           <HeureDepartArrivee v-if="showHeureDepartArrivee"/>
         </transition>
-        <div class="wrapper">
-          <div class="link_wrapper">
-            <button @click="navigateToMap">Démarrer</button>
-            </div>
-        </div>
+        <div class="wrapper-button">
+          <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
         </div>
       </div>
+    </div>
   </template>
 
 
@@ -161,21 +159,9 @@
       font-family: 'Lato', sans-serif;
     }
 
-    .wrapper{
-      place-items: center;
-      margin-left: 1.25rem;
-      display: flex;
-      position: relative;
-      top: 90%;
-      left: 50%;
-      transform: translate(-50%);
 
-    }
 
-    .link_wrapper{
-      position: relative;
-      margin-right: 2.75rem;
-    }
+
 
     .green-button{
       display: block;
@@ -241,5 +227,44 @@
       width: 100%;
       margin-bottom: 2rem;
     }
-    
-  </style>
+
+.btn-neutral {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 550;
+  text-align: center;
+  color: #ffffff;
+  background-color: #6a9cf5;
+
+  border-radius: 0.475rem;
+  border-color: white;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-neutral:hover {
+  background-color: black;
+  border-color: black;
+  transition: border-color 0.2s, transform 0.2s;
+
+
+}
+
+.btn-neutral:active {
+  background-color: black;
+  border-color: black;
+  transition: border-color 0.2s, transform 0.2s;
+  transform: scale(0.95);
+}
+
+
+.wrapper-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+</style>
