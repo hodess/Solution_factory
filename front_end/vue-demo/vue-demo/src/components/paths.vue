@@ -1,37 +1,34 @@
 <template>
   <div class="container">
     <div class="glass-effect">
-      <!-- Utilisation de v-for pour itérer sur chaque station -->
-      <div v-for="(station, stationIndex) in stations" :key="stationIndex" class="chemin">
-        <div class="heure">
-          <!-- Utilisation de méthodes pour obtenir l'heure de départ et d'arrivée spécifiques à chaque chemin -->
-          <div class="hda">{{ getHeureDepart(station) }} - {{ getHeureArrivee(station) }}</div>
-          <!-- Appel à la méthode tempsEnMinutes pour calculer la durée spécifique à chaque chemin -->
-          <div class="duree">{{ tempsEnMinutes(station) }} min</div>
+      <template v-for="(station, stationIndex) in stations" :key="stationIndex">
+        <div class="chemin"
+             :class="{ 'selected': stationIndex === selectedStationIndex }"
+             @click="selectStation(stationIndex)">
+          <div class="heure">
+            <div class="hda">{{ getHeureDepart(station) }} - {{ getHeureArrivee(station) }}</div>
+            <div class="duree">{{ tempsEnMinutes(station) }} min</div>
+          </div>
+          <div class="trajet">
+            <template v-for="(ligne, index) in getLignes(station)" :key="index">
+              <div class="lignes">
+                <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
+                <img v-if="index < getLignes(station).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
+              </div>
+            </template>
+          </div>
         </div>
-        <div class="trajet">
-          <!-- Utilisation de méthodes pour obtenir les lignes spécifiques à chaque chemin -->
-          <template v-for="(ligne, index) in getLignes(station)" :key="index">
-            <div class="lignes">
-              <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
-              <!-- Vérifier si ce n'est pas la dernière itération -->
-              <img v-if="index < getLignes(station).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
-            </div>
-          </template>
-        </div>
-        <!-- Afficher le diviseur sauf si c'est le dernier élément -->
-        <div v-if="stationIndex < stations.length - 1" class="divider"></div>
-      </div>
+        <div  class="divider"></div>
+
+      </template>
     </div>
   </div>
 </template>
 
 
 
-
-
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { stations } from "@/stockage/trajets";
 
 const lineMap = {
@@ -64,6 +61,13 @@ export default {
     const lignes = ref([]);
     const formatHeureDepart = ref('');
     const formatHeureArrivee = ref('');
+    const selectedStationIndex = ref(null); // State to track selected station index
+
+
+    // Function to select a station by its index
+    const selectStation = (index) => {
+      selectedStationIndex.value = index;
+    };
 
     // Fonction pour calculer le temps total en minutes
     /*const tempsEnMinutes = () => {
@@ -169,16 +173,25 @@ export default {
       return lignes;
     };
 
+    // On component mount, select the first station by default
+    onMounted(() => {
+      selectStation(0);
+    });
+
     return {
       stations,
+      selectedStationIndex,
       tempsEnMinutes,
       getLignes,
       getLineImage,
       getHeureDepart,
-      getHeureArrivee
+      getHeureArrivee,
+      selectStation
     };
   }
 };
+
+
 </script>
 
 <style scoped>
@@ -191,7 +204,7 @@ export default {
   height: fit-content;
   margin: 0;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(248, 96, 96, 0.5), rgba(218, 3, 3, 0.8));
+  background: linear-gradient(135deg, rgba(248, 96, 96, 0.6), rgba(218, 3, 3, 0.9));
 }
 
 .glass-effect {
@@ -209,9 +222,10 @@ export default {
 .trajet {
   padding: 1rem;
   width: fit-content;
+  min-width: 15vw;
   height: fit-content;
   border-width: 2px;
-  background-color: rgb(252, 193, 193, 0.5);
+  background-color: rgb(252, 193, 193, 0.6);
   margin-bottom: 1rem;
   margin-top: 1rem;
   border-color: black;
@@ -257,10 +271,29 @@ img {
 }
 
 .divider{
-width: 100%; /* Largeur de la barre */
+  width: 100%; /* Largeur de la barre */
   height: 2px; /* Hauteur de la barre */
   background-color: white; /* Couleur de la barre */
-  margin: 20px 0; /* Marge autour de la barre */
+  margin-bottom: 1rem;
+}
 
+.selected{
+
+}
+
+.chemin {
+  padding: 0;
+  border-width: 0 0 0 0;
+  transition: padding 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.chemin.selected {
+  padding: 0.5rem;
+  background-color: rgb(0, 0, 0, 0.05);
+  border-radius: 8px 8px 0 0;
+  border-width: 2px 2px 0 2px;
+  border-style: solid;
+  border-color: white;
+  transition: padding 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 </style>
