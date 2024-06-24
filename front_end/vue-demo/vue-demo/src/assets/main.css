@@ -29,7 +29,6 @@ body {
 
 #app {
   grid-template-columns: 1fr 1fr;
-  padding: 0 2rem;
   margin-bottom: 3rem;
 
 }
@@ -38,7 +37,6 @@ body {
 
   #app {
     grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
     margin-bottom: 3rem;
   }
 }
