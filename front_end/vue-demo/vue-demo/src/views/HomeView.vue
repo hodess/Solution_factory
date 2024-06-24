@@ -1,5 +1,5 @@
 <script setup>
-import SearchBar from '../pages/SearchBar.vue';
+import SearchBar from '../components/SearchBar.vue';
 import metroWorldMap from '../assets/metro-world-map.jpg';
 
 console.log(metroWorldMap); // Vérifiez si le chemin est correct
