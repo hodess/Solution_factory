@@ -65,6 +65,10 @@
       isArriveeFocused.value = false;
       searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
     }
+    return{
+      searchTextDepart,
+      searchTextArrivee,
+    }
   }
 
   function getStationLines(lines) {

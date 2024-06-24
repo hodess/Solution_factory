@@ -1,3 +1,4 @@
+
 <script setup>
   import { ref } from 'vue';
   import DepartDestination from "@/components/DepartDestination.vue";
@@ -30,6 +31,7 @@
       }
     }
   };
+
   </script>
 
 
@@ -154,6 +156,7 @@
     }
 
 
+
     body{
       font-family: 'Lato', sans-serif;
     }
@@ -167,6 +170,7 @@
       left: 50%;
       transform: translate(-50%);
 
+
     }
 
     .link_wrapper{
@@ -175,6 +179,7 @@
     }
 
     .green-button{
+
       display: block;
       width: 250px;
       height: 50px;
@@ -239,6 +244,7 @@
       width: 100%;
       margin-bottom: 2rem;
     }
+
 
 
   </style>
