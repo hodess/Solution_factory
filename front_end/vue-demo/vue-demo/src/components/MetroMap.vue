@@ -80,7 +80,7 @@ export default {
 
       // Ajouter un nouveau contrôle de zoom en bas à gauche
       L.control.zoom({
-        position: 'bottomleft'
+        position: 'bottomright'
       }).addTo(this.map);
 
       this.linesLayerGroup = L.layerGroup().addTo(this.map);

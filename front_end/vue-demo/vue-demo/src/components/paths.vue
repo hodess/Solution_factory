@@ -226,8 +226,8 @@ export default {
   height: fit-content;
   border-width: 2px;
   background-color: rgb(252, 193, 193, 0.6);
-  margin-bottom: 1rem;
-  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+  margin-top: 0.4rem;
   border-color: black;
   border-radius: 1rem;
   display: flex;
