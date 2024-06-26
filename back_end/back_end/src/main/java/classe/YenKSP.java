@@ -85,7 +85,12 @@ public class YenKSP {
                 totalPath.addAll(spurResult.chemin);
                 int totalTime = spurResult.distance + findTemps(rootpath);
 
+                //aficher B
+                System.out.println("B: " + B);
+
                 if (!B.contains(totalPath)) {
+                    System.out.println("TotalPath: " + totalPath);
+                    System.out.println("TotalTime: " + totalTime);
                     B.add(totalPath);
                     BTemp.add(totalTime);
                 }
@@ -144,7 +149,7 @@ public class YenKSP {
     }
 
 
-    public static Result yenKSP_multiple_start_end(List<Gare> start, List<Gare> end, int k,List<Line> filtreLine){
+    public static Result yenKSP_multiple_start_end(List<Gare> start, List<Gare> end, int k,List<Line> filtreLine,int nb_result){
         List<Voie> filtreVoie = new ArrayList<>();
         for (Voie voie_start : start.get(0).getVoie()) {
             //enlever toute les voie entre les start
@@ -163,6 +168,7 @@ public class YenKSP {
         for (Gare gare_start : start) {
             for (Gare gare_end : end) {
                 Result result = yenKSP(gare_start, gare_end, k,filtreVoie, filtreLine);
+                System.out.println("Result: " + result.chemins + " " + result.temps);
 
                 if (result_all.chemins == null) {
                     result_all = result;
@@ -179,7 +185,7 @@ public class YenKSP {
         List<List<Gare>> chemin = new ArrayList<>();
         List<Integer> temps = new ArrayList<>();
         int i = 0;
-        while (i < 5 && result_all.temps.size() > 0) {
+        while (i < nb_result+1 && result_all.temps.size() > 0) {
             int indexMinTime = 0;
             for (int m = 1; m < result_all.temps.size(); m++) {
                 if (result_all.temps.get(m) < result_all.temps.get(indexMinTime)) {
@@ -198,13 +204,13 @@ public class YenKSP {
 
     public static Result ret_yens(List<Gare> start,List<Gare> end,List<Line> filtreLine){
 
-        int nb_result = 4;
+        int nb_result = 2;
 
         System.out.println("\nYens\n");
         System.out.println("Start: " + start + "\nEnd: " + end);
         if (start != null && end != null) {
 
-            return YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine);
+            return YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine,nb_result);
 
         }
         else{
@@ -220,7 +226,7 @@ public class YenKSP {
         System.out.println("Start: " + start + "\nEnd: " + end);
         if (start != null && end != null) {
 
-            YenKSP.Result result = YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine);
+            YenKSP.Result result = YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine,nb_result);
             if (result.chemins != null && result.temps != null) {
                 for (int i = 0; i < result.chemins.size(); i++) {
                     System.out.println("Chemin " + (i + 1) + ":");
