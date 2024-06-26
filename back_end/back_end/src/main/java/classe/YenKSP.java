@@ -123,10 +123,10 @@ public class YenKSP {
         return totalTime;
     }
 
-    public static List<List<Gare>> findGare(Map<Integer, Line> linesMap, String name_start,String name_end) {
+    public static List<List<Gare>> findGare(Map<String, Line> linesMap, String name_start,String name_end) {
         List<Gare> start = new ArrayList<>();
         List<Gare> end = new ArrayList<>();
-        for (Integer id : linesMap.keySet()) {
+        for (String id : linesMap.keySet()) {
             Line line = linesMap.get(id);
             Gare start_temp = line.findGare_with_name(name_start);
             if (start_temp != null) {

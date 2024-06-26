@@ -21,9 +21,9 @@ public class Line {
         }
     }
 
-    public Gare findGare_with_id(int id) {
+    public Gare findGare_with_id(String id) {
         for (Gare g : listeGare) {
-            if (g.getId() == id) {
+            if (g.getId().equals(id)) {
                 return g;
             }
         }

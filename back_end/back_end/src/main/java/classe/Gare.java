@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Gare {
-    private int id;
+    private String id;
     private String name;
     private Line ligne;
-    private List<Integer> coord;
+    private List<Double> coord;
     private List<Voie> voie;
 
-    public Gare(int id,String name, Line ligne,int x,int y) {
+    public Gare(String id,String name, Line ligne,double x,double y) {
         this.id=id;
         this.name = name;
         this.ligne = ligne;
@@ -30,11 +30,11 @@ public class Gare {
 
     @Override
     public String toString() {
-        return String.format(" Gare(id = %d, name=%s, ligne=%s, nb de voie=%d",
+        return String.format(" Gare(id = %s, name=%s, ligne=%s, nb de voie=%d",
                 id, name, ligne.getName(), voie.size());
     }
     @JsonProperty("id")
-    public int getId() {
+    public String getId() {
         return id;
     }
     @JsonIgnore
@@ -51,7 +51,7 @@ public class Gare {
         return name;
     }
     @JsonProperty("coord")
-    public List<Integer> getCoord() {
+    public List<Double> getCoord() {
         return coord;
     }
 

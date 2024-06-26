@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Fonction {
-    public static Map<Integer, Line> linesMap = new HashMap<>();
+    public static Map<String, Line> linesMap = new HashMap<>();
 
-    public static void setLinesMap(Map<Integer, Line> linesMap) {
+    public static void setLinesMap(Map<String, Line> linesMap) {
         Fonction.linesMap = linesMap;
     }
 
