@@ -3,6 +3,7 @@ package org.example;
 import classe.Create_class;
 import classe.Fonction;
 
+import classe.ReturnGareNoTraited;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +39,8 @@ public class HelloController {
 
     @GetMapping("/gares")
     public String all_gares() {
-        Create_class.create_all_class();
         logger.info("toute les gares");
-        return Fonction.all_gares();
+        return ReturnGareNoTraited.CallFunctions();
     }
 
     @GetMapping("/multiply/{num1}/{num2}")
@@ -48,4 +48,5 @@ public class HelloController {
         logger.info("Multiplying numbers: {} and {}", num1, num2);
         return num1 * num2;
     }
+
 }

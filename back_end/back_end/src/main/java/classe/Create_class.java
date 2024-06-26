@@ -35,8 +35,8 @@ public class Create_class {
             String name = resultSet.getString("name");
             String name_ligne = resultSet.getString("name_ligne");
             String id_ligne = resultSet.getString("id_ligne");
-            double x = resultSet.getInt("x");
-            double y = resultSet.getInt("y");
+            double x = resultSet.getDouble("x");
+            double y = resultSet.getDouble("y");
             new Gare(id, name, linesMap.get(id_ligne), x, y);
         }
         resultSet.close();
