@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonConverter {
-
+    public static final ObjectMapper objectMapper = new ObjectMapper();
     // Fonction pour convertir List<List<Gare>> en JSON
     public static String convert_list_line(List<Line> ListGare) {
         System.out.println("Convert List<List<Gare>> to JSON");
@@ -69,6 +69,7 @@ public class JsonConverter {
             chemins.add(chemin);
         }
 
+
         try {
             jsonBuilder.append(mapper.writeValueAsString(chemins));
         } catch (JsonProcessingException e) {
@@ -78,5 +79,13 @@ public class JsonConverter {
         jsonBuilder.append("}");
 
         return jsonBuilder.toString();
+    }
+    public static String convertObjectToJson(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
