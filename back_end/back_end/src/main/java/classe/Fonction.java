@@ -32,4 +32,12 @@ public class Fonction {
         List<Line> linesList = new ArrayList<>(linesMap.values());
         return JsonConverter.convert_list_line(linesList);
     }
+
+    public static void main(String[] args) {
+        Create_class.create_all_class();
+        String start = "Villejuif Léo Lagrange";
+        String end = "Abbesses";
+        System.out.println(find_chemin_start_end(start, end));
+    }
+
 }

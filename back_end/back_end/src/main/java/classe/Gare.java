@@ -61,7 +61,7 @@ public class Gare {
 
     public Voie findVoie(Gare gare2) {
         for (Voie v : voie) {
-            if (v.getOther(this) == gare2) {
+            if (v.getGare2() == gare2) {
                 return v;
             }
         }
