@@ -241,25 +241,22 @@ export default {
         this.map.fitBounds(bounds, {paddingTopLeft: [window.innerWidth * 0.2, 0]});
       }
     },
-    traceTrajet(stationDepart, stationArrivee) {
-      // À implémenter : Recherche dans tes données JSON pour trouver le chemin entre les stations
-      // Création d'une ligne ou d'un polyline entre les coordonnées des stations
-      const polyline = L.polyline([
-        [stationDepart.coord[0], stationDepart.coord[1]],
-        [stationArrivee.coord[0], stationArrivee.coord[1]]
-      ], {color: 'red'}).addTo(this.map);
-
-      // Zoom sur le trajet tracé
-      const bounds = polyline.getBounds();
-      this.map.fitBounds(bounds);
+    clearMap() {
+      this.linesLayerGroup.clearLayers();
+      this.markersLayer.clearLayers();
     },
-    tracePremierChemin() {
-      const premierChemin = stations[0].chemins[0];
 
-      if (premierChemin) {
-        const segments = premierChemin.map(segment => {
-          const polylinePoints = [];
-          const markers = [];
+    traceChemin(cheminIndex) {
+      const chemin = stations[0].chemins[cheminIndex - 1]; // -1 car les chemins sont indexés à partir de 0 dans les tableaux
+
+      if (chemin) {
+        this.clearMap(); // Efface les lignes et marqueurs existants sur la carte
+
+        let bounds = new L.LatLngBounds(); // Initialise les limites pour calculer le zoom
+
+        chemin.forEach(segment => {
+          let previousCoord = null;
+          let previousLine = null;
 
           Object.keys(segment).forEach(ligne => {
             const gares = segment[ligne].Gare;
@@ -269,6 +266,7 @@ export default {
                 if (coord && coord.length === 2) {
                   const lineKey = convertLineFormat(ligne); // Convertir la ligne au format utilisé dans lineColors
                   const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
+
                   // Création du marqueur de cercle pour la station
                   const marker = L.circleMarker([coord[0], coord[1]], {
                     radius: 6,
@@ -279,33 +277,29 @@ export default {
                     fillOpacity: 1
                   }).bindPopup(gare.name); // Popup avec le nom de la station
 
-                  markers.push(marker);
-                  polylinePoints.push(new L.LatLng(coord[0], coord[1]));
+                  this.markersLayer.addLayer(marker);
+
+                  bounds.extend([coord[0], coord[1]]); // Étendre les limites pour inclure cette station
+
+                  // Relier les stations de la même ligne
+                  if (previousCoord && previousLine === lineKey) {
+                    const polyline = L.polyline([previousCoord, coord], { color: color }).addTo(this.map);
+                    this.linesLayerGroup.addLayer(polyline);
+                  }
+
+                  previousCoord = [coord[0], coord[1]];
+                  previousLine = lineKey;
                 }
               });
             }
           });
-
-          // Ajouter tous les marqueurs à la carte
-          markers.forEach(marker => {
-            this.markersLayer.addLayer(marker);
-          });
-
-          // Création de la polyline avec la couleur des marqueurs
-          const polylineColor = markers.length > 0 ? markers[0].options.color : 'blue'; // Prend la couleur du premier marqueur comme couleur de la polyline
-          const polyline = L.polyline(polylinePoints, {color: polylineColor}).addTo(this.map);
-          this.linesLayerGroup.addLayer(polyline);
-
-          return polylinePoints;
         });
 
-        if (segments.length > 0) {
-          const bounds = L.latLngBounds(segments[0]);
-          this.map.fitBounds(bounds);
-        }
+        // Zoom sur les limites calculées tout en laissant 20% à gauche de l'écran
+        const screenLeftPadding = window.innerWidth * 0.2;
+        this.map.fitBounds(bounds, { paddingTopLeft: [screenLeftPadding, 0] });
       }
-    }
-  }
+    },  }
 };
 </script>
 
@@ -315,8 +309,8 @@ export default {
     <div>
       <button @click="showAllLines">Afficher toutes les stations</button>
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
-      <button @click="tracePremierChemin">Tracer le premier chemin</button>
-      <!-- Dropdown menu -->
+      <button @click="traceChemin(1)">Tracer le premier chemin</button>
+      <button @click="traceChemin(2)">Tracer le deuxième chemin</button>      <!-- Dropdown menu -->
       <div class="dropdown">
         <button class="dropbtn"></button>
         <div class="dropdown-content">
