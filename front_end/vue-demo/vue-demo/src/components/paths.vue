@@ -19,7 +19,6 @@
           </div>
         </div>
         <div  class="divider"></div>
-
       </template>
     </div>
   </div>
