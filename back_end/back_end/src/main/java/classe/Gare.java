@@ -59,6 +59,24 @@ public class Gare {
         return ligne.getName();
     }
 
+    public double getDistance(Gare gare2) {
+        double lat1 = this.coord.get(0);
+        double lon1 = this.coord.get(1);
+        double lat2 = gare2.getCoord().get(0);
+        double lon2 = gare2.getCoord().get(1);
+
+        // Radius of the Earth in km
+        final int R = 6371;
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
     public Voie findVoie(Gare gare2) {
         for (Voie v : voie) {
             if (v.getGare2() == gare2) {
@@ -67,6 +85,8 @@ public class Gare {
         }
         return null;
     }
+
+
 
 
 }

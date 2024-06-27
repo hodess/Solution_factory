@@ -8,17 +8,36 @@ public class YenKSP {
     public static class Result {
         public List<List<Gare>> chemins;
         public List<Integer> temps;
+        public List<Double> distance;
+
+        public Result(List<List<Gare>> chemins, List<Integer> temps, List<Double> distance) {
+            this.chemins = chemins;
+            this.temps = temps;
+            this.distance = distance;
+        }
 
         public Result(List<List<Gare>> chemins, List<Integer> temps) {
             this.chemins = chemins;
             this.temps = temps;
+            this.distance = null;
         }
 
         public Result() {
             this.chemins = null;
             this.temps = null;
+            this.distance = null;
         }
     }
+
+    public static double calcul_distance (List<Gare> chemin){
+        //je veux une boucle qui parcout toute les gare -1
+        double distance = 0;
+        for (int i = 0; i < chemin.size() - 1; i++) {
+            distance += chemin.get(i).getDistance(chemin.get(i + 1));
+        }
+        return distance;
+    }
+
 
     public static Result yenKSP(Gare start, Gare end, int k,List<Voie> filtreVoie_before,List<Line> filtreLine) {
         List<List<Gare>> A = new ArrayList<>();
@@ -32,7 +51,7 @@ public class YenKSP {
 
         Dijkstra.Result dijkstraResult = Dijkstra.dijkstra(start, end, filtreVoie, filtreLine);
         if (dijkstraResult.chemin == null) {
-            return new Result(null, null);
+            return new Result(null, null,null);
         }
         A.add(dijkstraResult.chemin);
         tempsAll.add(dijkstraResult.distance);
@@ -141,6 +160,9 @@ public class YenKSP {
             B.remove(indexMinTime);
             BTemp.remove(indexMinTime);
         }
+
+
+
         return new Result(A, tempsAll);
     }
 
@@ -230,8 +252,12 @@ public class YenKSP {
             result_all.temps.remove(indexMinTime);
             i++;
         }
+        List<Double> list_distance = new ArrayList<>();
+        for (List<Gare> gare : chemin) {
+            list_distance.add(calcul_distance(gare));
+        }
 
-        return new Result(chemin,temps);
+        return new Result(chemin,temps,list_distance);
     }
 
     public static Result ret_yens(List<Gare> start,List<Gare> end,List<Line> filtreLine){
@@ -265,7 +291,8 @@ public class YenKSP {
                     for (Gare gare : result.chemins.get(i)) {
                         System.out.print(gare.getName() +","+gare.getLigne().getName() + " -> ");
                     }
-                    System.out.println("\nDistance totale: " + result.temps.get(i));
+                    System.out.println("\nTemps totale: " + result.temps.get(i));
+                    System.out.println("Distance totale: " + result.distance.get(i)+"\n");
                 }
             } else {
                 System.out.println("Aucun chemin trouvé.");

@@ -38,6 +38,7 @@ public class JsonConverter {
         for (int i = 0; i < ListGare.chemins.size(); i++) {
             List<Gare> gares = ListGare.chemins.get(i);
             int temps = ListGare.temps.get(i);
+            double distance = ListGare.distance.get(i);
 
             // Utiliser une map pour regrouper les gares par ligne
             Map<String, Map<String, List<Map<String, Object>>>> lignesGares = new HashMap<>();
@@ -66,7 +67,9 @@ public class JsonConverter {
                 chemin.put(nomLigne, ligneMap);
             }
             chemin.put("temps", temps);
+            chemin.put("distance", distance);
             chemins.add(chemin);
+
         }
 
 
