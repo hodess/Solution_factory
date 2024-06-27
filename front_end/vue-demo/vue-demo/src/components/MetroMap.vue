@@ -4,6 +4,47 @@ import 'leaflet/dist/leaflet.css';
 import data from '../../public/data.json';
 import hello_world from "@/components/hello_world.vue";
 import Hello_world from "@/components/hello_world.vue";
+import { stations } from "@/stockage/trajets.js"; // Importer les données des trajets
+
+
+function convertLineFormat(line) {
+  switch (line) {
+    case "Ligne 1":
+      return "ligne_1";
+    case "Ligne 2":
+      return "ligne_2";
+    case "Ligne 3":
+      return "ligne_3";
+    case "Ligne 3bis":
+      return "ligne_3bis";
+    case "Ligne 4":
+      return "ligne_4";
+    case "Ligne 5":
+      return "ligne_5";
+    case "Ligne 6":
+      return "ligne_6";
+    case "Ligne 7":
+      return "ligne_7";
+    case "Ligne 7bis":
+      return "ligne_7bis";
+    case "Ligne 8":
+      return "ligne_8";
+    case "Ligne 9":
+      return "ligne_9";
+    case "Ligne 10":
+      return "ligne_10";
+    case "Ligne 11":
+      return "ligne_11";
+    case "Ligne 12":
+      return "ligne_12";
+    case "Ligne 13":
+      return "ligne_13";
+    case "Ligne 14":
+      return "ligne_14";
+    default:
+      return "feur"; // Couleur par défaut si la ligne n'est pas trouvée
+  }
+}
 
 export default {
   name: 'LeafletMap',
@@ -59,7 +100,7 @@ export default {
   mounted() {
     this.initMap();
     this.createTriangleIcon();
-    this.showAllLines(); // Appel de la méthode pour afficher les triangles noirs par défaut
+    this.showAllLines(); // Afficher tous les ronds noirs par défaut
   },
   methods: {
     initMap() {
@@ -92,7 +133,7 @@ export default {
       for (const line in metroData) {
         const stations = metroData[line].stations;
         stations.forEach(station => {
-          const { latitude, longitude, nom } = station.coordonnees;
+          const {latitude, longitude, nom} = station.coordonnees;
           const marker = L.circleMarker([latitude, longitude], {
             radius: 5,
             fillColor: 'Grey',
@@ -107,16 +148,16 @@ export default {
           });
 
           this.markersLayer.addLayer(marker);
-          this.metroMarkers.push({ line, marker });
+          this.metroMarkers.push({line, marker});
         });
       }
-    },    addMetroLines(metroData, line) {
+    }, addMetroLines(metroData, line) {
       const lineColor = this.lineColors[line] || 'black';
       let bounds = [];
 
       for (const lineKey in metroData) {
         const stations = metroData[lineKey].stations;
-        const polyline = L.polyline(stations.map(station => [station.coordonnees.latitude, station.coordonnees.longitude]), { color: lineColor });
+        const polyline = L.polyline(stations.map(station => [station.coordonnees.latitude, station.coordonnees.longitude]), {color: lineColor});
 
         if (lineKey === line) {
           this.linesLayerGroup.addLayer(polyline);
@@ -147,14 +188,13 @@ export default {
         this.addMarkersAsTriangles(data.metro_paris);
       }
     },
-
     addMarkersWithColor(metroData, line) {
       const lineColor = this.lineColors[line] || 'black';
 
       for (const lineKey in metroData) {
         const stations = metroData[lineKey].stations;
         stations.forEach(station => {
-          const { latitude, longitude, nom } = station.coordonnees;
+          const {latitude, longitude, nom} = station.coordonnees;
           const marker = L.circleMarker([latitude, longitude], {
             radius: 6,
             fillColor: lineColor,
@@ -166,7 +206,7 @@ export default {
 
           if (lineKey === line) {
             this.markersLayer.addLayer(marker);
-            this.metroMarkers.push({ line, marker });
+            this.metroMarkers.push({line, marker});
           }
         });
       }
@@ -198,7 +238,71 @@ export default {
     },
     zoomToBounds(bounds) {
       if (bounds && bounds.isValid && bounds.isValid()) {
-        this.map.fitBounds(bounds, { paddingTopLeft: [window.innerWidth * 0.2, 0] });
+        this.map.fitBounds(bounds, {paddingTopLeft: [window.innerWidth * 0.2, 0]});
+      }
+    },
+    traceTrajet(stationDepart, stationArrivee) {
+      // À implémenter : Recherche dans tes données JSON pour trouver le chemin entre les stations
+      // Création d'une ligne ou d'un polyline entre les coordonnées des stations
+      const polyline = L.polyline([
+        [stationDepart.coord[0], stationDepart.coord[1]],
+        [stationArrivee.coord[0], stationArrivee.coord[1]]
+      ], {color: 'red'}).addTo(this.map);
+
+      // Zoom sur le trajet tracé
+      const bounds = polyline.getBounds();
+      this.map.fitBounds(bounds);
+    },
+    tracePremierChemin() {
+      const premierChemin = stations[0].chemins[0];
+
+      if (premierChemin) {
+        const segments = premierChemin.map(segment => {
+          const polylinePoints = [];
+          const markers = [];
+
+          Object.keys(segment).forEach(ligne => {
+            const gares = segment[ligne].Gare;
+            if (gares) {
+              gares.forEach(gare => {
+                const coord = gare.coord;
+                if (coord && coord.length === 2) {
+                  const lineKey = convertLineFormat(ligne); // Convertir la ligne au format utilisé dans lineColors
+                  const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
+                  // Création du marqueur de cercle pour la station
+                  const marker = L.circleMarker([coord[0], coord[1]], {
+                    radius: 6,
+                    fillColor: color,
+                    color: color,
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 1
+                  }).bindPopup(gare.name); // Popup avec le nom de la station
+
+                  markers.push(marker);
+                  polylinePoints.push(new L.LatLng(coord[0], coord[1]));
+                }
+              });
+            }
+          });
+
+          // Ajouter tous les marqueurs à la carte
+          markers.forEach(marker => {
+            this.markersLayer.addLayer(marker);
+          });
+
+          // Création de la polyline avec la couleur des marqueurs
+          const polylineColor = markers.length > 0 ? markers[0].options.color : 'blue'; // Prend la couleur du premier marqueur comme couleur de la polyline
+          const polyline = L.polyline(polylinePoints, {color: polylineColor}).addTo(this.map);
+          this.linesLayerGroup.addLayer(polyline);
+
+          return polylinePoints;
+        });
+
+        if (segments.length > 0) {
+          const bounds = L.latLngBounds(segments[0]);
+          this.map.fitBounds(bounds);
+        }
       }
     }
   }
@@ -208,22 +312,23 @@ export default {
 <template>
   <div>
     <div id="map"></div>
-    <!-- Dropdown menu -->
-    <div class="dropdown">
-      <button class="dropbtn"></button>
-      <div class="dropdown-content">
-        <div v-for="(imagePath, line) in lineImages" :key="line" @click="selectLine(line)">
-          <img :src="imagePath" alt="Icone ligne de métro" style="width: 30px; height: 30px;">
-        </div>
-      </div>
-    </div>
     <div>
       <button @click="showAllLines">Afficher toutes les stations</button>
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
-      <hello_world/>
+      <button @click="tracePremierChemin">Tracer le premier chemin</button>
+      <!-- Dropdown menu -->
+      <div class="dropdown">
+        <button class="dropbtn"></button>
+        <div class="dropdown-content">
+          <div v-for="(imagePath, line) in lineImages" :key="line" @click="selectLine(line)">
+            <img :src="imagePath" alt="Icone ligne de métro" style="width: 30px; height: 30px;">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 
 
 <style>
@@ -318,5 +423,18 @@ select {
   background-color: #f1f1f1;
 }
 
+.custom-div-icon {
+  position: relative;
+  background: #fff;
+  border: 1px solid #333;
+  text-align: center;
+  font-size: 0.6rem;
+  padding: 2px;
+  border-radius: 5px;
+}
 
+.marker-point {
+  width: auto;
+  height: auto;
+}
 </style>
