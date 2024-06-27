@@ -44,6 +44,7 @@ public class Create_class {
 
     public static void fill_voie(Statement statement) throws SQLException {
         ResultSet resultSet = statement.executeQuery("SELECT temps,id_Ligne,name_Gare1,id_Gare1,id_ligne_gare1,name_Gare2,id_Gare2,id_ligne_gare2 FROM locomotive.voie_with_gare_with_id where name_Ligne!=0 order by name_ligne;");
+        //SELECT temps, id_Ligne, name_Ligne, name_Gare1, id_Gare1, id_ligne_gare1, name_Gare2, id_Gare2, id_ligne_gare2 FROM locomotive.voie_with_gare_with_id WHERE id_Ligne != "IDFM:C01370" and id_ligne_gare1=id_ligne_gare2  ORDER BY name_Ligne LIMIT 2000;
         while (resultSet.next()) {
             String id_Gare1 = resultSet.getString("id_Gare1");
             String id_Gare2 = resultSet.getString("id_Gare2");
@@ -55,36 +56,35 @@ public class Create_class {
             new Voie(gare1, gare2, line_for_voie, temps, 0);
         }
         resultSet.close();
-        /*
-        String query = "SELECT " +
-                "c.id_Gare1, g1.id_ligne AS id_Ligne_Gare1, " +
-                "c.id_Gare2, g2.id_ligne AS id_Ligne_Gare2, " +
-                "v.temps, v.bidirectionnel, v.id_ligne AS id_Ligne_Voie " +
-                "FROM " +
-                "contient c " +
-                "JOIN Gare g1 ON c.id_Gare1 = g1.id " +
-                "JOIN Gare g2 ON c.id_Gare2 = g2.id " +
-                "JOIN Voie v ON c.id_Voie = v.id " +
-                "WHERE v.id_ligne = 0";
+
+        String query = "SELECT temps, id_Ligne, name_Ligne, name_Gare1, id_Gare1, id_ligne_gare1, name_Gare2, id_Gare2, id_ligne_gare2 " +
+               "FROM ( " +
+               "    SELECT temps, id_Ligne, name_Ligne, name_Gare1, id_Gare1, id_ligne_gare1, name_Gare2, id_Gare2, id_ligne_gare2, " +
+               "           ROW_NUMBER() OVER (PARTITION BY id_Ligne, name_Ligne, name_Gare1, id_Gare1, id_ligne_gare1, name_Gare2, id_Gare2, id_ligne_gare2 ORDER BY temps) as rn " +
+               "    FROM locomotive.voie_with_gare_with_id " +
+               "    WHERE id_Ligne = 'IDFM:C01370' AND id_ligne_gare1 != id_ligne_gare2 " +
+               ") AS subquery " +
+               "WHERE rn = 1 " +
+               "ORDER BY name_Ligne " +
+               "LIMIT 2000;";
 
         resultSet = statement.executeQuery(query);
 
         while (resultSet.next()) {
             String idGare1 = resultSet.getString("id_Gare1");
-            String idLigneGare1 = resultSet.getString("id_Ligne_Gare1");
+            String idLigneGare1 = resultSet.getString("id_ligne_gare1");
             String idGare2 = resultSet.getString("id_Gare2");
-            String idLigneGare2 = resultSet.getString("id_Ligne_Gare2");
+            String idLigneGare2 = resultSet.getString("id_ligne_gare2");
             int temps = resultSet.getInt("temps");
-            int bidirectionnel = resultSet.getInt("bidirectionnel");
-            int idLigneVoie = resultSet.getInt("id_Ligne_Voie");
+            String idLigneVoie = resultSet.getString("id_Ligne");
 
             Line line_for_gare1 = linesMap.get(idLigneGare1);
             Gare gare1 = line_for_gare1.findGare_with_id(idGare1);
             Line line_for_gare2 = linesMap.get(idLigneGare2);
             Gare gare2 = line_for_gare2.findGare_with_id(idGare2);
             Line line_for_voie = linesMap.get(idLigneVoie);
-            new Voie(gare1, gare2, line_for_voie, temps, bidirectionnel);
-        }*/
+            new Voie(gare1, gare2, line_for_voie, temps, 0);
+        }
     }
 
     public static void fill_all(String url, String user, String password) {

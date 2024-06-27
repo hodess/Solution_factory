@@ -50,7 +50,7 @@ public class YenKSP {
                     for (int n = 0; n < A.get(m).size() - 1; n++) {
                         if (rootpath.contains(A.get(m).get(n))) {
                             Voie tempVoie = A.get(m).get(n).findVoie(A.get(m).get(n + 1));
-                            System.out.println("Gare 1  : " + A.get(m).get(n) + " Gare 2  " + A.get(m).get(n + 1) + " " + tempVoie);
+                            //System.out.println("Gare 1  : " + A.get(m).get(n) + " Gare 2  " + A.get(m).get(n + 1) + " " + tempVoie);
                             if (!filtreVoie.contains(tempVoie)) {
                                 filtreVoie.add(tempVoie);
                             }
@@ -70,16 +70,14 @@ public class YenKSP {
                     }
                 }
 
-                System.out.println("FiltreVoie: " + filtreVoie);
+                /*System.out.println("FiltreVoie: " + filtreVoie);
                 System.out.println("Rootpath: " + rootpath);
                 System.out.println("Spurnode: " + spurnode);
-                System.out.println();
+                System.out.println();*/
                 Dijkstra.Result spurResult = Dijkstra.dijkstra(spurnode, end, filtreVoie, filtreLine);
                 if (spurResult.chemin == null) {
                     continue;
                 }
-
-                System.out.println("\n\n");
 
                 List<Gare> totalPath = new ArrayList<>(rootpath);
                 spurResult.chemin.remove(0);
@@ -88,8 +86,8 @@ public class YenKSP {
 
                 //aficher B
                 if (!B.contains(totalPath)) {
-                    System.out.println("TotalPath: " + totalPath);
-                    System.out.println("TotalTime: " + totalTime);
+                    //System.out.println("TotalPath: " + totalPath);
+                    //System.out.println("TotalTime: " + totalTime);
                     B.add(totalPath);
                     BTemp.add(totalTime);
                 }
@@ -123,7 +121,6 @@ public class YenKSP {
             B.remove(indexMinTime);
             BTemp.remove(indexMinTime);
         }
-        System.out.println("A: " + A);
         return new Result(A, tempsAll);
     }
 
@@ -178,7 +175,7 @@ public class YenKSP {
         for (Gare gare_start : start) {
             for (Gare gare_end : end) {
                 Result result = yenKSP(gare_start, gare_end, k,filtreVoie, filtreLine);
-                System.out.println("Result: " + result.chemins + " " + result.temps);
+                //System.out.println("Result: " + result.chemins + " " + result.temps);
 
                 if (result_all.chemins == null) {
                     result_all = result;

@@ -25,7 +25,6 @@ public class Fonction {
         List<Line> filtreLine = new ArrayList<>();
         YenKSP.affichage(start, end, filtreLine);
         YenKSP.Result result = YenKSP.ret_yens(start, end, filtreLine);
-        System.out.println("nb de chemin : " + result.chemins.size());
         return JsonConverter.convert_chemin(result);
     }
 
@@ -36,8 +35,8 @@ public class Fonction {
 
     public static void main(String[] args) {
         Create_class.create_all_class();
-        String start = "Place d'Italie";
-        String end = "Le Kremlin-Bicêtre";
+        String start = "Villejuif Léo Lagrange";
+        String end = "Abbesses";
         System.out.println(find_chemin_start_end(start, end));
     }
 
