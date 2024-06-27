@@ -136,7 +136,7 @@ public class Create_class {
 
              fill_all(url, user, password);
             Fonction.setLinesMap(linesMap);
-
+            ReturnGareWithOrder.setLinesMap(linesMap);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
