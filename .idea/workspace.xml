@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2e523e85-5eb1-4fbf-8814-820f0cda5ed8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/back_end/back_end/src/main/java/classe/ReturnGareWithOrder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/src/main/java/classe/Create_class.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/src/main/java/classe/Create_class.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/back_end/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/back_end/src/main/java/classe/JsonConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/src/main/java/classe/JsonConverter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/src/main/java/org/example/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/src/main/java/org/example/HelloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/back_end/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Create_class.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Create_class.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Dijkstra$Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Dijkstra$Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Dijkstra.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Dijkstra.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Fonction.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Fonction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Gare.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Gare.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/JsonConverter.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/JsonConverter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Line.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Line.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareNoTraited$LieuWithLine.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareNoTraited$LieuWithLine.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareNoTraited.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareNoTraited.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareWithOrder$LieuWithLineAndOrder.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareWithOrder$LieuWithLineAndOrder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareWithOrder.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/ReturnGareWithOrder.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Voie.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/Voie.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/YenKSP$Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/YenKSP$Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/YenKSP.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/classe/YenKSP.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/org/example/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/org/example/Application.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/org/example/HelloController.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/org/example/HelloController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/org/example/Personne.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/org/example/Personne.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/test/Personne.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/test/Personne.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/back_end/target/classes/test/main_personne.class" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/back_end/target/classes/test/main_personne.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_end/vue-demo/vue-demo/src/components/MetroMap.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/vue-demo/vue-demo/src/components/MetroMap.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_end/vue-demo/vue-demo/src/components/paths.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/vue-demo/vue-demo/src/components/paths.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,16 +31,30 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
   <component name="ProjectId" id="2iSkEBVOrLwwl9DQ5daAKZLxYLw" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/back_end/back_end" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "Front-end",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
+  }
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -52,5 +65,8 @@
       <updated>1719491251405</updated>
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

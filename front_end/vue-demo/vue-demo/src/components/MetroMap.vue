@@ -1,10 +1,14 @@
 <script>
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import data from '../../public/data.json';
 import hello_world from "@/components/hello_world.vue";
 import Hello_world from "@/components/hello_world.vue";
-import { stations } from "@/stockage/trajets.js"; // Importer les données des trajets
+import { ref } from 'vue'
+import axios from "axios"; // Importer les données des trajets
+
+let chemin_json=ref(null)
+
+
 
 
 function convertLineFormat(line) {
@@ -45,6 +49,8 @@ function convertLineFormat(line) {
       return "feur"; // Couleur par défaut si la ligne n'est pas trouvée
   }
 }
+
+
 
 export default {
   name: 'LeafletMap',
@@ -110,6 +116,9 @@ export default {
         zoomControl: false  // Désactiver le contrôle de zoom par défaut
       });
 
+
+
+
       L.tileLayer('https://api.maptiler.com/maps/positron/{z}/{x}/{y}.png?key=kGzEOK5vmVP8dEjh59c5', {
         attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
         tileSize: 512,
@@ -127,7 +136,28 @@ export default {
       this.linesLayerGroup = L.layerGroup().addTo(this.map);
       this.markersLayer = L.layerGroup().addTo(this.map);
 
-      this.addMarkersAsCircles(data.metro_paris);
+      this.addMarkersAsCircles(this.chemin_json);
+
+    },
+    fetchAndLogResult() {
+      axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
+          .then(response => {
+            console.log(response.data); // Affiche la réponse dans la console
+            chemin_json=response.data
+            console.log(chemin_json.chemins[1])
+            let secondChemin = chemin_json.chemins[1]
+            for (let key in secondChemin) {
+              if (secondChemin[key].Gare) {
+                secondChemin[key].Gare.forEach(gare => {
+                  console.log(gare.coord);
+                });
+              }
+            }
+            console.log(secondChemin.temps)
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
     },
     addMarkersAsCircles(metroData) {
       for (const line in metroData) {
@@ -151,7 +181,8 @@ export default {
           this.metroMarkers.push({line, marker});
         });
       }
-    }, addMetroLines(metroData, line) {
+    },
+    addMetroLines(metroData, line) {
       const lineColor = this.lineColors[line] || 'black';
       let bounds = [];
 
@@ -181,11 +212,10 @@ export default {
       this.markersLayer.clearLayers();
 
       if (this.currentLine) {
-        const bounds = this.addMetroLines(data.metro_paris, this.currentLine);
-        this.addMarkersWithColor(data.metro_paris, this.currentLine);
+        const bounds = this.addMetroLines(this.chemin, this.currentLine);
+        this.addMarkersWithColor(this.chemin, this.currentLine);
+
         this.zoomToBounds(bounds);
-      } else {
-        this.addMarkersAsTriangles(data.metro_paris);
       }
     },
     addMarkersWithColor(metroData, line) {
@@ -216,7 +246,7 @@ export default {
       this.linesLayerGroup.clearLayers(); // Efface toutes les lignes affichées
       this.markersLayer.clearLayers(); // Efface tous les marqueurs affichés
 
-      this.addMarkersAsCircles(data.metro_paris); // Réaffiche tous les ronds noirs
+      this.addMarkersAsCircles(this.chemin);
     },
     showAllMetroLines() {
       this.currentLine = null; // Réinitialise la ligne actuelle
@@ -224,9 +254,9 @@ export default {
       this.markersLayer.clearLayers(); // Efface tous les marqueurs affichés
 
       // Affiche toutes les lignes de métro disponibles
-      for (const line in data.metro_paris) {
-        this.addMetroLines(data.metro_paris, line);
-        this.addMarkersWithColor(data.metro_paris, line); // Ajoute les marqueurs de couleur
+      for (const line in this.chemin) {
+        this.addMetroLines(this.chemin, line);
+        this.addMarkersWithColor(this.chemin, line);
       }
     },
     selectLine(line) {
@@ -245,61 +275,76 @@ export default {
       this.linesLayerGroup.clearLayers();
       this.markersLayer.clearLayers();
     },
-
     traceChemin(cheminIndex) {
-      const chemin = stations[0].chemins[cheminIndex - 1]; // -1 car les chemins sont indexés à partir de 0 dans les tableaux
+      let chemin = chemin_json.chemins[cheminIndex-1]
+      console.log(chemin)
 
       if (chemin) {
         this.clearMap(); // Efface les lignes et marqueurs existants sur la carte
 
         let bounds = new L.LatLngBounds(); // Initialise les limites pour calculer le zoom
 
-        chemin.forEach(segment => {
-          let previousCoord = null;
-          let previousLine = null;
+        for (let key in chemin) {
+          if (chemin.hasOwnProperty(key) && chemin[key].Gare) {
+            let gares = chemin[key].Gare;
+            let previousCoord=null
+            let previousLine=null
 
-          Object.keys(segment).forEach(ligne => {
-            const gares = segment[ligne].Gare;
-            if (gares) {
-              gares.forEach(gare => {
-                const coord = gare.coord;
-                if (coord && coord.length === 2) {
-                  const lineKey = convertLineFormat(ligne); // Convertir la ligne au format utilisé dans lineColors
-                  const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
+            gares.forEach(gare => {
+              const coord = gare.coord;
+              const temp = coord[0]
+              coord[0]=coord[1]
+              coord[1]=temp
 
-                  // Création du marqueur de cercle pour la station
-                  const marker = L.circleMarker([coord[0], coord[1]], {
-                    radius: 6,
-                    fillColor: color,
-                    color: color,
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 1
-                  }).bindPopup(gare.name); // Popup avec le nom de la station
+              if (coord && coord.length === 2) {
+                const lineKey = convertLineFormat("Ligne"+key); // Convertir la ligne au format utilisé dans lineColors
+                const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
 
-                  this.markersLayer.addLayer(marker);
+                // Création du marqueur de cercle pour la station
+                const marker = L.circleMarker([coord[0], coord[1]], {
+                  radius: 6,
+                  fillColor: color,
+                  color: color,
+                  weight: 1,
+                  opacity: 1,
+                  fillOpacity: 1
+                }).bindPopup(gare.name); // Popup avec le nom de la station
 
-                  bounds.extend([coord[0], coord[1]]); // Étendre les limites pour inclure cette station
+                this.markersLayer.addLayer(marker);
+                console.log("previous cord "+previousCoord)
 
-                  // Relier les stations de la même ligne
-                  if (previousCoord && previousLine === lineKey) {
-                    const polyline = L.polyline([previousCoord, coord], { color: color }).addTo(this.map);
-                    this.linesLayerGroup.addLayer(polyline);
-                  }
-
-                  previousCoord = [coord[0], coord[1]];
-                  previousLine = lineKey;
+                // Relier les stations de la même ligne
+                if (previousCoord && previousLine === lineKey) {
+                  const polyline = L.polyline([previousCoord, coord], { color: color }).addTo(this.map);
+                  this.linesLayerGroup.addLayer(polyline);
                 }
+
+                previousCoord = [coord[0], coord[1]];
+                previousLine = lineKey;
+              }
               });
             }
-          });
-        });
-
-        // Zoom sur les limites calculées tout en laissant 20% à gauche de l'écran
-        const screenLeftPadding = window.innerWidth * 0.2;
-        this.map.fitBounds(bounds, { paddingTopLeft: [screenLeftPadding, 0] });
+          }
+        }
       }
-    },  }
+    },
+};
+
+const rotateButton = () => {
+  if (dropdownButton.value) {
+    // Définir la transition CSS
+    dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
+
+    if (!dropdownButton.value.classList.contains('rotated')) {
+      // Si le bouton n'est pas déjà tourné, le tourner
+      dropdownButton.value.style.transform = 'rotate(180deg)';
+      dropdownButton.value.classList.add('rotated');
+    } else {
+      // Sinon, le remettre à sa position d'origine
+      dropdownButton.value.style.transform = '';
+      dropdownButton.value.classList.remove('rotated');
+    }
+  }
 };
 </script>
 
@@ -311,6 +356,7 @@ export default {
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
       <button @click="traceChemin(1)">Tracer le premier chemin</button>
       <button @click="traceChemin(2)">Tracer le deuxième chemin</button>      <!-- Dropdown menu -->
+      <button @click="fetchAndLogResult">recup</button>
       <div class="dropdown">
         <button class="dropbtn"></button>
         <div class="dropdown-content">
