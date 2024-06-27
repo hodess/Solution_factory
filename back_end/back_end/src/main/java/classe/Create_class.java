@@ -175,7 +175,11 @@ public class Create_class {
                 fill_voie(statement);
 
                 for (Line l : linesMap.values()) {
-                    System.out.println(l.getListeGare().size()  + "\t"+ l);
+                    System.out.println(l.getName());
+                    for (Gare g : l.getListeGare()) {
+                        System.out.println(g);
+                    }
+                    System.out.println("\n\n");
                 }
 
                 statement.close();
