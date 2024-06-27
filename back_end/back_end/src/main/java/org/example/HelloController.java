@@ -1,10 +1,7 @@
 package org.example;
 
-import classe.Create_class;
-import classe.Fonction;
+import classe.*;
 
-import classe.ReturnGareNoTraited;
-import classe.ReturnGareWithOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +45,8 @@ public class HelloController {
     public String all_garesMap() {
         Create_class.create_all_class();
         logger.info("toute les gares");
-        return ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_();
+        String ObjToJson = JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
+        return ObjToJson;
     }
 
     @GetMapping("/multiply/{num1}/{num2}")
