@@ -69,12 +69,31 @@ public class YenKSP {
                         filtreVoie.add(voie);
                     }
                 }
+                //System.out.println("spurnode: " + spurnode.getName() + " " + spurnode.getLigne().getName() + ", next node : "+ A.get(i).get(j+1).getName() +" " + A.get(i).get(j+1).getLigne().getName()  +" \t voie : " +spurnode.findVoie(A.get(i).get(j+1)));
+                //On regarde si on est deja passer par la voie 0 entre les deux gares
+                if (spurnode.findVoie(A.get(i).get(j+1)).getLigne().getName().equals("0")){
+                    for (Voie voie_start : A.get(i).get(j+1).getVoie()) {
+                        //System.out.println("Voie 0  : "+ voie_start.getGare1().getName() + "  " + voie_start.getGare1().getLigne().getName() + "  " + voie_start.getGare2().getName() + voie_start.getGare2().getLigne().getName() + "\n");
+                        if ((voie_start.getLigne().getName().equals("0")) && voie_start.getGare2() == A.get(i).get(j+1)) {
+                            filtreVoie.add(voie_start);
+                        }
+                    }
+                }
 
-                /*System.out.println("FiltreVoie: " + filtreVoie);
-                System.out.println("Rootpath: " + rootpath);
-                System.out.println("Spurnode: " + spurnode);
-                System.out.println();*/
+                if(j>0){
+                    if (A.get(i).get(j-1).findVoie(spurnode).getLigne().getName().equals("0")){
+                        for (Voie voie_start : spurnode.getVoie()) {
+                            //System.out.println("Voie 0  : "+ voie_start.getGare1().getName() + "  " + voie_start.getGare1().getLigne().getName() + "  " + voie_start.getGare2().getName() + voie_start.getGare2().getLigne().getName() + "\n");
+                            if (voie_start.getLigne().getName().equals("0")) {
+                                filtreVoie.add(voie_start);
+                            }
+                        }
+                    }
+                    //System.out.println("spurnode: " + spurnode.getName() + " " + spurnode.getLigne().getName() + ", last node :" + A.get(i).get(j-1).getName()+ " "+ A.get(i).get(j-1).getLigne().getName() +" \t voie : " +A.get(i).get(j-1).findVoie(spurnode));
+                }
+
                 Dijkstra.Result spurResult = Dijkstra.dijkstra(spurnode, end, filtreVoie, filtreLine);
+
                 if (spurResult.chemin == null) {
                     continue;
                 }
@@ -86,12 +105,13 @@ public class YenKSP {
 
                 //aficher B
                 if (!B.contains(totalPath)) {
-                    //System.out.println("TotalPath: " + totalPath);
-                    //System.out.println("TotalTime: " + totalTime);
+                    /*System.out.println("TotalPath: " + totalPath);
+                    System.out.println("TotalTime: " + totalTime);*/
                     B.add(totalPath);
                     BTemp.add(totalTime);
                 }
             }
+
 
             if (B.isEmpty()) {
                 break;
@@ -158,16 +178,21 @@ public class YenKSP {
 
     public static Result yenKSP_multiple_start_end(List<Gare> start, List<Gare> end, int k,List<Line> filtreLine,int nb_result){
         List<Voie> filtreVoie = new ArrayList<>();
-        for (Voie voie_start : start.get(0).getVoie()) {
-            //enlever toute les voie entre les start
-            if(voie_start.getLigne().getName().equals("Ligne 0")){
-                filtreVoie.add(voie_start);
+        //System.out.println("Start: " + start + "\nEnd: " + end);
+        for (Gare gare_start : start) {
+            for (Voie voie_start : gare_start.getVoie()) {
+                //enlever toute les voie entre les start
+                if (voie_start.getLigne().getName().equals("0")) {
+                    filtreVoie.add(voie_start);
+                }
             }
         }
-        for (Voie voie_end : end.get(0).getVoie()) {
-            //enlever toute les voie entre les end
-            if(voie_end.getLigne().getName().equals("Ligne 0")){
-                filtreVoie.add(voie_end);
+        for (Gare gare_end : end) {
+            for (Voie voie_end : gare_end.getVoie()) {
+                //enlever toute les voie entre les end
+                if (voie_end.getLigne().getName().equals("0")) {
+                    filtreVoie.add(voie_end);
+                }
             }
         }
 
@@ -213,8 +238,8 @@ public class YenKSP {
 
         int nb_result = 2;
 
-        System.out.println("\nYens\n");
-        System.out.println("Start: " + start + "\nEnd: " + end);
+        //System.out.println("\nYens\n");
+        //System.out.println("Start: " + start + "\nEnd: " + end);
         if (start != null && end != null) {
 
             return YenKSP.yenKSP_multiple_start_end(start, end,nb_result,filtreLine,nb_result);

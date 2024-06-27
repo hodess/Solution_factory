@@ -44,12 +44,12 @@ public class HelloController {
         return ReturnGareNoTraited.CallFunctions();
     }
 
-    @GetMapping("/garesMap")
+    /*@GetMapping("/garesMap")
     public String all_garesMap() {
         Create_class.create_all_class();
         logger.info("toute les gares");
         return ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_();
-    }
+    }*/
 
     @GetMapping("/multiply/{num1}/{num2}")
     public double multiplyNumbers(@PathVariable double num1, @PathVariable double num2) {

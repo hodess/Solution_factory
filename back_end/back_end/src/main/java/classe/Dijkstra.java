@@ -30,7 +30,6 @@ public class Dijkstra {
                 if((lien.getBidirectionnel()==1) || (lien.getBidirectionnel()==0 && lien.getGare1()==start && lien.getGare2()==voisin))
                 {
                     distance.put(voisin, lien.getTemps());
-                    //System.out.println("Voie " + lien +" " +filtreVoie.contains(lien) + "  " + lien.getTemps() + "\n " + " " + distance.get(voisin));
                     parent.put(voisin, start);
                 }
             }

@@ -30,7 +30,7 @@ public class JsonConverter {
 
     public static String convert_chemin(YenKSP.Result ListGare) {
         ObjectMapper mapper = new ObjectMapper();
-        StringBuilder jsonBuilder = new StringBuilder("{\"chemins\": [");
+        StringBuilder jsonBuilder = new StringBuilder("{\"chemins\":");
 
         List<Map<String, Object>> chemins = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class JsonConverter {
             e.printStackTrace();
         }
 
-        jsonBuilder.append("]}");
+        jsonBuilder.append("}");
 
         return jsonBuilder.toString();
     }
