@@ -6,7 +6,7 @@ let stations = ref([]);
 
 async function fetchStations() {
   try {
-    const response = await axios.get('http://localhost:8085/gares');
+    const response = await axios.get('http://localhost:8081/gares');
     stations.value = response.data;
     console.log(stations.value);
     for (let key in stations.value) {
@@ -26,7 +26,7 @@ onMounted(fetchStations);
 const selectedDepartIndex = ref(-1);
 const selectedArriveeIndex = ref(-1);
 
-function navigateResults(type, direction, searchResultsDepart, searchResultsArrivee) {
+function navigateResults(type, direction) {
   if (type === 'depart') {
     if (searchResultsDepart.value.length === 0) return;
     selectedDepartIndex.value = (selectedDepartIndex.value + direction + searchResultsDepart.value.length) % searchResultsDepart.value.length;
@@ -36,12 +36,12 @@ function navigateResults(type, direction, searchResultsDepart, searchResultsArri
   }
 }
 
-function selectHighlightedResult(type, searchResultsDepart, searchResultsArrivee, searchTextDepart, searchTextArrivee, isDepartFocused, isArriveeFocused) {
+function selectHighlightedResult(type) {
   if (type === 'depart' && selectedDepartIndex.value !== -1) {
-    selectStation(searchResultsDepart.value[selectedDepartIndex.value], 'depart', searchResultsDepart, searchTextDepart, isDepartFocused);
+    selectStation(searchResultsDepart.value[selectedDepartIndex.value], 'depart');
     selectedDepartIndex.value = -1;
   } else if (type === 'arrivee' && selectedArriveeIndex.value !== -1) {
-    selectStation(searchResultsArrivee.value[selectedArriveeIndex.value], 'arrivee', searchResultsArrivee, searchTextArrivee, isArriveeFocused);
+    selectStation(searchResultsArrivee.value[selectedArriveeIndex.value], 'arrivee');
     selectedArriveeIndex.value = -1;
   }
 }
