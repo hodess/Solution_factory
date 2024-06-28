@@ -1,38 +1,7 @@
-<template>
-  <div class="container">
-    <div class="glass-effect" v-if="chemin_json.chemins">
-      <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
-        <div class="chemin"
-             :class="{ 'selected': cheminIndex === selectedStationIndex }"
-             @click="selectStation(cheminIndex);">
-          <div class="heure">
-            <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
-            <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
-          </div>
-          <div class="trajet">
-            <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
-              <div class="lignes">
-                <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
-                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
-              </div>
-            </template>
-          </div>
-        </div>
-        <div class="divider"></div>
-      </template>
-    </div>
-  </div>
-</template>
-
-
-
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-
-let chemin_json=ref(null)
-
-
+import { chemin_json } from '@/config';
 
 
 const lineMap = {
@@ -61,7 +30,7 @@ export default {
     const formatHeureDepart = ref('');
     const formatHeureArrivee = ref('');
     const selectedStationIndex = ref(null); // State to track selected station index
-    const chemin_json = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
+    chemin_json.value = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
@@ -79,7 +48,7 @@ export default {
       axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
           .then(response => {
             chemin_json.value = response.data;  // Update the reference
-            console.log(chemin_json.value.chemins[0]);
+            // console.log(chemin_json.value.chemins[0]);
 
           })
           .catch(error => {
@@ -158,6 +127,32 @@ export default {
   }
 };
 </script>
+
+<template>
+  <div class="container">
+    <div class="glass-effect" v-if="chemin_json.chemins">
+      <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
+        <div class="chemin"
+             :class="{ 'selected': cheminIndex === selectedStationIndex }"
+             @click="selectStation(cheminIndex);">
+          <div class="heure">
+            <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
+            <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
+          </div>
+          <div class="trajet">
+            <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
+              <div class="lignes">
+                <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
+                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="divider"></div>
+      </template>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .container {
