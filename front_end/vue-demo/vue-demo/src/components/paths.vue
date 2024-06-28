@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="glass-effect" v-if="chemin_json.chemins && chemin_json.chemins.length > 0">
+    <div class="glass-effect" v-if="chemin_json.chemins">
       <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
         <div class="chemin"
              :class="{ 'selected': cheminIndex === selectedStationIndex }"
@@ -28,8 +28,10 @@
 
 <script>
 import { ref, onMounted } from "vue";
-let chemin_json=ref(null)
 import axios from "axios";
+
+let chemin_json=ref(null)
+
 
 
 
@@ -54,24 +56,17 @@ const lineMap = {
 
 export default {
   setup() {
-    const tempsTotal = ref(0);
-    const lignes = ref([]);
+    // const tempsTotal = ref(0);
+    // const lignes = ref([]);
     const formatHeureDepart = ref('');
     const formatHeureArrivee = ref('');
     const selectedStationIndex = ref(null); // State to track selected station index
-    const chemin_json = ref({ chemins: [] }); // Initialize chemin_json with an empty structure
-
-
-
-    // Function to select a station by its index
-
+    const chemin_json = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
       console.log(index)
     };
-
-
 
     const getLignes = (chemin) => {
       if (!chemin) {
@@ -79,7 +74,6 @@ export default {
       }
       return Object.keys(chemin).filter(key => key !== 'temps' && key !== 'distance');
     };
-
 
     function fetchAndLogResult() {
       axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
@@ -93,47 +87,13 @@ export default {
           });
     }
 
-    // Fonction pour calculer le temps total en minutes
-    /*const tempsEnMinutes = () => {
-      let total = 0;
-      stations.forEach(station => {
-        if (station.chemins) {
-          station.chemins.forEach(chemin => {
-            chemin.forEach(segment => {
-              total += segment.temps;
-            });
-          });
-        }
-      });
-      return Math.round(total / 60);
-    };*/
-      // Fonction pour calculer le temps total en minutes pour un chemin spécifiqu
+    // Fonction pour calculer le temps total en minutes pour un chemin spécifiqu
     const tempsEnMinutes = (chemin) => {
       if (!chemin || !chemin.temps) {
         return 0; // Return 0 if chemin or temps does not exist
       }
       return Math.round(chemin.temps / 60);
     };
-
-    // Fonction pour récupérer les noms des lignes
-    /*const recupererNomsLignes = () => {
-      stations.forEach(station => {
-        if (station.chemins) {
-          station.chemins.forEach(chemin => {
-            chemin.forEach(segment => {
-              Object.keys(segment).forEach(key => {
-                if (key !== 'temps') {
-                  lignes.value.push(key);
-                }
-              });
-            });
-          });
-        }
-      });
-    };*/
-
-    // Appeler la fonction pour récupérer les noms des lignes
-    // recupererNomsLignes();
 
     // Mettre à jour l'heure de départ
     formatHeureDepart.value = (() => {
@@ -167,8 +127,6 @@ export default {
       return `${hours}:${minutes}`;
     };
 
-
-
     // Fonction pour obtenir l'heure d'arrivée pour un chemin spécifique
 
     const getHeureArrivee = (chemin) => {
@@ -180,13 +138,10 @@ export default {
       return `${hours}:${minutes}`;
     };
 
-
-    // Fonction pour récupérer les noms des lignes pour un chemin spécifique
-
     // On component mount, select the first station by default
     onMounted(() => {
-      fetchAndLogResult();
       selectStation(0);
+      fetchAndLogResult();
     });
 
     return {
@@ -202,8 +157,6 @@ export default {
     };
   }
 };
-
-
 </script>
 
 <style scoped>
