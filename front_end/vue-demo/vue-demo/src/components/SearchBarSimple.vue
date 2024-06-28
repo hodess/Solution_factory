@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <div class="glass-effect">
-      <div class="lieu-a">{{ depart }}</div>
+      <div class="lieu-a" type="depart" >{{ updateStationsSimple }} </div>
       <div class="dotted-lines">
         <div class="dot-line" ref="dotLine1"></div>
         <div class="dot-line" ref="dotLine2"></div>
         <div class="dot-line" ref="dotLine3"></div>
       </div>
-      <div class="lieu-b">{{ arrivee }}</div>
+      <div class="lieu-b" type="arrivee">{{ updateStationsSimple }}</div>
     </div>
   </div>
 </template>
@@ -15,9 +15,19 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-const depart = "Châtelet les Halles";
-const arrivee = "Villejuif - Louis Aragon";
 
+const depart = ref('');
+const arrivee = ref('');
+
+
+function updateStationsSimple({ departSelect, arriveeSelect }, type) {
+  if (type === "depart"){
+    depart.value  = departSelect;
+  }else if ( type === "arrivee"){
+    arrivee.value = arriveeSelect;
+  }
+  
+}
 const dotLine1 = ref(null);
 const dotLine2 = ref(null);
 const dotLine3 = ref(null);

@@ -1,11 +1,15 @@
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed  } from 'vue';
   import { stations } from "@/stockage/gares";
 
+  const emit = defineEmits(['updateStations']);
 
   //Pour la navigation avec boutons
   const selectedDepartIndex = ref(-1);
   const selectedArriveeIndex = ref(-1);
+
+  
+  
 
 
   function navigateResults(type, direction) {
@@ -56,20 +60,21 @@
   }
 
   function selectStation(station, type) {
-    if (type === 'depart') {
-      searchTextDepart.value = station.name;
-      isDepartFocused.value = false;
-      searchResultsDepart.value = searchResultsDepart.value.filter(result => result.name !== station.name);
-    } else if (type === 'arrivee') {
-      searchTextArrivee.value = station.name;
-      isArriveeFocused.value = false;
-      searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
-    }
-    return{
-      searchTextDepart,
-      searchTextArrivee,
-    }
+  if (type === 'depart') {
+    searchTextDepart.value = station.name;
+    isDepartFocused.value = false;
+    searchResultsDepart.value = searchResultsDepart.value.filter(result => result.name !== station.name);
+  } else if (type === 'arrivee') {
+    searchTextArrivee.value = station.name;
+    isArriveeFocused.value = false;
+    searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
   }
+  // Emettez un événement avec les valeurs sélectionnées
+  emit('update-stations', {
+    depart: searchTextDepart.value,
+    arrivee: searchTextArrivee.value
+  });
+}
 
   function getStationLines(lines) {
     const lineMap = {

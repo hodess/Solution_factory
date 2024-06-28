@@ -1,44 +1,69 @@
 <script setup>
-  import { ref, onMounted} from 'vue';
-  import axios from 'axios'; 
-  import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import DepartDestination from "@/components/DepartDestination.vue";
+import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
 
-  import DepartDestination from "@/components/DepartDestination.vue";
-  import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
+const router = useRouter();
 
-  const router = useRouter();
+const dropdownButton = ref(null);
+const showHeureDepartArrivee = ref(false);
 
-  const dropdownButton = ref(null);
-  const handleClick = () => {
-    toggleHeureDepartArrivee();
-    rotateButton();
-  };
+const handleClick = () => {
+  toggleHeureDepartArrivee();
+  rotateButton();
+};
 
-  const showHeureDepartArrivee = ref(false);
-  const toggleHeureDepartArrivee = () => {
-    showHeureDepartArrivee.value = !showHeureDepartArrivee.value;
-  };
+const toggleHeureDepartArrivee = () => {
+  showHeureDepartArrivee.value = !showHeureDepartArrivee.value;
+};
 
-  const rotateButton = () => {
-    if (dropdownButton.value) {
-      // Définir la transition CSS
-      dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
+const rotateButton = () => {
+  if (dropdownButton.value) {
+    dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
 
-      if (!dropdownButton.value.classList.contains('rotated')) {
-        // Si le bouton n'est pas déjà tourné, le tourner
-        dropdownButton.value.style.transform = 'rotate(180deg)';
-        dropdownButton.value.classList.add('rotated');
-      } else {
-        // Sinon, le remettre à sa position d'origine
-        dropdownButton.value.style.transform = '';
-        dropdownButton.value.classList.remove('rotated');
-      }
+    if (!dropdownButton.value.classList.contains('rotated')) {
+      dropdownButton.value.style.transform = 'rotate(180deg)';
+      dropdownButton.value.classList.add('rotated');
+    } else {
+      dropdownButton.value.style.transform = '';
+      dropdownButton.value.classList.remove('rotated');
     }
-  };
-  const navigateToMap = () => {
+  }
+};
+
+const departDestination = ref(null);
+
+
+const stationDepart = ref('');
+const stationArrivee = ref('');
+
+const emit = defineEmits(['pushinformations']);
+
+
+function updateStations({ depart, arrivee }) {
+  stationDepart.value = depart;
+  stationArrivee.value = arrivee;
+}
+
+function showstationsclique() {
+  console.log(stationDepart.value, stationArrivee.value);
+  
+  emit('push-informations', {
+    departSelect: stationDepart.value,
+    arriveeSelect: stationArrivee.value
+  });
+}
+
+function buttonClique() {
+  showstationsclique();
+  navigateToMap();
+}
+
+const navigateToMap = () => {
   router.push('/map');
 };
-  </script>
+</script>
 
 
 <template>
@@ -47,7 +72,7 @@
         <div class="title-trip-wrapper">
           <div class="title-trip">Où voulez-vous aller ?</div>
         </div>
-        <DepartDestination/>
+        <DepartDestination ref="departDestination" @update-stations="updateStations"/>
         <div class="dropdown-button-container">
           <div class="dropdown-button-container-sticky">
             <div class="dropdown-button-text">Quand :</div>
@@ -59,7 +84,7 @@
         </transition>
         <div class="wrapper">
           <div class="link_wrapper">
-            <button @click="navigateToMap">Démarrer</button>
+            <button @click="buttonClique">Démarrer</button>
             </div>
         </div>
         </div>
