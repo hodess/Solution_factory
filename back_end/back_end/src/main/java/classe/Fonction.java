@@ -33,11 +33,14 @@ public class Fonction {
         return JsonConverter.convert_list_line(linesList);
     }
 
-    public static void main(String[] args) {
+    public static boolean main_connexite() {
         Create_class.create_all_class();
         String start = "Maison Blanche";
         String end = "Jussieu";
-        System.out.println(find_chemin_start_end(start, end));
+
+        List<List<Gare>> gares = YenKSP.findGare(linesMap, start, end);
+        Gare start_gare = gares.get(0).get(0);
+        return connexite.is_connected_dfs(start_gare,linesMap);
     }
 
 }
