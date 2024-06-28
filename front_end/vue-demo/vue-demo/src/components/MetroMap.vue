@@ -1,7 +1,6 @@
 <script>
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import hello_world from "@/components/hello_world.vue";
 import Hello_world from "@/components/hello_world.vue";
 import { ref } from 'vue'
 import axios from "axios"; // Importer les données des trajets
@@ -140,7 +139,7 @@ export default {
 
     },
     fetchAndLogResult() {
-      axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
+      axios.get(`http://localhost:8085/find_gare?start=Châtelet&end=Odéon`)
           .then(response => {
             console.log(response.data); // Affiche la réponse dans la console
             chemin_json=response.data

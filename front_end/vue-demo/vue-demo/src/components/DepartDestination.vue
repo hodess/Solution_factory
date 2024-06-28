@@ -1,161 +1,152 @@
 <script setup>
-  import { ref, computed } from 'vue';
-  import { stations } from "@/stockage/gares";
+import axios from 'axios';
+import { ref, computed, onMounted } from 'vue';
 
+let stations = ref([]);
 
-  //Pour la navigation avec boutons
-  const selectedDepartIndex = ref(-1);
-  const selectedArriveeIndex = ref(-1);
-
-
-  function navigateResults(type, direction) {
-    if (type === 'depart') {
-      if (searchResultsDepart.value.length === 0) return;
-      selectedDepartIndex.value = (selectedDepartIndex.value + direction + searchResultsDepart.value.length) % searchResultsDepart.value.length;
-    } else if (type === 'arrivee') {
-      if (searchResultsArrivee.value.length === 0) return;
-      selectedArriveeIndex.value = (selectedArriveeIndex.value + direction + searchResultsArrivee.value.length) % searchResultsArrivee.value.length;
-    }
-  }
-
-  function selectHighlightedResult(type) {
-    if (type === 'depart' && selectedDepartIndex.value !== -1) {
-      selectStation(searchResultsDepart.value[selectedDepartIndex.value], 'depart');
-      selectedDepartIndex.value = -1;
-    } else if (type === 'arrivee' && selectedArriveeIndex.value !== -1) {
-      selectStation(searchResultsArrivee.value[selectedArriveeIndex.value], 'arrivee');
-      selectedArriveeIndex.value = -1;
-    }
-  }
-
-
-
-
-  const { searchText: searchTextDepart, searchResults: searchResultsDepart } = useSearch(stations);
-  const { searchText: searchTextArrivee, searchResults: searchResultsArrivee } = useSearch(stations);
-
-  const isDepartFocused = ref(false);
-  const isArriveeFocused = ref(false);
-
-  function useSearch(stations) {
-    const searchText = ref('');
-    const searchResults = computed(() => {
-      if (!searchText.value) {
-        return [];
+async function fetchStations() {
+  try {
+    const response = await axios.get('http://localhost:8085/gares');
+    stations.value = response.data;
+    console.log(stations.value);
+    for (let key in stations.value) {
+      if (stations.value[key].name) {
+        // console.log(stations.value[key].name);
       }
-      return stations.filter(station =>
-          station.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
-          station.address.toLowerCase().includes(searchText.value.toLowerCase())
-      ).slice(0, 4);
-    });
-
-    return {
-      searchText,
-      searchResults,
-    };
-  }
-
-  function selectStation(station, type) {
-    if (type === 'depart') {
-      searchTextDepart.value = station.name;
-      isDepartFocused.value = false;
-      searchResultsDepart.value = searchResultsDepart.value.filter(result => result.name !== station.name);
-    } else if (type === 'arrivee') {
-      searchTextArrivee.value = station.name;
-      isArriveeFocused.value = false;
-      searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
     }
-    return{
-      searchTextDepart,
-      searchTextArrivee,
-    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des gares:', error);
   }
+}
 
-  function getStationLines(lines) {
-    const lineMap = {
-      // Metro lines
-      'M1': 'src/components/lines/metro-1.png',
-      'M2': 'src/components/lines/metro-2.png',
-      'M3': 'src/components/lines/metro-3.png',
-      'M4': 'src/components/lines/metro-4.png',
-      'M5': 'src/components/lines/metro-5.png',
-      'M6': 'src/components/lines/metro-6.png',
-      'M7': 'src/components/lines/metro-7.png',
-      'M8': 'src/components/lines/metro-8.png',
-      'M9': 'src/components/lines/metro-9.png',
-      'M10': 'src/components/lines/metro-10.png',
-      'M11': 'src/components/lines/metro-11.png',
-      'M12': 'src/components/lines/metro-12.png',
-      'M13': 'src/components/lines/metro-13.png',
-      'M14': 'src/components/lines/metro-14.png',
-      // RER lines
-      'RER A': 'src/components/lines/rer-a.png',
-      'RER B': 'src/components/lines/rer-b.png',
-      'RER C': 'src/components/lines/rer-c.png',
-      'RER D': 'src/components/lines/rer-d.png',
-      'RER E': 'src/components/lines/rer-e.png',
-      // Tram lines
-      'Tram 1': 'src/components/lines/tram-1.png',
-      'Tram 2': 'src/components/lines/tram-2.png',
-      'Tram 3a': 'src/components/lines/tram-3a.png',
-      'Tram 3b': 'src/components/lines/tram-3b.png',
-      'Tram 4': 'src/components/lines/tram-4.png',
-      'Tram 5': 'src/components/lines/tram-5.png',
-      'Tram 6': 'src/components/lines/tram-6.png',
-      'Tram 7': 'src/components/lines/tram-7.png',
-      'Tram 8': 'src/components/lines/tram-8.png',
-      'Tram 9': 'src/components/lines/tram-9.png',
-      'Tram 10': 'src/components/lines/tram-10.png',
-      'Tram 11': 'src/components/lines/tram-11.png',
-      'Tram 12': 'src/components/lines/tram-12.png',
-      'Tram 13': 'src/components/lines/tram-13.png',
-      'Tram 14': 'src/components/lines/tram-14.png',
-      // Transilien lines
-      'transilien H': 'src/components/lines/transilien-h.png',
-      'transilien J': 'src/components/lines/transilien-j.png',
-      'transilien K': 'src/components/lines/transilien-k.png',
-      'transilien L': 'src/components/lines/transilien-l.png',
-      'transilien N': 'src/components/lines/transilien-n.png',
-      'transilien P': 'src/components/lines/transilien-p.png',
-      'transilien R': 'src/components/lines/transilien-r.png',
-      'transilien U': 'src/components/lines/transilien-u.png',
-      'transilien V': 'src/components/lines/transilien-v.png',
-      //logo
-      'Logo Metro' : 'src/components/lines/logo-metro.png',
-      'Logo RER' : 'src/components/lines/logo-RER.png',
-      'Logo tram' : 'src/components/lines/logo-tram.png',
-      'Logo transilien' : 'src/components/lines/logo-transilien.png'
-    };
+// Appeler la fonction fetchStations au montage du composant
+onMounted(fetchStations);
 
-    const metroLines = [];
-    const rerLines = [];
-    const tramLines = [];
-    const transilienLines = [];
+// Pour la navigation avec boutons
+const selectedDepartIndex = ref(-1);
+const selectedArriveeIndex = ref(-1);
 
-    lines.split(', ').forEach(line => {
-      const formattedLine = line.trim();
-      if (lineMap[formattedLine]) {
-        if (formattedLine.startsWith('M')) {
-          metroLines.push(lineMap[formattedLine]);
-        } else if (formattedLine.startsWith('RER')) {
-          rerLines.push(lineMap[formattedLine]);
-        } else if (formattedLine.startsWith('Tram')) {
-          tramLines.push(lineMap[formattedLine]);
-        } else if (formattedLine.startsWith('transilien')) {
-          transilienLines.push(lineMap[formattedLine]);
-        }
+function navigateResults(type, direction, searchResultsDepart, searchResultsArrivee) {
+  if (type === 'depart') {
+    if (searchResultsDepart.value.length === 0) return;
+    selectedDepartIndex.value = (selectedDepartIndex.value + direction + searchResultsDepart.value.length) % searchResultsDepart.value.length;
+  } else if (type === 'arrivee') {
+    if (searchResultsArrivee.value.length === 0) return;
+    selectedArriveeIndex.value = (selectedArriveeIndex.value + direction + searchResultsArrivee.value.length) % searchResultsArrivee.value.length;
+  }
+}
+
+function selectHighlightedResult(type, searchResultsDepart, searchResultsArrivee, searchTextDepart, searchTextArrivee, isDepartFocused, isArriveeFocused) {
+  if (type === 'depart' && selectedDepartIndex.value !== -1) {
+    selectStation(searchResultsDepart.value[selectedDepartIndex.value], 'depart', searchResultsDepart, searchTextDepart, isDepartFocused);
+    selectedDepartIndex.value = -1;
+  } else if (type === 'arrivee' && selectedArriveeIndex.value !== -1) {
+    selectStation(searchResultsArrivee.value[selectedArriveeIndex.value], 'arrivee', searchResultsArrivee, searchTextArrivee, isArriveeFocused);
+    selectedArriveeIndex.value = -1;
+  }
+}
+
+function useSearch(stations) {
+  const searchText = ref('');
+  const searchResults = computed(() => {
+    if (!searchText.value) {
+      return [];
+    }
+    return stations.value
+      .filter(station =>
+        station.name.toLowerCase().includes(searchText.value.toLowerCase())
+      )
+      .slice(0, 4);
+  });
+  return {
+    searchText,
+    searchResults,
+  };
+}
+
+const { searchText: searchTextDepart, searchResults: searchResultsDepart } = useSearch(stations);
+const { searchText: searchTextArrivee, searchResults: searchResultsArrivee } = useSearch(stations);
+
+const isDepartFocused = ref(false);
+const isArriveeFocused = ref(false);
+
+function selectStation(station, type) {
+  if (type === 'depart') {
+    searchTextDepart.value = station.name;
+    isDepartFocused.value = false;
+    searchResultsDepart.value = searchResultsDepart.value.filter(result => result.name !== station.name);
+  } else if (type === 'arrivee') {
+    searchTextArrivee.value = station.name;
+    isArriveeFocused.value = false;
+    searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
+  }
+  return {
+    searchTextDepart,
+    searchTextArrivee,
+  }
+}
+
+function getStationLines(lines) {
+  const lineMap = {
+    // Metro lines
+    '1': 'src/components/lines/metro-1.png',
+    '2': 'src/components/lines/metro-2.png',
+    '3': 'src/components/lines/metro-3.png',
+    '4': 'src/components/lines/metro-4.png',
+    '5': 'src/components/lines/metro-5.png',
+    '6': 'src/components/lines/metro-6.png',
+    '7': 'src/components/lines/metro-7.png',
+    '8': 'src/components/lines/metro-8.png',
+    '9': 'src/components/lines/metro-9.png',
+    '10': 'src/components/lines/metro-10.png',
+    '11': 'src/components/lines/metro-11.png',
+    '12': 'src/components/lines/metro-12.png',
+    '13': 'src/components/lines/metro-13.png',
+    '14': 'src/components/lines/metro-14.png',
+    // RER lines
+    'A': 'src/components/lines/rer-a.png',
+    'B': 'src/components/lines/rer-b.png',
+    'C': 'src/components/lines/rer-c.png',
+    'D': 'src/components/lines/rer-d.png',
+    'E': 'src/components/lines/rer-e.png',
+
+  };
+
+  const metroLines = [];
+  const rerLines = [];
+  const tramLines = [];
+  const transilienLines = [];
+  const logos = [];
+
+  lines.split(', ').forEach(line => {
+    const formattedLine = line.trim();
+    if (lineMap[formattedLine]) {
+      if (/^\d+$/.test(formattedLine)) { // Commence par un chiffre de 1 à 9 (métro)
+        metroLines.push(lineMap[formattedLine]);
+      } else if (/^[A-Z]$/.test(formattedLine)) { // Commence par une lettre majuscule (RER)
+        rerLines.push(lineMap[formattedLine]);
+      } else if (formattedLine.startsWith('Tram')) {
+        tramLines.push(lineMap[formattedLine]);
+      } else if (formattedLine.startsWith('transilien')) {
+        transilienLines.push(lineMap[formattedLine]);
       } else {
-        console.log(`Image not found for line: ${line}`);
+        logos.push(lineMap[formattedLine]);
       }
-    });
+    } else {
+      console.log(`Image not found for line: ${formattedLine}`);
+    }
+  });
 
-    return {
-      metroLines,
-      rerLines,
-      tramLines,
-      transilienLines
-    };
-  }
+  return {
+    metroLines,
+    rerLines,
+    tramLines,
+    transilienLines,
+    logos
+  };
+}
+
+const { metroLines, rerLines, tramLines, transilienLines, logos } = getStationLines('M1, RER A, Tram 1, transilien H, Logo Metro, Logo RER, Logo tram, Logo transilien');
 </script>
 
 <template>
@@ -163,52 +154,45 @@
 
     <!-- Departure input -->
     <!-- <div class="small-title">De :</div> -->
-    <input
-        v-model="searchTextDepart"
-        @focus="isDepartFocused = true"
-        @blur="() => setTimeout(() => isDepartFocused = false, 100)"
-        @keydown.down.prevent="navigateResults('depart', 1)"
-        @keydown.up.prevent="navigateResults('depart', -1)"
-        @keydown.enter.prevent="selectHighlightedResult('depart')"
-        type="search"
-        class="search"
-        placeholder="Gare de départ"
-    />
+    <input v-model="searchTextDepart" @focus="isDepartFocused = true"
+      @blur="() => setTimeout(() => isDepartFocused = false, 100)" @keydown.down.prevent="navigateResults('depart', 1)"
+      @keydown.up.prevent="navigateResults('depart', -1)" @keydown.enter.prevent="selectHighlightedResult('depart')"
+      type="search" class="search" placeholder="Gare de départ" />
 
     <ul v-if="isDepartFocused && searchResultsDepart.length">
-      <li
-          v-for="(result, index) in searchResultsDepart"
-          :key="result.name"
-          @click="selectStation(result, 'depart')"
-          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length && getStationLines(result.line).tramLines.length && getStationLines(result.line).transilienLines.length, 'highlighted': index === selectedDepartIndex }"
-      >
+      <li v-for="(result, index) in searchResultsDepart" :key="result.name" @click="selectStation(result, 'depart')"
+        :class="{ 'double-height': getStationLines(result.nameLigne).metroLines.length && getStationLines(result.nameLigne).rerLines.length && getStationLines(result.nameLigne).tramLines.length && getStationLines(result.nameLigne).transilienLines.length, 'highlighted': index === selectedDepartIndex }">
         <strong>{{ result.name }}</strong><br>
         <div class="lines-container">
-          <div class="metro-lines" v-if="getStationLines(result.line).metroLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-metro.png) `}"></div>
-            <template v-for="line in getStationLines(result.line).metroLines">
-              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+          <div class="metro-lines" v-if="getStationLines(result.nameLigne).metroLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-metro.png) ` }"></div>
+            <template v-for="line in getStationLines(result.nameLigne).metroLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }">
+              </div>
               <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
             </template>
           </div>
-          <div class="rer-lines" v-if="getStationLines(result.line).rerLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-RER.png) `}"></div>
-            <template v-for="line in getStationLines(result.line).rerLines">
-              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+          <div class="rer-lines" v-if="getStationLines(result.nameLigne).rerLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-RER.png) ` }"></div>
+            <template v-for="line in getStationLines(result.nameLigne).rerLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }">
+              </div>
               <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
             </template>
           </div>
-          <div class="tram-lines" v-if="getStationLines(result.line).tramLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-tram.png) `}"></div>
-            <template v-for="line in getStationLines(result.line).tramLines">
-              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+          <div class="tram-lines" v-if="getStationLines(result.nameLigne).tramLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-tram.png) ` }"></div>
+            <template v-for="line in getStationLines(result.nameLigne).tramLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }">
+              </div>
               <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
             </template>
           </div>
-          <div class="transilien-lines" v-if="getStationLines(result.line).transilienLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-transilien.png) `}"></div>
-            <template v-for="line in getStationLines(result.line).transilienLines">
-              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }"></div>
+          <div class="transilien-lines" v-if="getStationLines(result.nameLigne).transilienLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-transilien.png) ` }"></div>
+            <template v-for="line in getStationLines(result.nameLigne).transilienLines">
+              <div v-if="line.type === 'logo'" class="logo-line" :style="{ backgroundImage: `url(${line.image})` }">
+              </div>
               <div v-else class="logo-line" :style="{ backgroundImage: `url(${line})` }"></div>
             </template>
           </div>
@@ -219,47 +203,37 @@
 
     <!-- Arrival input -->
     <!-- <div class="small-title">À :</div> -->
-    <input
-        v-model="searchTextArrivee"
-        @focus="isArriveeFocused = true"
-        @blur="() => setTimeout(() => isArriveeFocused = false, 100)"
-        @keydown.down.prevent="navigateResults('arrivee', 1)"
-        @keydown.up.prevent="navigateResults('arrivee', -1)"
-        @keydown.enter.prevent="selectHighlightedResult('arrivee')"
-        type="search"
-        class="search"
-        placeholder="Gare d'arrivée"
-    />
+    <input v-model="searchTextArrivee" @focus="isArriveeFocused = true"
+      @blur="() => setTimeout(() => isArriveeFocused = false, 100)"
+      @keydown.down.prevent="navigateResults('arrivee', 1)" @keydown.up.prevent="navigateResults('arrivee', -1)"
+      @keydown.enter.prevent="selectHighlightedResult('arrivee')" type="search" class="search"
+      placeholder="Gare d'arrivée" />
     <ul v-if="isArriveeFocused && searchResultsArrivee.length">
-      <li
-          v-for="(result, index) in searchResultsArrivee"
-          :key="result.name"
-          @click="selectStation(result, 'arrivee')"
-          :class="{ 'double-height': getStationLines(result.line).metroLines.length && getStationLines(result.line).rerLines.length && getStationLines(result.line).tramLines.length && getStationLines(result.line).transilienLines.length, 'highlighted': index === selectedArriveeIndex }"
-      >
+      <li v-for="(result, index) in searchResultsArrivee" :key="result.name" @click="selectStation(result, 'arrivee')"
+        :class="{ 'double-height': getStationLines(result.nameLigne).metroLines.length && getStationLines(result.nameLigne).rerLines.length && getStationLines(result.nameLigne).tramLines.length && getStationLines(result.nameLigne).transilienLines.length, 'highlighted': index === selectedArriveeIndex }">
         <strong>{{ result.name }}</strong><br>
         <div class="lines-container">
-          <div class="metro-lines" v-if="getStationLines(result.line).metroLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-metro.png) `}"></div>
-            <template v-for="image in getStationLines(result.line).metroLines">
+          <div class="metro-lines" v-if="getStationLines(result.nameLigne).metroLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-metro.png) ` }"></div>
+            <template v-for="image in getStationLines(result.nameLigne).metroLines">
               <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
             </template>
           </div>
-          <div class="rer-lines" v-if="getStationLines(result.line).rerLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-RER.png) `}"></div>
-            <template v-for="image in getStationLines(result.line).rerLines">
+          <div class="rer-lines" v-if="getStationLines(result.nameLigne).rerLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-RER.png) ` }"></div>
+            <template v-for="image in getStationLines(result.nameLigne).rerLines">
               <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
             </template>
           </div>
-          <div class="tram-lines" v-if="getStationLines(result.line).tramLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-tram.png) `}"></div>
-            <template v-for="image in getStationLines(result.line).tramLines">
+          <div class="tram-lines" v-if="getStationLines(result.nameLigne).tramLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-tram.png) ` }"></div>
+            <template v-for="image in getStationLines(result.nameLigne).tramLines">
               <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
             </template>
           </div>
-          <div class="transilien-lines" v-if="getStationLines(result.line).transilienLines.length">
-            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-transilien.png) `}"></div>
-            <template v-for="image in getStationLines(result.line).transilienLines">
+          <div class="transilien-lines" v-if="getStationLines(result.nameLigne).transilienLines.length">
+            <div class="logo-line" :style="{ backgroundImage: `url(src/components/lines/logo-transilien.png) ` }"></div>
+            <template v-for="image in getStationLines(result.nameLigne).transilienLines">
               <div class="logo-line" :style="{ backgroundImage: `url(${image})` }"></div>
             </template>
           </div>
@@ -327,7 +301,7 @@ li:last-child {
   border-bottom: none;
 }
 
-strong{
+strong {
   max-width: 60%;
 }
 
@@ -352,14 +326,15 @@ strong{
 
 
 .double-height {
-  height: 4rem; /* Adjust this value as needed */
+  height: 4rem;
+  /* Adjust this value as needed */
 }
 
 
- .lines-container {
+.lines-container {
 
-   flex-direction: column;
- }
+  flex-direction: column;
+}
 
 .metro-lines,
 .tram-lines,
@@ -378,14 +353,13 @@ strong{
 }
 
 .double-height {
-  height: fit-content; /* Adjust this value as needed */
+  height: fit-content;
+  /* Adjust this value as needed */
 }
 
 .highlighted {
-  background-color: #e0e0e0; /* Highlight color */
+  background-color: #e0e0e0;
+  /* Highlight color */
   border-radius: 5px;
 }
 </style>
-
-
-
