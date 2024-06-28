@@ -1,67 +1,33 @@
 <script>
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ref } from 'vue'
 import { chemin_json } from '@/config';
 import Paths from "@/components/paths.vue";
+import eventBus from '../../eventBus.js';
 
-function convertLineFormat(line) {
-  switch (line) {
-    case "Ligne 1":
-      return "ligne_1";
-    case "Ligne 2":
-      return "ligne_2";
-    case "Ligne 3":
-      return "ligne_3";
-    case "Ligne 3bis":
-      return "ligne_3bis";
-    case "Ligne 4":
-      return "ligne_4";
-    case "Ligne 5":
-      return "ligne_5";
-    case "Ligne 6":
-      return "ligne_6";
-    case "Ligne 7":
-      return "ligne_7";
-    case "Ligne 7bis":
-      return "ligne_7bis";
-    case "Ligne 8":
-      return "ligne_8";
-    case "Ligne 9":
-      return "ligne_9";
-    case "Ligne 10":
-      return "ligne_10";
-    case "Ligne 11":
-      return "ligne_11";
-    case "Ligne 12":
-      return "ligne_12";
-    case "Ligne 13":
-      return "ligne_13";
-    case "Ligne 14":
-      return "ligne_14";
-    default:
-      return "rien"; // Couleur par défaut si la ligne n'est pas trouvée
-  }
-}
-
-const rotateButton = () => {
-  if (dropdownButton.value) {
-    // Définir la transition CSS
-    dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
-
-    if (!dropdownButton.value.classList.contains('rotated')) {
-      // Si le bouton n'est pas déjà tourné, le tourner
-      dropdownButton.value.style.transform = 'rotate(180deg)';
-      dropdownButton.value.classList.add('rotated');
-    } else {
-      // Sinon, le remettre à sa position d'origine
-      dropdownButton.value.style.transform = '';
-      dropdownButton.value.classList.remove('rotated');
-    }
-  }
-};
 
 export default {
+  created() {
+    this.eventBusHandler = (numChemin) => {
+      console.log(`Événement cheminClique reçu avec numéro : ${numChemin}`);
+      switch (numChemin) {
+        case 1:
+          this.traceChemin(1)
+          break;
+        case 2:
+          this.traceChemin(2)
+          break;
+        case 3:
+          this.traceChemin(3)
+          break;
+        default:
+          console.error('Numéro de chemin invalide :', numChemin);
+          break;
+      }
+    };
+
+    eventBus.on('cheminClique', this.eventBusHandler);
+  },
   name: 'LeafletMap',
   components: {Paths},
   setup(){
@@ -121,13 +87,7 @@ export default {
     this.initMap();
     // this.showAllLines(); // Afficher tous les ronds noirs par défaut
   },
-
   methods: {
-    prinfeur() {
-      console.log("AAAAHHHHHHHHAHAHAHAHAHHZAIDHZAOIFH");
-      // Autres actions à exécuter lorsque la fonction est appelée
-    },
-
     initMap() {
       this.map = L.map('map', {
         center: [48.8566, 2.3522],
@@ -144,6 +104,8 @@ export default {
         accessToken: 'kGzEOK5vmVP8dEjh59c5'
       }).addTo(this.map);
 
+
+
       // Ajouter un nouveau contrôle de zoom en bas à gauche
       L.control.zoom({
         position: 'bottomright'
@@ -151,6 +113,7 @@ export default {
 
       this.linesLayerGroup = L.layerGroup().addTo(this.map);
       this.markersLayer = L.layerGroup().addTo(this.map);
+
 
       // this.addMarkersAsCircles(this.chemin_json);
 
@@ -271,42 +234,49 @@ export default {
       this.markersLayer.clearLayers();
     },
 
+
     traceChemin(cheminIndex) {
-  console.log("fonction trace chemin");
-  console.log(chemin_json.value);
-  console.log("Chemin numéro : " + cheminIndex);
+      console.log("fonction trace chemin");
+      console.log(chemin_json.value);
+      console.log("Chemin numéro : " + cheminIndex);
 
-  if (cheminIndex < 1 || cheminIndex > chemin_json.value.chemins.length) {
-    console.error("Index de chemin invalide");
-    return;
-  }
+      let chemin_affiche = chemin_json.value.chemins[cheminIndex-1];
+      console.log("le chemin affiché est :");
+      console.log(chemin_affiche);
 
-  let chemin_affiche = chemin_json.value.chemins[cheminIndex - 1];
-  console.log("le chemin affiché est :");
-  console.log(chemin_affiche);
+      if (!chemin_affiche) {
+        console.error("Chemin non trouvé pour l'index : " + cheminIndex);
+        return;
+      }
 
-  console.log("Les lignes sont :");
-  console.log(chemin_affiche);
+      console.log("Les lignes sont :");
+      console.log(Object.keys(chemin_affiche));
 
-  if (chemin_affiche) {
-    // this.clearMap(); // Efface les lignes et marqueurs existants sur la carte
+      // Clear previous markers and lines
+      this.clearMap();
 
-    let bounds = new L.LatLngBounds(); // Initialise les limites pour calculer le zoom
+      let bounds = new L.LatLngBounds(); // Initialise les limites pour calculer le zoom
 
-    for (let key in chemin_affiche) {
-      if (chemin_affiche.hasOwnProperty(key) && chemin_affiche[key].Gare) {
-        let gares = chemin_affiche[key].Gare;
-        let previousCoord = null;
-        let previousLine = null;
+      for (let key in chemin_affiche) {
+        if (chemin_affiche.hasOwnProperty(key) && chemin_affiche[key].Gare) {
+          let gares = chemin_affiche[key].Gare;
+          let previousCoord = null;
+          let previousLine = null;
 
-        gares.forEach(gare => {
-          let coord = gare.coord.slice(); // Copie de coord pour éviter de modifier l'original
-          const temp = coord[0];
-          coord[0] = coord[1];
-          coord[1] = temp;
+          gares.forEach(gare => {
+            if (!gare.coord || gare.coord.length !== 2) {
+              console.warn("Coordonnées invalides pour la gare : ", gare);
+              return;
+            }
 
-          if (coord && coord.length === 2) {
-            const lineKey = convertLineFormat("Ligne" + key.trim()); // Convertir la ligne au format utilisé dans lineColors
+            let coord = gare.coord.slice(); // Copie de coord pour éviter de modifier l'original
+            const temp = coord[0];
+            coord[0] = coord[1];
+            coord[1] = temp;
+
+            console.log("marche ta race"+key)
+            const lineKey = "ligne_" + key.trim();
+            console.log(lineKey)
             const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
 
             // Création du marqueur de cercle pour la station
@@ -319,10 +289,13 @@ export default {
               fillOpacity: 1
             }).bindPopup(gare.name); // Popup avec le nom de la station
 
+            console.log("marker")
+            console.log(marker)
+
             this.markersLayer.addLayer(marker);
             console.log("previous cord " + previousCoord);
 
-            // Relier les stations de la même ligne
+            //Relier les stations de la même ligne
             if (previousCoord && previousLine === lineKey) {
               const polyline = L.polyline([previousCoord, coord], { color: color }).addTo(this.map);
               this.linesLayerGroup.addLayer(polyline);
@@ -330,14 +303,29 @@ export default {
 
             previousCoord = [coord[0], coord[1]];
             previousLine = lineKey;
-          }
-        });
+
+            // Étendre les limites de la carte avec les nouvelles coordonnées
+            bounds.extend([coord[0], coord[1]]);
+          });
+        }
       }
-    }
-  }
-}
+
+      // Ajuster le zoom pour afficher toutes les lignes avec un padding à gauche de 20 rem
+      if (bounds.isValid()) {
+        this.map.fitBounds(bounds, { padding: [0, window.innerWidth * 0.1] });
+      }
     },
 
+},
+  watch: {
+    '$parent': {
+      handler: function(numChemin) {
+        console.log(`Événement cheminClique reçu avec numéro : ${numChemin}`);
+        this.traceChemin(numChemin);
+      },
+      deep: true
+    }
+  },
 };
 
 </script>
@@ -348,8 +336,10 @@ export default {
     <div>
       <button @click="showAllLines">Afficher toutes les stations</button>
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
-      <button @click="traceChemin(1)">Tracer le premier chemin</button>
-      <button @click="traceChemin(2)">Tracer le deuxième chemin</button>      <!-- Dropdown menu -->
+      <button @click="traceChemin(0)">Tracer le premier chemin</button>
+      <button @click="traceChemin(1)">Tracer le deuxième chemin</button>      <!-- Dropdown menu -->
+      <button @click="traceChemin(2)">Tracer le troisième chemin</button>      <!-- Dropdown menu -->
+
       <div class="dropdown">
         <button class="dropbtn"></button>
         <div class="dropdown-content">

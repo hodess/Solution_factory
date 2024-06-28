@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { chemin_json } from '@/config';
 import MetroMap from './MetroMap.vue';
+import eventBus from '../../eventBus.js';
+
 
 
 
@@ -26,15 +28,20 @@ const lineMap = {
 };
 
 export default {
+
   methods: {
     callPrinfeur() {
       // Utilisation de $parent pour accéder au composant MetroMap
       MetroMap.methods.prinfeur.call(this)
     },
 
-    traceChemin(cheminIndex){
-      MetroMap.methods.traceChemin.call(this, cheminIndex)
+
+    emettreEvenement(numChemin) {
+      console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
+      eventBus.emit('cheminClique', numChemin);
+
     }
+
   },
   setup() {
     // const tempsTotal = ref(0);
@@ -44,7 +51,9 @@ export default {
     const selectedStationIndex = ref(null); // State to track selected station index
     chemin_json.value = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
     const cheminJsonValue = ref(chemin_json.value);
-    const metroMapRef = ref(null); // Référence au composant MetroMap
+
+
+
 
 
 
@@ -53,7 +62,15 @@ export default {
     const updateCheminJson = () => {
       chemin_json.value = cheminJsonValue.value;
     };
+    const emettreEvenement = (numChemin) => {
+      console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
+      eventBus.emit('cheminClique', numChemin);
+    }
 
+
+    setTimeout(function() {
+      emettreEvenement(1); // Appel sans argument car par défaut, numChemin est 1
+    }, 1500);
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
@@ -137,6 +154,7 @@ export default {
       fetchAndLogResult();
     });
 
+
     return {
       chemin_json,
       cheminJsonValue,
@@ -148,7 +166,12 @@ export default {
       getHeureDepart,
       getHeureArrivee,
       selectStation,
-      fetchAndLogResult
+      fetchAndLogResult,
+      formatHeureDepart,
+      formatHeureArrivee,
+
+
+
     };
   }
 };
@@ -160,7 +183,7 @@ export default {
       <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
         <div class="chemin"
              :class="{ 'selected': cheminIndex === selectedStationIndex }"
-             @click="traceChemin(cheminIndex); selectStation(cheminIndex);">
+             @click="emettreEvenement(cheminIndex+1); selectStation(cheminIndex);">
           <div class="heure">
             <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
             <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
@@ -174,13 +197,14 @@ export default {
               </div>
             </template>
           </div>
-          <button @click="callPrinfeur">Lancer prinfeur</button>
+          <!-- <button @click="callPrinfeur">Lancer prinfeur</button> -->
 
         </div>
         <div class="divider"></div>
       </template>
     </div>
   </div>
+
 </template>
 
 <style scoped>
