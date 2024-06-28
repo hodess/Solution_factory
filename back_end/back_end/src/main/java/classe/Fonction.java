@@ -43,4 +43,10 @@ public class Fonction {
         return connexite.is_connected_dfs(start_gare,linesMap);
     }
 
+    public static void main(String[] args) {
+            Create_class.create_all_class();
+            String start = "Aimé Césaire";
+            String end = "Bibliothèque François Mitterrand";
+            System.out.println(find_chemin_start_end(start, end));
+        }
 }
