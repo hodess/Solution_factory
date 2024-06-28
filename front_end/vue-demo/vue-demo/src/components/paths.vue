@@ -4,7 +4,7 @@
       <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
         <div class="chemin"
              :class="{ 'selected': cheminIndex === selectedStationIndex }"
-             @click="selectStation(cheminIndex)">
+             @click="selectStation(cheminIndex);">
           <div class="heure">
             <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
             <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
@@ -68,6 +68,7 @@ export default {
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
+      console.log(index)
     };
 
 
