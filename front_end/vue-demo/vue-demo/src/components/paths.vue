@@ -31,6 +31,11 @@ export default {
     const formatHeureArrivee = ref('');
     const selectedStationIndex = ref(null); // State to track selected station index
     chemin_json.value = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
+    const cheminJsonValue = ref(chemin_json.value);
+
+    const updateCheminJson = () => {
+      chemin_json.value = cheminJsonValue.value;
+    };
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
@@ -48,7 +53,7 @@ export default {
       axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
           .then(response => {
             chemin_json.value = response.data;  // Update the reference
-            // console.log(chemin_json.value.chemins[0]);
+            console.log(chemin_json.value.chemins[0]);
 
           })
           .catch(error => {
@@ -115,6 +120,8 @@ export default {
 
     return {
       chemin_json,
+      cheminJsonValue,
+      updateCheminJson,
       selectedStationIndex,
       tempsEnMinutes,
       getLignes,

@@ -4,9 +4,6 @@ import 'leaflet/dist/leaflet.css';
 import { ref } from 'vue'
 import { chemin_json } from '@/config';
 
-
-console.log("chemins : "+chemin_json)
-
 function convertLineFormat(line) {
   switch (line) {
     case "Ligne 1":
@@ -68,6 +65,7 @@ const rotateButton = () => {
 export default {
   name: 'LeafletMap',
   setup(){
+    console.log("chemin au setup : ")
     console.log(chemin_json.value); // Affiche 'Chemin depuis Component1'
     console.log("je recupere bien le json depuis paths")
   },
@@ -268,10 +266,10 @@ export default {
       this.markersLayer.clearLayers();
     },
     traceChemin(cheminIndex) {
-      console.log("feur")
-      console.log("chemins : "+chemin_json)
-      let chemin_affiche = chemin_json.chemins[cheminIndex-1]
-      console.log("feur2"+chemin_affiche)
+      console.log("fonction trace chemin")
+      console.log(chemin_json.value)
+      let chemin_affiche = chemin_json.value.chemins[cheminIndex-1]
+      console.log(chemin_affiche)
 
       if (chemin_affiche) {
         this.clearMap(); // Efface les lignes et marqueurs existants sur la carte
