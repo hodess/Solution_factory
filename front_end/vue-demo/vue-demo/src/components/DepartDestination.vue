@@ -1,9 +1,9 @@
 <script setup>
 import axios from 'axios';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, defineEmits } from 'vue';
 
 let stations = ref([]);
-
+const emit = defineEmits(['update-stations']);
 async function fetchStations() {
   try {
     const response = await axios.get('http://localhost:8081/gares');
@@ -80,10 +80,15 @@ function selectStation(station, type) {
     isArriveeFocused.value = false;
     searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
   }
+  emit('update-stations', {
+    depart: searchTextDepart.value,
+    arrivee: searchTextArrivee.value
+  });
   return {
     searchTextDepart,
     searchTextArrivee,
   }
+
 }
 
 function getStationLines(lines) {

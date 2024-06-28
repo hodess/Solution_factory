@@ -1,68 +1,90 @@
 <script setup>
-  import { ref, onMounted} from 'vue';
-  import axios from 'axios'; 
-  import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-  import DepartDestination from "@/components/DepartDestination.vue";
-  import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
+import DepartDestination from "@/components/DepartDestination.vue";
+import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
 
-  const router = useRouter();
+const router = useRouter();
+const dropdownButton = ref(null);
+const handleClick = () => {
+  toggleHeureDepartArrivee();
+  rotateButton();
+};
+let messageReçu = ref("");
 
-  const dropdownButton = ref(null);
-  const handleClick = () => {
-    toggleHeureDepartArrivee();
-    rotateButton();
-  };
+function handleMessageForCookies(message) {
+  messageReçu.value = message;
+}
 
-  const showHeureDepartArrivee = ref(false);
-  const toggleHeureDepartArrivee = () => {
-    showHeureDepartArrivee.value = !showHeureDepartArrivee.value;
-  };
 
-  const rotateButton = () => {
-    if (dropdownButton.value) {
-      // Définir la transition CSS
-      dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
+const showHeureDepartArrivee = ref(false);
+const toggleHeureDepartArrivee = () => {
+  showHeureDepartArrivee.value = !showHeureDepartArrivee.value;
+};
 
-      if (!dropdownButton.value.classList.contains('rotated')) {
-        // Si le bouton n'est pas déjà tourné, le tourner
-        dropdownButton.value.style.transform = 'rotate(180deg)';
-        dropdownButton.value.classList.add('rotated');
-      } else {
-        // Sinon, le remettre à sa position d'origine
-        dropdownButton.value.style.transform = '';
-        dropdownButton.value.classList.remove('rotated');
-      }
+const rotateButton = () => {
+  if (dropdownButton.value) {
+    // Définir la transition CSS
+    dropdownButton.value.style.transition = 'transform 0.3s, background-color 0.3s';
+
+    if (!dropdownButton.value.classList.contains('rotated')) {
+      // Si le bouton n'est pas déjà tourné, le tourner
+      dropdownButton.value.style.transform = 'rotate(180deg)';
+      dropdownButton.value.classList.add('rotated');
+    } else {
+      // Sinon, le remettre à sa position d'origine
+      dropdownButton.value.style.transform = '';
+      dropdownButton.value.classList.remove('rotated');
     }
-  };
-  const navigateToMap = () => {
+  }
+};
+const navigateToMap = () => {
+  console.log(messageReçu.value);
+  let départFromStorage = localStorage.getItem("départ")
+  let ArriveeFromStorage = localStorage.getItem("arrivée")
+  if (départFromStorage == null || ArriveeFromStorage == null) {
+    localStorage.setItem('départ', messageReçu.value.depart);
+    localStorage.setItem('arrivée', messageReçu.value.arrivee);
+  }
+  else {
+    départFromStorage += ";" + messageReçu.value.depart
+    ArriveeFromStorage += ";" + messageReçu.value.arrivee
+    localStorage.setItem('départ', départFromStorage);
+    localStorage.setItem('arrivée', ArriveeFromStorage);
+  }
+  localStorage.setItem('currentDepart', messageReçu.value.depart);
+  localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
   router.push('/map');
 };
-  </script>
+
+
+</script>
 
 
 <template>
-    <div class="container">
-      <div class="glass-effect">
-        <div class="title-trip-wrapper">
-          <div class="title-trip">Où voulez-vous aller ?</div>
-        </div>
-        <DepartDestination/>
-        <div class="dropdown-button-container">
-          <div class="dropdown-button-container-sticky">
-            <div class="dropdown-button-text">Quand :</div>
-            <button  ref="dropdownButton" @click="handleClick" class="dropdown-button"></button>
-          </div>
-        </div>
-        <transition name="fade">
-          <HeureDepartArrivee v-if="showHeureDepartArrivee"/>
-        </transition>
-        <div class="wrapper-button">
-          <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
+  <div class="container">
+    <div class="glass-effect">
+      <div class="title-trip-wrapper">
+        <div class="title-trip">Où voulez-vous aller ?</div>
+      </div>
+      <DepartDestination ref="departDestination" @update-stations="handleMessageForCookies" />
+      <div class=" dropdown-button-container">
+        <div class="dropdown-button-container-sticky">
+          <div class="dropdown-button-text">Quand :</div>
+          <button ref="dropdownButton" @click="handleClick" class="dropdown-button"></button>
         </div>
       </div>
+      <transition name="fade">
+        <HeureDepartArrivee v-if="showHeureDepartArrivee" />
+      </transition>
+      <div class="wrapper-button">
+        <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
+      </div>
     </div>
-  </template>
+  </div>
+</template>
 
 
 <style scoped>
@@ -84,7 +106,7 @@
   margin: 0;
   justify-content: center;
   background: linear-gradient(135deg, rgb(40, 123, 255, 0.6), rgba(4, 7, 90, 0.78));
-/*
+  /*
   background-color: linear-gradient(135deg, #00b4db, #0083b0);
   background-color: rgb(40, 123, 255, 0.1);
   backdrop-filter: blur(5px);
@@ -97,7 +119,7 @@
 
 
 
-.glass-effect{
+.glass-effect {
   border-radius: 15px;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
@@ -129,104 +151,107 @@
   transition: transform 0.3s, background-color 0.3s;
   margin-left: 1rem;
 }
+
 .dropdown-button:hover {
-      transform: scale(1.05);
-    }
+  transform: scale(1.05);
+}
 
 
-    .dropdown-button-text{
-      color: white;
-    }
+.dropdown-button-text {
+  color: white;
+}
 
-    .dropdown-button-container{
-      right: 0;
-      display: flex;
-      width: 100%;
-      align-items: center;
-      position: relative;
-      height: 2.5rem; /* Par exemple, pour illustrer la hauteur */
-    }
+.dropdown-button-container {
+  right: 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  position: relative;
+  height: 2.5rem;
+  /* Par exemple, pour illustrer la hauteur */
+}
 
-    .dropdown-button-container-sticky{
-      display: flex;
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-
-
-    body{
-      font-family: 'Lato', sans-serif;
-    }
+.dropdown-button-container-sticky {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
 
+body {
+  font-family: 'Lato', sans-serif;
+}
 
 
 
-    .green-button{
-      display: block;
-      width: 250px;
-      height: 50px;
-      line-height: 50px;
-      text-decoration: none;
-      background: rgb(124, 164, 236);
-      text-align: center;
-      color: #ffffff;
-      letter-spacing: 1px;
-      border: 1px solid;
-      transition: all .35s;
-      border-radius: 15px;
-    }
-    .icon{
-      width: 50px;
-      height: 50px;
-      border: 3px solid transparent;
-      position: absolute;
-      transform: rotate(45deg);
-      right: 0;
-      top: 0;
-      z-index: -1;
-      transition: all .35s;
-    }
-
-    .icon svg{
-      width: 30px;
-      position: absolute;
-      top: calc(50% - 15px);
-      left: calc(50% - 15px);
-      transform: rotate(-45deg);
-      fill: #2ecc71;
-      transition: all .35s;
-    }
-
-    .green-button:hover{
-      width: 200px;
-      border: 3px solid #2ecc71;
-      background: transparent;
-      color: #2ecc71;
-    }
-
-    .green-button:hover + .icon{
-      border: 3px solid #2ecc71;
-      right: -25%;
-    }
 
 
-    .title-trip {
-      color: white;
-      font-size: 1.2rem;
-      border-bottom: black;
-      border-bottom: 1px;
-      border-radius: 1px;
-    }
+.green-button {
+  display: block;
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-decoration: none;
+  background: rgb(124, 164, 236);
+  text-align: center;
+  color: #ffffff;
+  letter-spacing: 1px;
+  border: 1px solid;
+  transition: all .35s;
+  border-radius: 15px;
+}
 
-    .title-trip-wrapper{
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
+.icon {
+  width: 50px;
+  height: 50px;
+  border: 3px solid transparent;
+  position: absolute;
+  transform: rotate(45deg);
+  right: 0;
+  top: 0;
+  z-index: -1;
+  transition: all .35s;
+}
+
+.icon svg {
+  width: 30px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 15px);
+  transform: rotate(-45deg);
+  fill: #2ecc71;
+  transition: all .35s;
+}
+
+.green-button:hover {
+  width: 200px;
+  border: 3px solid #2ecc71;
+  background: transparent;
+  color: #2ecc71;
+}
+
+.green-button:hover+.icon {
+  border: 3px solid #2ecc71;
+  right: -25%;
+}
+
+
+.title-trip {
+  color: white;
+  font-size: 1.2rem;
+  border-bottom: black;
+  border-bottom: 1px;
+  border-radius: 1px;
+}
+
+.title-trip-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2rem;
+}
 
 .btn-neutral {
   display: inline-block;
@@ -261,10 +286,9 @@
 }
 
 
-.wrapper-button{
+.wrapper-button {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 </style>
