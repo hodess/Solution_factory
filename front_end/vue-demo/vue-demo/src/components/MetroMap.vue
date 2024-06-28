@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ref } from 'vue'
 import { chemin_json } from '@/config';
+import Paths from "@/components/paths.vue";
 
 function convertLineFormat(line) {
   switch (line) {
@@ -39,7 +40,7 @@ function convertLineFormat(line) {
     case "Ligne 14":
       return "ligne_14";
     default:
-      return "feur"; // Couleur par défaut si la ligne n'est pas trouvée
+      return "rien"; // Couleur par défaut si la ligne n'est pas trouvée
   }
 }
 
@@ -60,16 +61,14 @@ const rotateButton = () => {
   }
 };
 
-
-
 export default {
   name: 'LeafletMap',
+  components: {Paths},
   setup(){
     console.log("chemin au setup : ")
     console.log(chemin_json.value); // Affiche 'Chemin depuis Component1'
     console.log("je recupere bien le json depuis paths")
   },
-
   data() {
     return {
       markersLayer: null,
@@ -122,7 +121,13 @@ export default {
     this.initMap();
     // this.showAllLines(); // Afficher tous les ronds noirs par défaut
   },
+
   methods: {
+    prinfeur() {
+      console.log("AAAAHHHHHHHHAHAHAHAHAHHZAIDHZAOIFH");
+      // Autres actions à exécuter lorsque la fonction est appelée
+    },
+
     initMap() {
       this.map = L.map('map', {
         center: [48.8566, 2.3522],
@@ -265,61 +270,74 @@ export default {
       this.linesLayerGroup.clearLayers();
       this.markersLayer.clearLayers();
     },
+
     traceChemin(cheminIndex) {
-      console.log("fonction trace chemin")
-      console.log(chemin_json.value)
-      let chemin_affiche = chemin_json.value.chemins[cheminIndex-1]
-      console.log(chemin_affiche)
+  console.log("fonction trace chemin");
+  console.log(chemin_json.value);
+  console.log("Chemin numéro : " + cheminIndex);
 
-      if (chemin_affiche) {
-        this.clearMap(); // Efface les lignes et marqueurs existants sur la carte
+  if (cheminIndex < 1 || cheminIndex > chemin_json.value.chemins.length) {
+    console.error("Index de chemin invalide");
+    return;
+  }
 
-        let bounds = new L.LatLngBounds(); // Initialise les limites pour calculer le zoom
+  let chemin_affiche = chemin_json.value.chemins[cheminIndex - 1];
+  console.log("le chemin affiché est :");
+  console.log(chemin_affiche);
 
-        for (let key in chemin_affiche) {
-          if (chemin_affiche.hasOwnProperty(key) && chemin_affiche[key].Gare) {
-            let gares = chemin_affiche[key].Gare;
-            let previousCoord=null
-            let previousLine=null
+  console.log("Les lignes sont :");
+  console.log(chemin_affiche);
 
-            gares.forEach(gare => {
-              const coord = gare.coord;
-              const temp = coord[0]
-              coord[0]=coord[1]
-              coord[1]=temp
+  if (chemin_affiche) {
+    // this.clearMap(); // Efface les lignes et marqueurs existants sur la carte
 
-              if (coord && coord.length === 2) {
-                const lineKey = convertLineFormat("Ligne"+key); // Convertir la ligne au format utilisé dans lineColors
-                const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
+    let bounds = new L.LatLngBounds(); // Initialise les limites pour calculer le zoom
 
-                // Création du marqueur de cercle pour la station
-                const marker = L.circleMarker([coord[0], coord[1]], {
-                  radius: 6,
-                  fillColor: color,
-                  color: color,
-                  weight: 1,
-                  opacity: 1,
-                  fillOpacity: 1
-                }).bindPopup(gare.name); // Popup avec le nom de la station
+    for (let key in chemin_affiche) {
+      if (chemin_affiche.hasOwnProperty(key) && chemin_affiche[key].Gare) {
+        let gares = chemin_affiche[key].Gare;
+        let previousCoord = null;
+        let previousLine = null;
 
-                this.markersLayer.addLayer(marker);
-                console.log("previous cord "+previousCoord)
+        gares.forEach(gare => {
+          let coord = gare.coord.slice(); // Copie de coord pour éviter de modifier l'original
+          const temp = coord[0];
+          coord[0] = coord[1];
+          coord[1] = temp;
 
-                // Relier les stations de la même ligne
-                if (previousCoord && previousLine === lineKey) {
-                  const polyline = L.polyline([previousCoord, coord], { color: color }).addTo(this.map);
-                  this.linesLayerGroup.addLayer(polyline);
-                }
+          if (coord && coord.length === 2) {
+            const lineKey = convertLineFormat("Ligne" + key.trim()); // Convertir la ligne au format utilisé dans lineColors
+            const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
 
-                previousCoord = [coord[0], coord[1]];
-                previousLine = lineKey;
-              }
-              });
+            // Création du marqueur de cercle pour la station
+            const marker = L.circleMarker([coord[0], coord[1]], {
+              radius: 6,
+              fillColor: color,
+              color: color,
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 1
+            }).bindPopup(gare.name); // Popup avec le nom de la station
+
+            this.markersLayer.addLayer(marker);
+            console.log("previous cord " + previousCoord);
+
+            // Relier les stations de la même ligne
+            if (previousCoord && previousLine === lineKey) {
+              const polyline = L.polyline([previousCoord, coord], { color: color }).addTo(this.map);
+              this.linesLayerGroup.addLayer(polyline);
             }
+
+            previousCoord = [coord[0], coord[1]];
+            previousLine = lineKey;
           }
-        }
+        });
       }
+    }
+  }
+}
     },
+
 };
 
 </script>

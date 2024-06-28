@@ -2,6 +2,8 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { chemin_json } from '@/config';
+import MetroMap from './MetroMap.vue';
+
 
 
 const lineMap = {
@@ -24,6 +26,16 @@ const lineMap = {
 };
 
 export default {
+  methods: {
+    callPrinfeur() {
+      // Utilisation de $parent pour accéder au composant MetroMap
+      MetroMap.methods.prinfeur.call(this)
+    },
+
+    traceChemin(cheminIndex){
+      MetroMap.methods.traceChemin.call(this, cheminIndex)
+    }
+  },
   setup() {
     // const tempsTotal = ref(0);
     // const lignes = ref([]);
@@ -32,10 +44,16 @@ export default {
     const selectedStationIndex = ref(null); // State to track selected station index
     chemin_json.value = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
     const cheminJsonValue = ref(chemin_json.value);
+    const metroMapRef = ref(null); // Référence au composant MetroMap
+
+
+
+
 
     const updateCheminJson = () => {
       chemin_json.value = cheminJsonValue.value;
     };
+
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
@@ -114,6 +132,7 @@ export default {
 
     // On component mount, select the first station by default
     onMounted(() => {
+      console.log('Le composant Paths est monté');
       selectStation(0);
       fetchAndLogResult();
     });
@@ -129,7 +148,7 @@ export default {
       getHeureDepart,
       getHeureArrivee,
       selectStation,
-      fetchAndLogResult,
+      fetchAndLogResult
     };
   }
 };
@@ -141,12 +160,13 @@ export default {
       <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
         <div class="chemin"
              :class="{ 'selected': cheminIndex === selectedStationIndex }"
-             @click="selectStation(cheminIndex);">
+             @click="traceChemin(cheminIndex); selectStation(cheminIndex);">
           <div class="heure">
             <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
             <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
           </div>
           <div class="trajet">
+
             <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
               <div class="lignes">
                 <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
@@ -154,6 +174,8 @@ export default {
               </div>
             </template>
           </div>
+          <button @click="callPrinfeur">Lancer prinfeur</button>
+
         </div>
         <div class="divider"></div>
       </template>
