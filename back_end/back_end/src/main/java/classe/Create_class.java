@@ -43,8 +43,7 @@ public class Create_class {
     }
 
     public static void fill_voie(Statement statement) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT temps,id_Ligne,name_Gare1,id_Gare1,id_ligne_gare1,name_Gare2,id_Gare2,id_ligne_gare2 FROM locomotive.voie_with_gare_with_id where name_Ligne!=0 order by name_ligne;");
-        //SELECT temps, id_Ligne, name_Ligne, name_Gare1, id_Gare1, id_ligne_gare1, name_Gare2, id_Gare2, id_ligne_gare2 FROM locomotive.voie_with_gare_with_id WHERE id_Ligne != "IDFM:C01370" and id_ligne_gare1=id_ligne_gare2  ORDER BY name_Ligne LIMIT 2000;
+        ResultSet resultSet = statement.executeQuery("SELECT temps, id_Ligne, name_Ligne, name_Gare1, id_Gare1, id_ligne_gare1, name_Gare2, id_Gare2, id_ligne_gare2 FROM locomotive.voie_with_gare_with_id WHERE id_Ligne != 'IDFM:C01370' and id_ligne_gare1=id_ligne_gare2  ORDER BY name_Ligne LIMIT 2000;");
         while (resultSet.next()) {
             String id_Gare1 = resultSet.getString("id_Gare1");
             String id_Gare2 = resultSet.getString("id_Gare2");

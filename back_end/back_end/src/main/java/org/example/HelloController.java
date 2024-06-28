@@ -41,12 +41,17 @@ public class HelloController {
         return ReturnGareNoTraited.CallFunctions();
     }
 
+    @GetMapping("/connexite")
+    public boolean connexite() {
+        logger.info("connexité");
+        return Fonction.main_connexite();
+    }
+
     @GetMapping("/garesMap")
     public String all_garesMap() {
         Create_class.create_all_class();
         logger.info("toute les gares");
-        String ObjToJson = JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
-        return ObjToJson;
+        return JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
     }
 
     @GetMapping("/multiply/{num1}/{num2}")

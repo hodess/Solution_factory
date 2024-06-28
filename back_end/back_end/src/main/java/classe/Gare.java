@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Gare {
+    public static int nbGare = 0;
     private String id;
     private String name;
     private Line ligne;
@@ -22,6 +23,7 @@ public class Gare {
         this.coord.add(x);
         this.coord.add(y);
         ligne.addGare(this);
+        nbGare++;
     }
 
     public void addVoie(Voie newVoie) {
@@ -57,6 +59,10 @@ public class Gare {
 
     public String getNomLigne(){
         return ligne.getName();
+    }
+
+    public static int getNbGare() {
+        return nbGare;
     }
 
     public double getDistance(Gare gare2) {
