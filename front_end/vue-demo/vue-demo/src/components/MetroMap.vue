@@ -29,8 +29,8 @@ export default {
     eventBus.on('cheminClique', this.eventBusHandler);
   },
   name: 'LeafletMap',
-  components: {Paths},
-  setup(){
+  components: { Paths },
+  setup() {
     console.log("chemin au setup : ")
     console.log(chemin_json.value); // Affiche 'Chemin depuis Component1'
     console.log("je recupere bien le json depuis paths")
@@ -58,28 +58,38 @@ export default {
         'ligne_12': 'src/components/lines/metro-12.png',
         'ligne_13': 'src/components/lines/metro-13.png',
         'ligne_14': 'src/components/lines/metro-14.png',
+        'ligne_A': 'src/components/lines/rer-a.png',
+        'ligne_B': 'src/components/lines/rer-b.png',
+        'ligne_C': 'src/components/lines/rer-c.png',
+        'ligne_D': 'src/components/lines/rer-d.png',
+        'ligne_E': 'src/components/lines/rer-e.png',
       }
     };
   },
   computed: {
     lineColors() {
       return {
-        ligne_1: '#FFCD00',     // Jaune
-        ligne_2: '#003CA6',     // Bleu foncé
-        ligne_3: '#837902',     // Vert olive
-        ligne_3bis: '#6EC4E8',  // Bleu ciel
-        ligne_4: '#CF009E',     // Fuchsia
-        ligne_5: '#FF7E2E',     // Orange
-        ligne_6: '#6ECA97',     // Vert clair
-        ligne_7: '#FA9ABA',     // Rose
-        ligne_7bis: '#B5BD00',  // Jaune vert
-        ligne_8: '#E19BDF',     // Lilas
-        ligne_9: '#B6BD00',     // Vert pomme
-        ligne_10: '#C9910D',    // Orange clair
-        ligne_11: '#704B1C',    // Marron
-        ligne_12: '#007852',    // Vert bouteille
-        ligne_13: '#6EC4E8',    // Bleu ciel (identique à la 3bis)
-        ligne_14: '#62259D'     // Violet
+        ligne_1: '#FFCE00',     // Jaune
+        ligne_2: '#0064B0',     // Bleu foncé
+        ligne_3: '#9F9825',     // Vert olive
+        ligne_3bis: '#98D4E2',  // Bleu ciel
+        ligne_4: '#C04191',     // Fuchsia
+        ligne_5: '#F28E42',     // Orange
+        ligne_6: '#83C491',     // Vert clair
+        ligne_7: '#F3A4BA',     // Rose
+        ligne_7bis: '#83C491',  // Jaune vert
+        ligne_8: '#CEADD2',     // Lilas
+        ligne_9: '#D5C900',     // Vert pomme
+        ligne_10: '#E3B32A',    // Orange clair
+        ligne_11: '#8D5E2A',    // Marron
+        ligne_12: '#00814F',    // Vert bouteille
+        ligne_13: '#98D4E2',    // Bleu ciel (identique à la 3bis)
+        ligne_14: '#662483',     // Violet
+        ligne_A: '#F7403A',     // Rouge
+        ligne_B: '#4B92DB',    // Rouge
+        ligne_C: '#F3D311',     // Rouge
+        ligne_D: '#3F9C35',     // Rouge
+        ligne_E: '#DE81D3',     // Rouge
       };
     }
   },
@@ -226,7 +236,7 @@ export default {
     },*/
     zoomToBounds(bounds) {
       if (bounds && bounds.isValid && bounds.isValid()) {
-        this.map.fitBounds(bounds, {paddingTopLeft: [window.innerWidth * 0.2, 0]});
+        this.map.fitBounds(bounds, { paddingTopLeft: [window.innerWidth * 0.2, 0] });
       }
     },
     clearMap() {
@@ -240,7 +250,7 @@ export default {
       console.log(chemin_json.value);
       console.log("Chemin numéro : " + cheminIndex);
 
-      let chemin_affiche = chemin_json.value.chemins[cheminIndex-1];
+      let chemin_affiche = chemin_json.value.chemins[cheminIndex - 1];
       console.log("le chemin affiché est :");
       console.log(chemin_affiche);
 
@@ -274,9 +284,8 @@ export default {
             coord[0] = coord[1];
             coord[1] = temp;
 
-            console.log("marche ta race"+key)
             const lineKey = "ligne_" + key.trim();
-            console.log(lineKey)
+            console.log("ligne key : " + lineKey)
             const color = this.lineColors[lineKey] || 'black'; // Couleur de la ligne de métro
 
             // Création du marqueur de cercle pour la station
@@ -316,10 +325,10 @@ export default {
       }
     },
 
-},
+  },
   watch: {
     '$parent': {
-      handler: function(numChemin) {
+      handler: function (numChemin) {
         console.log(`Événement cheminClique reçu avec numéro : ${numChemin}`);
         this.traceChemin(numChemin);
       },
@@ -337,8 +346,8 @@ export default {
       <button @click="showAllLines">Afficher toutes les stations</button>
       <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
       <button @click="traceChemin(0)">Tracer le premier chemin</button>
-      <button @click="traceChemin(1)">Tracer le deuxième chemin</button>      <!-- Dropdown menu -->
-      <button @click="traceChemin(2)">Tracer le troisième chemin</button>      <!-- Dropdown menu -->
+      <button @click="traceChemin(1)">Tracer le deuxième chemin</button> <!-- Dropdown menu -->
+      <button @click="traceChemin(2)">Tracer le troisième chemin</button> <!-- Dropdown menu -->
 
       <div class="dropdown">
         <button class="dropbtn"></button>
@@ -366,7 +375,7 @@ select {
   flex-grow: 1;
 }
 
-.line-button{
+.line-button {
   margin-top: -10rem;
 }
 
@@ -394,7 +403,8 @@ select {
 }
 
 .dropdown {
-  position: fixed; /* Utiliser relative au lieu de absolute */
+  position: fixed;
+  /* Utiliser relative au lieu de absolute */
   margin-top: -4rem;
   margin-left: 50vw;
   display: inline-block;
@@ -418,10 +428,13 @@ select {
   position: absolute;
   background-color: #f9f9f9;
   min-width: fit-content;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 2; /* Augmenter le z-index pour que le dropdown soit au-dessus du bouton */
-  top: -40.3rem; /* Positionner le dropdown au-dessus du bouton */
-  left: 50%; /* Centrer horizontalement par rapport au bouton */
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  /* Augmenter le z-index pour que le dropdown soit au-dessus du bouton */
+  top: -40.3rem;
+  /* Positionner le dropdown au-dessus du bouton */
+  left: 50%;
+  /* Centrer horizontalement par rapport au bouton */
   transform: translateX(-50%);
   border-radius: 15px;
 }

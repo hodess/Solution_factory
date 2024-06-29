@@ -24,7 +24,12 @@ const lineMap = {
   'ligne_13': 'src/components/lines/metro-13.png',
   'ligne_14': 'src/components/lines/metro-14.png',
   "Logo metro": 'src/components/lines/logo-metro.png',
-  "Logo RER": 'src/components/lines/logo-RER.png'
+  "Logo RER": 'src/components/lines/logo-RER.png',
+  'ligne_A': 'src/components/lines/rer-a.png',
+  'ligne_B': 'src/components/lines/rer-b.png',
+  'ligne_C': 'src/components/lines/rer-c.png',
+  'ligne_D': 'src/components/lines/rer-d.png',
+  'ligne_E': 'src/components/lines/rer-e.png',
 };
 
 export default {
@@ -68,7 +73,7 @@ export default {
     }
 
 
-    setTimeout(function() {
+    setTimeout(function () {
       emettreEvenement(1); // Appel sans argument car par défaut, numChemin est 1
     }, 1500);
 
@@ -85,15 +90,18 @@ export default {
     };
 
     function fetchAndLogResult() {
-      axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
-          .then(response => {
-            chemin_json.value = response.data;  // Update the reference
-            console.log(chemin_json.value.chemins[0]);
+      let start = localStorage.getItem('currentDepart');
+      let end = localStorage.getItem('currentArrivee');
+      axios.get(`http://localhost:8081/find_gare?start=${start}&end=${end}`)
+        .then(response => {
+          chemin_json.value = response.data;  // Update the reference
+          console.log(chemin_json.value.chemins);
+          console.log(chemin_json.value.chemins[0]);
 
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
     }
 
     // Fonction pour calculer le temps total en minutes pour un chemin spécifiqu
@@ -181,9 +189,8 @@ export default {
   <div class="container">
     <div class="glass-effect" v-if="chemin_json.chemins">
       <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
-        <div class="chemin"
-             :class="{ 'selected': cheminIndex === selectedStationIndex }"
-             @click="emettreEvenement(cheminIndex+1); selectStation(cheminIndex);">
+        <div class="chemin" :class="{ 'selected': cheminIndex === selectedStationIndex }"
+          @click="emettreEvenement(cheminIndex + 1); selectStation(cheminIndex);">
           <div class="heure">
             <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
             <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
@@ -193,7 +200,8 @@ export default {
             <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
               <div class="lignes">
                 <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
-                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
+                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image"
+                  class="fleche" />
               </div>
             </template>
           </div>
@@ -255,7 +263,8 @@ export default {
 
 .nom-ligne {
   font-weight: bold;
-  margin-right: 0.5rem; /* Espacement entre le nom de la ligne et l'image */
+  margin-right: 0.5rem;
+  /* Espacement entre le nom de la ligne et l'image */
 }
 
 img {
@@ -273,7 +282,8 @@ img {
 
 .heure {
   font-weight: bold;
-  display: flex; /* Utilisation de Flexbox pour le conteneur */
+  display: flex;
+  /* Utilisation de Flexbox pour le conteneur */
   justify-content: space-between;
 }
 
@@ -283,16 +293,17 @@ img {
   justify-content: center;
 }
 
-.divider{
-  width: 100%; /* Largeur de la barre */
-  height: 2px; /* Hauteur de la barre */
-  background-color: white; /* Couleur de la barre */
+.divider {
+  width: 100%;
+  /* Largeur de la barre */
+  height: 2px;
+  /* Hauteur de la barre */
+  background-color: white;
+  /* Couleur de la barre */
   margin-bottom: 1rem;
 }
 
-.selected{
-
-}
+.selected {}
 
 .chemin {
   padding: 0;
