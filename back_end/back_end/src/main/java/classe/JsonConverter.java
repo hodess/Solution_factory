@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonConverter {
-
+    public static final ObjectMapper objectMapper = new ObjectMapper();
     // Fonction pour convertir List<List<Gare>> en JSON
     public static String convert_list_line(List<Line> ListGare) {
         System.out.println("Convert List<List<Gare>> to JSON");
@@ -30,7 +30,7 @@ public class JsonConverter {
 
     public static String convert_chemin(YenKSP.Result ListGare) {
         ObjectMapper mapper = new ObjectMapper();
-        StringBuilder jsonBuilder = new StringBuilder("{\"chemins\": [");
+        StringBuilder jsonBuilder = new StringBuilder("{\"chemins\":");
 
         List<Map<String, Object>> chemins = new ArrayList<>();
 
@@ -38,6 +38,7 @@ public class JsonConverter {
         for (int i = 0; i < ListGare.chemins.size(); i++) {
             List<Gare> gares = ListGare.chemins.get(i);
             int temps = ListGare.temps.get(i);
+            double distance = ListGare.distance.get(i);
 
             // Utiliser une map pour regrouper les gares par ligne
             Map<String, Map<String, List<Map<String, Object>>>> lignesGares = new HashMap<>();
@@ -66,8 +67,11 @@ public class JsonConverter {
                 chemin.put(nomLigne, ligneMap);
             }
             chemin.put("temps", temps);
+            chemin.put("distance", distance);
             chemins.add(chemin);
+
         }
+
 
         try {
             jsonBuilder.append(mapper.writeValueAsString(chemins));
@@ -75,8 +79,16 @@ public class JsonConverter {
             e.printStackTrace();
         }
 
-        jsonBuilder.append("]}");
+        jsonBuilder.append("}");
 
         return jsonBuilder.toString();
+    }
+    public static String convertObjectToJson(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

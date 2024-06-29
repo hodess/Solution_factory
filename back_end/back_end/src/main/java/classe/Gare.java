@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Gare {
-    private int id;
+    public static int nbGare = 0;
+    private String id;
     private String name;
     private Line ligne;
-    private List<Integer> coord;
+    private List<Double> coord;
     private List<Voie> voie;
 
-    public Gare(int id,String name, Line ligne,int x,int y) {
+    public Gare(String id,String name, Line ligne,double x,double y) {
         this.id=id;
         this.name = name;
         this.ligne = ligne;
@@ -22,6 +23,7 @@ public class Gare {
         this.coord.add(x);
         this.coord.add(y);
         ligne.addGare(this);
+        nbGare++;
     }
 
     public void addVoie(Voie newVoie) {
@@ -30,11 +32,11 @@ public class Gare {
 
     @Override
     public String toString() {
-        return String.format(" Gare(id = %d, name=%s, ligne=%s, nb de voie=%d",
+        return String.format(" Gare(id = %s, name=%s, ligne=%s, nb de voie=%d",
                 id, name, ligne.getName(), voie.size());
     }
     @JsonProperty("id")
-    public int getId() {
+    public String getId() {
         return id;
     }
     @JsonIgnore
@@ -51,7 +53,7 @@ public class Gare {
         return name;
     }
     @JsonProperty("coord")
-    public List<Integer> getCoord() {
+    public List<Double> getCoord() {
         return coord;
     }
 
@@ -59,14 +61,38 @@ public class Gare {
         return ligne.getName();
     }
 
+    public static int getNbGare() {
+        return nbGare;
+    }
+
+    public double getDistance(Gare gare2) {
+        double lat1 = this.coord.get(0);
+        double lon1 = this.coord.get(1);
+        double lat2 = gare2.getCoord().get(0);
+        double lon2 = gare2.getCoord().get(1);
+
+        // Radius of the Earth in km
+        final int R = 6371;
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
     public Voie findVoie(Gare gare2) {
         for (Voie v : voie) {
-            if (v.getOther(this) == gare2) {
+            if (v.getGare2() == gare2) {
                 return v;
             }
         }
         return null;
     }
+
+
 
 
 }

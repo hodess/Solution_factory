@@ -15,9 +15,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-const depart = "Châtelet les Halles";
-const arrivee = "Villejuif - Louis Aragon";
-
+const depart = localStorage.getItem('currentDepart') || "Paris - Gare de Lyon";
+const arrivee = localStorage.getItem('currentArrivee') || "Paris - Gare du Nord";
 const dotLine1 = ref(null);
 const dotLine2 = ref(null);
 const dotLine3 = ref(null);
@@ -84,7 +83,8 @@ onMounted(() => {
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);*/
 
 }
-.glass-effect{
+
+.glass-effect {
   border-radius: 15px;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
@@ -95,13 +95,14 @@ onMounted(() => {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.lieu-a, .lieu-b {
+.lieu-a,
+.lieu-b {
   color: white;
   font-size: 1.1rem;
   text-align: left;
 }
 
-.dotted-lines{
+.dotted-lines {
   margin-left: 2rem;
   margin-top: 1rem;
   margin-bottom: 0.8rem;
@@ -111,13 +112,16 @@ onMounted(() => {
 .dot-line {
   border-radius: 20px;
   width: 0.3rem;
-  height: 0.2rem; /* Taille initiale */
+  height: 0.2rem;
+  /* Taille initiale */
   background-color: white;
   margin: 0.5rem 0;
-  transition: transform 1s ease-out, background-color 1s ease-out, height 1s ease-out; /* Transition pour l'animation */
+  transition: transform 1s ease-out, background-color 1s ease-out, height 1s ease-out;
+  /* Transition pour l'animation */
 }
 
 .dot-grow {
-  height: 1rem; /* Taille agrandie */
+  height: 1rem;
+  /* Taille agrandie */
 }
 </style>

@@ -1,7 +1,6 @@
 package org.example;
 
-import classe.Create_class;
-import classe.Fonction;
+import classe.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +37,21 @@ public class HelloController {
 
     @GetMapping("/gares")
     public String all_gares() {
+        logger.info("toute les gares");
+        return ReturnGareNoTraited.CallFunctions();
+    }
+
+    @GetMapping("/connexite")
+    public boolean connexite() {
+        logger.info("connexité");
+        return Fonction.main_connexite();
+    }
+
+    @GetMapping("/garesMap")
+    public String all_garesMap() {
         Create_class.create_all_class();
         logger.info("toute les gares");
-        return Fonction.all_gares();
+        return JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
     }
 
     @GetMapping("/multiply/{num1}/{num2}")
@@ -48,4 +59,5 @@ public class HelloController {
         logger.info("Multiplying numbers: {} and {}", num1, num2);
         return num1 * num2;
     }
+
 }

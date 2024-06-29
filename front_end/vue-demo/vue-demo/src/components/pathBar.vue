@@ -45,7 +45,7 @@ const handleSearchBarSimpleClick = () => {
   if (!showSearchBar.value) {
     toggleSearchBar();
   }
-};
+};  
 </script>
 
 <template>
