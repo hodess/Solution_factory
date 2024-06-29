@@ -15,6 +15,8 @@ console.log(metroWorldMap); // Vérifiez si le chemin est correct
   <main class="ImageFond">
     <div class="search_bar">
     <SearchBar />
+    </div>
+    <div class="search_bar">
     <Favori />
     </div>
     <div class="image" />

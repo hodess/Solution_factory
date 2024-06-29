@@ -26,7 +26,7 @@
   
     margin: 0;
     justify-content: center;
-    background: linear-gradient(135deg, rgb(40, 123, 255, 0.6), rgba(4, 7, 90, 0.78));
+    background: linear-gradient(135deg, rgba(255, 248, 40, 0.826), rgba(140, 155, 3, 0.832));
     border: 2px solid rgba(255, 255, 255, 1);
   
   
@@ -53,8 +53,6 @@
   font-size: 1.8rem;
   flex: 1;
 }
-
-  
 
   </style>
   
