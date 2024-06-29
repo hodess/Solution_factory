@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-on:click="handleClick">
     <div class="glass-effect">
       <div class="title">favori</div>
       <div class="lieu-a">{{ mostDepartUsed }}</div>
@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-
 
 const depart = localStorage.getItem('départ'); // Par exemple: 'gare1,gare2,gare3,gare2'
 const arrivee = localStorage.getItem('arrivée'); // Par exemple: 'gare1,gare3,gare2,gare1'
@@ -57,7 +56,13 @@ function findMostUsed(str) {
   return mostUsed;
 }
 
-
+// Fonction pour gérer le clic sur le bouton
+function handleClick() {   
+    console.log("test");
+    localStorage.setItem('départ',mostDepartUsed);
+    localStorage.setItem('arrivée',mostArriveeUsed);
+    router.push('/map');
+}
 
 </script>
 
@@ -72,7 +77,7 @@ function findMostUsed(str) {
   
     margin: 0;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(255, 248, 40, 0.826), rgba(140, 155, 3, 0.832));
+    background: linear-gradient(135deg, rgba(255, 169, 40, 0.826), rgba(155, 109, 3, 0.832));
     border: 2px solid rgba(255, 255, 255, 1);
 }
 
@@ -95,6 +100,7 @@ function findMostUsed(str) {
 }
 
 .title {
+    text-align: center;
   font-size: 1.8rem;
   flex: 1;
 }
