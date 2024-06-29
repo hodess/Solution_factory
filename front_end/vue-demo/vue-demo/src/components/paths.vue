@@ -1,119 +1,108 @@
-<template>
-  <div class="container">
-    <div class="glass-effect">
-      <template v-for="(station, stationIndex) in stations" :key="stationIndex">
-        <div class="chemin"
-             :class="{ 'selected': stationIndex === selectedStationIndex }"
-             @click="selectStation(stationIndex)">
-          <div class="heure">
-            <div class="hda">{{ getHeureDepart(station) }} - {{ getHeureArrivee(station) }}</div>
-            <div class="duree">{{ tempsEnMinutes(station) }} min</div>
-          </div>
-          <div class="trajet">
-            <template v-for="(ligne, index) in getLignes(station)" :key="index">
-              <div class="lignes">
-                <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
-                <img v-if="index < getLignes(station).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
-              </div>
-            </template>
-          </div>
-        </div>
-        <div  class="divider"></div>
-      </template>
-    </div>
-  </div>
-</template>
-
-
-
 <script>
 import { ref, onMounted } from "vue";
-import { stations } from "@/stockage/trajets";
+import axios from "axios";
+import { chemin_json } from '@/config';
+import MetroMap from './MetroMap.vue';
+import eventBus from '../../eventBus.js';
+
+
+
 
 const lineMap = {
-  "Ligne 1": 'src/components/lines/metro-1.png',
-  "Ligne 2": 'src/components/lines/metro-2.png',
-  "Ligne 3": 'src/components/lines/metro-3.png',
-  "Ligne 4": 'src/components/lines/metro-4.png',
-  "Ligne 5": 'src/components/lines/metro-5.png',
-  "Ligne 6": 'src/components/lines/metro-6.png',
-  "Ligne 7": 'src/components/lines/metro-7.png',
-  "Ligne 8": 'src/components/lines/metro-8.png',
-  "Ligne 9": 'src/components/lines/metro-9.png',
-  "Ligne 10": 'src/components/lines/metro-10.png',
-  "Ligne 11": 'src/components/lines/metro-11.png',
-  "Ligne 12": 'src/components/lines/metro-12.png',
-  "Ligne 13": 'src/components/lines/metro-13.png',
-  "Ligne 14": 'src/components/lines/metro-14.png',
-  "Ligne A": 'src/components/lines/rer-a.png',
-  "Ligne B": 'src/components/lines/rer-b.png',
-  "Ligne C": 'src/components/lines/rer-c.png',
-  "Ligne D": 'src/components/lines/rer-d.png',
-  "Ligne E": 'src/components/lines/rer-e.png',
+  'ligne_1': 'src/components/lines/metro-1.png',
+  'ligne_2': 'src/components/lines/metro-2.png',
+  'ligne_3': 'src/components/lines/metro-3.png',
+  'ligne_4': 'src/components/lines/metro-4.png',
+  'ligne_5': 'src/components/lines/metro-5.png',
+  'ligne_6': 'src/components/lines/metro-6.png',
+  'ligne_7': 'src/components/lines/metro-7.png',
+  'ligne_8': 'src/components/lines/metro-8.png',
+  'ligne_9': 'src/components/lines/metro-9.png',
+  'ligne_10': 'src/components/lines/metro-10.png',
+  'ligne_11': 'src/components/lines/metro-11.png',
+  'ligne_12': 'src/components/lines/metro-12.png',
+  'ligne_13': 'src/components/lines/metro-13.png',
+  'ligne_14': 'src/components/lines/metro-14.png',
   "Logo metro": 'src/components/lines/logo-metro.png',
   "Logo RER": 'src/components/lines/logo-RER.png'
 };
 
 export default {
+
+  methods: {
+    callPrinfeur() {
+      // Utilisation de $parent pour accéder au composant MetroMap
+      MetroMap.methods.prinfeur.call(this)
+    },
+
+
+    emettreEvenement(numChemin) {
+      console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
+      eventBus.emit('cheminClique', numChemin);
+
+    }
+
+  },
   setup() {
-    const tempsTotal = ref(0);
-    const lignes = ref([]);
+    // const tempsTotal = ref(0);
+    // const lignes = ref([]);
     const formatHeureDepart = ref('');
     const formatHeureArrivee = ref('');
     const selectedStationIndex = ref(null); // State to track selected station index
+    chemin_json.value = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
+    const cheminJsonValue = ref(chemin_json.value);
 
 
-    // Function to select a station by its index
+
+
+
+
+
+
+    const updateCheminJson = () => {
+      chemin_json.value = cheminJsonValue.value;
+    };
+    const emettreEvenement = (numChemin) => {
+      console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
+      eventBus.emit('cheminClique', numChemin);
+    }
+
+
+    setTimeout(function() {
+      emettreEvenement(1); // Appel sans argument car par défaut, numChemin est 1
+    }, 1500);
+
     const selectStation = (index) => {
       selectedStationIndex.value = index;
+      console.log(index)
     };
 
-    // Fonction pour calculer le temps total en minutes
-    /*const tempsEnMinutes = () => {
-      let total = 0;
-      stations.forEach(station => {
-        if (station.chemins) {
-          station.chemins.forEach(chemin => {
-            chemin.forEach(segment => {
-              total += segment.temps;
-            });
-          });
-        }
-      });
-      return Math.round(total / 60);
-    };*/
-      // Fonction pour calculer le temps total en minutes pour un chemin spécifique
-      const tempsEnMinutes = (station) => {
-        let total = 0;
-        if (station && station.chemins) {
-          station.chemins.forEach(chemin => {
-            chemin.forEach(segment => {
-              total += segment.temps;
-            });
-          });
-        }
-        return Math.round(total / 60);
-      };
-
-    // Fonction pour récupérer les noms des lignes
-    const recupererNomsLignes = () => {
-      stations.forEach(station => {
-        if (station.chemins) {
-          station.chemins.forEach(chemin => {
-            chemin.forEach(segment => {
-              Object.keys(segment).forEach(key => {
-                if (key !== 'temps') {
-                  lignes.value.push(key);
-                }
-              });
-            });
-          });
-        }
-      });
+    const getLignes = (chemin) => {
+      if (!chemin) {
+        return [];
+      }
+      return Object.keys(chemin).filter(key => key !== 'temps' && key !== 'distance');
     };
 
-    // Appeler la fonction pour récupérer les noms des lignes
-    recupererNomsLignes();
+    function fetchAndLogResult() {
+      axios.get(`http://localhost:8081/find_gare?start=Châtelet&end=Odéon`)
+          .then(response => {
+            chemin_json.value = response.data;  // Update the reference
+            console.log(chemin_json.value.chemins[0]);
+
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+    }
+
+    // Fonction pour calculer le temps total en minutes pour un chemin spécifiqu
+    const tempsEnMinutes = (chemin) => {
+      if (!chemin || !chemin.temps) {
+        return 0; // Return 0 if chemin or temps does not exist
+      }
+      return Math.round(chemin.temps / 60);
+    };
 
     // Mettre à jour l'heure de départ
     formatHeureDepart.value = (() => {
@@ -135,6 +124,7 @@ export default {
 
     // Fonction pour obtenir le chemin de l'image de la ligne
     function getLineImage(ligne) {
+      ligne = "ligne_" + ligne.trim();
       return lineMap[ligne] || '';
     }
 
@@ -147,51 +137,75 @@ export default {
     };
 
     // Fonction pour obtenir l'heure d'arrivée pour un chemin spécifique
-    const getHeureArrivee = (station) => {
+
+    const getHeureArrivee = (chemin) => {
       const now = new Date();
-      const timeInMinutes = tempsEnMinutes(station);
+      const timeInMinutes = tempsEnMinutes(chemin);
       now.setMinutes(now.getMinutes() + timeInMinutes);
       const hours = now.getHours().toString().padStart(2, '0');
       const minutes = now.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
     };
-    // Fonction pour récupérer les noms des lignes pour un chemin spécifique
-    const getLignes = (station) => {
-      const lignes = [];
-      if (station && station.chemins) {
-        station.chemins.forEach(chemin => {
-          chemin.forEach(segment => {
-            Object.keys(segment).forEach(key => {
-              if (key !== 'temps') {
-                lignes.push(key);
-              }
-            });
-          });
-        });
-      }
-      return lignes;
-    };
 
     // On component mount, select the first station by default
     onMounted(() => {
+      console.log('Le composant Paths est monté');
       selectStation(0);
+      fetchAndLogResult();
     });
 
+
     return {
-      stations,
+      chemin_json,
+      cheminJsonValue,
+      updateCheminJson,
       selectedStationIndex,
       tempsEnMinutes,
       getLignes,
       getLineImage,
       getHeureDepart,
       getHeureArrivee,
-      selectStation
+      selectStation,
+      fetchAndLogResult,
+      formatHeureDepart,
+      formatHeureArrivee,
+
+
+
     };
   }
 };
-
-
 </script>
+
+<template>
+  <div class="container">
+    <div class="glass-effect" v-if="chemin_json.chemins">
+      <template v-for="(chemin, cheminIndex) in chemin_json.chemins" :key="cheminIndex">
+        <div class="chemin"
+             :class="{ 'selected': cheminIndex === selectedStationIndex }"
+             @click="emettreEvenement(cheminIndex+1); selectStation(cheminIndex);">
+          <div class="heure">
+            <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
+            <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
+          </div>
+          <div class="trajet">
+
+            <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
+              <div class="lignes">
+                <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
+                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
+              </div>
+            </template>
+          </div>
+          <!-- <button @click="callPrinfeur">Lancer prinfeur</button> -->
+
+        </div>
+        <div class="divider"></div>
+      </template>
+    </div>
+  </div>
+
+</template>
 
 <style scoped>
 .container {
