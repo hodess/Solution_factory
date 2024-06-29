@@ -103,7 +103,7 @@ export default {
         .then(response => {
           chemin_json.value = response.data;  // Update the reference
           console.log(chemin_json.value.chemins);
-          console.log(chemin_json.value.chemins[0]);
+          console.log("distance :"+chemin_json.value.chemins[0].distance);
 
         })
         .catch(error => {
@@ -111,7 +111,7 @@ export default {
         });
     }
 
-    // Fonction pour calculer le temps total en minutes pour un chemin spécifiqu
+    // Fonction pour calculer le temps total en minutes pour un chemin spécifique
     const tempsEnMinutes = (chemin) => {
       if (!chemin || !chemin.temps) {
         return 0; // Return 0 if chemin or temps does not exist
@@ -162,7 +162,23 @@ export default {
       return `${hours}:${minutes}`;
     };
 
-    // On component mount, select the first station by default
+    const ShowEco = (chemin) => {
+      const metroEco = 3.8;
+      const voitureEco = 134;
+      const logoEcolo = 'src/assets/simple-leaf-logo-free-png.png';
+      const logoVoiture = 'src/assets/symbole-de-voiture-icone-png-vert.png';
+      const metroCO2 = (chemin.distance * metroEco).toFixed(1);
+      const voitureCO2 = (chemin.distance * voitureEco).toFixed(1);
+      return `
+    <span >
+      <img src="${logoEcolo}"  class = "logoEco" alt="Eco logo" style="width: 25px; height: 25px;" /> ${metroCO2} gCO2 
+      <span class="eco-separator"></span>
+      <img src="${logoVoiture}" class ="logoVoiture" alt="Car logo" style="width: 20px; height: 20px;" /> ${voitureCO2} gCO2 
+    </span>
+  `; 
+};
+
+// On component mount, select the first station by default
     onMounted(() => {
       console.log('Le composant Paths est monté');
       selectStation(0);
@@ -184,7 +200,7 @@ export default {
       fetchAndLogResult,
       formatHeureDepart,
       formatHeureArrivee,
-
+      ShowEco,
 
 
     };
@@ -203,26 +219,23 @@ export default {
             <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
           </div>
           <div class="trajet">
-
             <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
               <div class="lignes">
                 <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
-                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image"
-                  class="fleche" />
+                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
               </div>
             </template>
           </div>
           <!-- <button @click="callPrinfeur">Lancer prinfeur</button> -->
-
+          <div class="eco" v-html="ShowEco(chemin)"></div>
         </div>
-
         <div class="divider"></div>
       </template>
       <button class="print-button" @click="PrintThePage"><span class="print-icon"></span></button>
     </div>
   </div>
-
 </template>
+
 
 <style scoped>
 .container {
@@ -421,5 +434,15 @@ button.print-button:hover .print-icon::before {
 button.print-button:hover .print-icon::after {
   height: 120%;
   transition: height .2s .15s, border-width 0s .16s;
+}
+
+.eco{
+  font-size: 1rem;
+  color: rgb(25, 143, 14);
+  margin-top: 0.5rem;
+}
+
+span.eco-separator {
+  width: 1rem; /* Adjust this value to simulate a tab space */
 }
 </style>
