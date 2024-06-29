@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JsonConverter {
     public static final ObjectMapper objectMapper = new ObjectMapper();
@@ -40,18 +37,14 @@ public class JsonConverter {
             int temps = ListGare.temps.get(i);
             double distance = ListGare.distance.get(i);
 
-            // Utiliser une map pour regrouper les gares par ligne
-            Map<String, Map<String, List<Map<String, Object>>>> lignesGares = new HashMap<>();
+            // Utiliser une LinkedHashMap pour préserver l'ordre des gares par ligne
+            Map<String, Map<String, List<Map<String, Object>>>> lignesGares = new LinkedHashMap<>();
 
-            // Regrouper les gares par ligne
+            // Regrouper les gares par ligne en préservant l'ordre
             for (Gare gare : gares) {
                 String nomLigne = gare.getNomLigne();
-                if (!lignesGares.containsKey(nomLigne)) {
-                    lignesGares.put(nomLigne, new HashMap<>());
-                }
-                if (!lignesGares.get(nomLigne).containsKey("Gare")) {
-                    lignesGares.get(nomLigne).put("Gare", new ArrayList<>());
-                }
+                lignesGares.putIfAbsent(nomLigne, new LinkedHashMap<>());
+                lignesGares.get(nomLigne).putIfAbsent("Gare", new ArrayList<>());
                 Map<String, Object> gareMap = new HashMap<>();
                 gareMap.put("name", gare.getName());
                 gareMap.put("coord", gare.getCoord());
@@ -60,7 +53,7 @@ public class JsonConverter {
             }
 
             // Construire l'objet pour ce chemin
-            Map<String, Object> chemin = new HashMap<>();
+            Map<String, Object> chemin = new LinkedHashMap<>();
             for (Map.Entry<String, Map<String, List<Map<String, Object>>>> entry : lignesGares.entrySet()) {
                 String nomLigne = entry.getKey();
                 Map<String, List<Map<String, Object>>> ligneMap = entry.getValue();
@@ -69,9 +62,7 @@ public class JsonConverter {
             chemin.put("temps", temps);
             chemin.put("distance", distance);
             chemins.add(chemin);
-
         }
-
 
         try {
             jsonBuilder.append(mapper.writeValueAsString(chemins));
@@ -83,6 +74,7 @@ public class JsonConverter {
 
         return jsonBuilder.toString();
     }
+
     public static String convertObjectToJson(Object object) {
         try {
             return objectMapper.writeValueAsString(object);
