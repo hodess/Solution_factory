@@ -47,10 +47,12 @@ export default {
         'ligne_1': 'src/components/lines/metro-1.png',
         'ligne_2': 'src/components/lines/metro-2.png',
         'ligne_3': 'src/components/lines/metro-3.png',
+        'ligne_3B': 'src/components/lines/metro-3-bis.png',
         'ligne_4': 'src/components/lines/metro-4.png',
         'ligne_5': 'src/components/lines/metro-5.png',
         'ligne_6': 'src/components/lines/metro-6.png',
         'ligne_7': 'src/components/lines/metro-7.png',
+        'ligne_7B': 'src/components/lines/metro-7-bis.png',
         'ligne_8': 'src/components/lines/metro-8.png',
         'ligne_9': 'src/components/lines/metro-9.png',
         'ligne_10': 'src/components/lines/metro-10.png',
@@ -72,12 +74,12 @@ export default {
         ligne_1: '#FFCE00',     // Jaune
         ligne_2: '#0064B0',     // Bleu foncé
         ligne_3: '#9F9825',     // Vert olive
-        ligne_3bis: '#98D4E2',  // Bleu ciel
+        ligne_3B: '#98D4E2',  // Bleu ciel
         ligne_4: '#C04191',     // Fuchsia
         ligne_5: '#F28E42',     // Orange
         ligne_6: '#83C491',     // Vert clair
         ligne_7: '#F3A4BA',     // Rose
-        ligne_7bis: '#83C491',  // Jaune vert
+        ligne_7B: '#83C491',  // Jaune vert
         ligne_8: '#CEADD2',     // Lilas
         ligne_9: '#D5C900',     // Vert pomme
         ligne_10: '#E3B32A',    // Orange clair
