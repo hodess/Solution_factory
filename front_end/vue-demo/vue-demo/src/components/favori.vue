@@ -9,10 +9,10 @@
 </template>
 
 <script setup>
-
+import { useRouter } from 'vue-router';
 const depart = localStorage.getItem('départ'); // Par exemple: 'gare1,gare2,gare3,gare2'
 const arrivee = localStorage.getItem('arrivée'); // Par exemple: 'gare1,gare3,gare2,gare1'
-
+const router = useRouter();
 let mostDepartUsed = null;
 let mostArriveeUsed = null;
 
@@ -57,28 +57,36 @@ function findMostUsed(str) {
 }
 
 // Fonction pour gérer le clic sur le bouton
-function handleClick() {   
-    console.log("test");
-    localStorage.setItem('départ',mostDepartUsed);
-    localStorage.setItem('arrivée',mostArriveeUsed);
-    router.push('/map');
+function handleClick() {
+  console.log("test");
+  localStorage.setItem('currentDepart', mostDepartUsed);
+  localStorage.setItem('currentArrivee', mostArriveeUsed);
+  let EnsembleDesDepart = localStorage.getItem('départ')
+  let EnsembleDesArrivee = localStorage.getItem('arrivée')
+  EnsembleDesDepart += ";" + mostDepartUsed
+  EnsembleDesArrivee += ";" + mostArriveeUsed
+  localStorage.setItem('départ', EnsembleDesDepart);
+  localStorage.setItem('arrivée', EnsembleDesArrivee);
+  router.push('/map');
+
 }
 
 </script>
 
 <style scoped>
 .container {
-    flex-direction: column;
-    align-items: center;
-    border-radius: 15px;  
-    width: fit-content;
-    z-index: 1;
-    height: fit-content;
-  
-    margin: 0;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(255, 169, 40, 0.826), rgba(155, 109, 3, 0.832));
-    border: 2px solid rgba(255, 255, 255, 1);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+  width: fit-content;
+  z-index: 1;
+  height: fit-content;
+
+  margin: 0;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 169, 40, 0.826), rgba(155, 109, 3, 0.832));
+  border: 2px solid rgba(255, 255, 255, 1);
 }
 
 .glass-effect {
@@ -100,10 +108,8 @@ function handleClick() {
 }
 
 .title {
-    text-align: center;
+  text-align: center;
   font-size: 1.8rem;
   flex: 1;
 }
-
 </style>
-  
