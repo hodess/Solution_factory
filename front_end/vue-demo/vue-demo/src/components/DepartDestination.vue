@@ -53,9 +53,11 @@ function useSearch(stations) {
       return [];
     }
     return stations.value
-      .filter(station =>
-        station.name.toLowerCase().includes(searchText.value.toLowerCase())
-      )
+      .filter(station => {
+        const normalizedStationName = station.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedSearchText = searchText.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        return normalizedStationName.includes(normalizedSearchText);
+      })
       .slice(0, 4);
   });
   return {
