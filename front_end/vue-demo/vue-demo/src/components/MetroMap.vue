@@ -350,7 +350,7 @@ export default {
       <button @click="traceChemin(0)">Tracer le premier chemin</button>
       <button @click="traceChemin(1)">Tracer le deuxième chemin</button> <!-- Dropdown menu -->
       <button @click="traceChemin(2)">Tracer le troisième chemin</button> <!-- Dropdown menu -->
-
+      
       <div class="dropdown">
         <button class="dropbtn"></button>
         <div class="dropdown-content">
