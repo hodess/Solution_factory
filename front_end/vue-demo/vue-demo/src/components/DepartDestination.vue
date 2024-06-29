@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed  } from 'vue';
+  import { ref, computed, defineEmits  } from 'vue';
   import { stations } from "@/stockage/gares";
 
   const emit = defineEmits(['updateStations']);
@@ -69,6 +69,8 @@
     isArriveeFocused.value = false;
     searchResultsArrivee.value = searchResultsArrivee.value.filter(result => result.name !== station.name);
   }
+  console.log(searchResultsDepart, searchResultsArrivee);
+
   // Emettez un événement avec les valeurs sélectionnées
   emit('update-stations', {
     depart: searchTextDepart.value,
