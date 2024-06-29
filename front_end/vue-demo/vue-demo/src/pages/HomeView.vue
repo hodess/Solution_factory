@@ -80,7 +80,7 @@ console.log(metroWorldMap); // Vérifiez si le chemin est correct
   z-index: 3;
 }
 .logo-locomotive{
-  background-image: url("@/assets/logo-locomotive.png");
+  background-image: url("@/assets/logo-locomotive.gif");
   background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
   background-position: center;
   z-index: -0.5;
