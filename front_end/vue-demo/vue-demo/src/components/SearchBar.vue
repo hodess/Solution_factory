@@ -57,6 +57,9 @@ const navigateToMap = () => {
   localStorage.setItem('currentDepart', messageReçu.value.depart);
   localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
   router.push('/map');
+  if (window.location.pathname === '/map') {
+    window.location.reload();
+  }
 };
 
 
