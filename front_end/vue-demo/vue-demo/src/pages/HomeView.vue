@@ -1,6 +1,7 @@
 <script setup>
 import SearchBar from '../components/SearchBar.vue';
 import metroWorldMap from '../assets/metro-world-map.jpg';
+import Favori from '../components/favori.vue';
 
 console.log(metroWorldMap); // Vérifiez si le chemin est correct
 </script>
@@ -14,6 +15,7 @@ console.log(metroWorldMap); // Vérifiez si le chemin est correct
   <main class="ImageFond">
     <div class="search_bar">
     <SearchBar />
+    <Favori />
     </div>
     <div class="image" />
   </main>
