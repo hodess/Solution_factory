@@ -140,6 +140,10 @@ public class ReturnGareWithOrder {
                         } else {
                             VoieToTake = 3;
                         }
+                        if(current.getName().equals("Javel") && terminu.getName().equals("Boulogne Pont de Saint-Cloud")){
+                            VoieToTake=2;
+                        }
+                        System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
                         lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
@@ -183,6 +187,10 @@ public class ReturnGareWithOrder {
                         }
                     }
                     current=terminusNotDone;
+                    List<String> gareDoneInPart2 = new ArrayList<>();
+                    gareDone.add(current.getName());
+                    gareDoneInPart2.add(current.getName());
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), 1));
                     while(gareDone.size()<line.getListeGare().size()){
                         int VoieToTake ;
 
@@ -201,10 +209,32 @@ public class ReturnGareWithOrder {
                         } else {
                             VoieToTake = 3;
                         }
+                        System.out.println(current.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
+                        gareDoneInPart2.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
-                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
+                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));;
                     }
+                    //add to lieuwithlinethenext
+                    int VoieToTake;
+                    if (!gareDoneInPart2.contains(current.getVoie().get(0).getGare2().getName())) {
+
+                        VoieToTake = 0;
+
+                    } else if (!gareDoneInPart2.contains(current.getVoie().get(1).getGare2().getName())) {
+
+                        VoieToTake = 1;
+
+                    } else if (!gareDoneInPart2.contains(current.getVoie().get(2).getGare2().getName())) {
+
+                        VoieToTake = 2;
+
+                    } else {
+                        VoieToTake = 3;
+                    }
+                    gareDoneInPart2.add(current.getVoie().get(VoieToTake).getGare2().getName());
+                    current = current.getVoie().get(VoieToTake).getGare2();
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
                     listFinalOfLines.put(line.getName()+"/2",lieuxWithLinesAndOrder);
                 }
 //
