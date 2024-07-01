@@ -54,8 +54,13 @@ function useSearch(stations) {
     }
     return stations.value
       .filter(station => {
-        const normalizedStationName = station.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        const normalizedSearchText = searchText.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedStationName = station.name.toLowerCase().normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // Supprime les diacritiques
+          .replace(/-/g, ' '); // Supprime les tirets
+
+        const normalizedSearchText = searchText.value.toLowerCase().normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // Supprime les diacritiques
+          .replace(/-/g, ' '); // Supprime les tirets
         return normalizedStationName.includes(normalizedSearchText);
       })
       .slice(0, 4);
