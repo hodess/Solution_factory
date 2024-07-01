@@ -54,30 +54,30 @@ const rotateButton = () => {
 //   return arr.filter(element => element !== undefined && element !== "");
 // }
 const navigateToMap = () => {
-  console.log(messageReçu.value);
-  let départFromStorage = localStorage.getItem("départ")
-  let ArriveeFromStorage = localStorage.getItem("arrivée")
-  if (départFromStorage == null || ArriveeFromStorage == null) {
-    localStorage.setItem('départ', messageReçu.value.depart);
-    localStorage.setItem('arrivée', messageReçu.value.arrivee);
-  }
-  else {
-    let tab1 = départFromStorage.split(";")
-    let tab2 = ArriveeFromStorage.split(";")
-    let cleanedParts = tab1.filter(part => part && part.trim() !== 'undefined');
-    départFromStorage = cleanedParts.join(';')
-    cleanedParts = tab2.filter(part => part && part.trim() !== 'undefined');
-    ArriveeFromStorage = cleanedParts.join(';')
-    départFromStorage += ";" + messageReçu.value.depart
-    ArriveeFromStorage += ";" + messageReçu.value.arrivee
-    localStorage.setItem('départ', départFromStorage);
-    localStorage.setItem('arrivée', ArriveeFromStorage);
-  }
   if (messageReçu.value.depart == messageReçu.value.arrivee) {
     probleme.value = true;
     return;
   }
   else {
+    console.log(messageReçu.value);
+    let départFromStorage = localStorage.getItem("départ")
+    let ArriveeFromStorage = localStorage.getItem("arrivée")
+    if (départFromStorage == null || ArriveeFromStorage == null) {
+      localStorage.setItem('départ', messageReçu.value.depart);
+      localStorage.setItem('arrivée', messageReçu.value.arrivee);
+    }
+    else {
+      let tab1 = départFromStorage.split(";")
+      let tab2 = ArriveeFromStorage.split(";")
+      let cleanedParts = tab1.filter(part => part && part.trim() !== 'undefined');
+      départFromStorage = cleanedParts.join(';')
+      cleanedParts = tab2.filter(part => part && part.trim() !== 'undefined');
+      ArriveeFromStorage = cleanedParts.join(';')
+      départFromStorage += ";" + messageReçu.value.depart
+      ArriveeFromStorage += ";" + messageReçu.value.arrivee
+      localStorage.setItem('départ', départFromStorage);
+      localStorage.setItem('arrivée', ArriveeFromStorage);
+    }
     localStorage.setItem('currentDepart', messageReçu.value.depart);
     localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
     router.push('/map');
