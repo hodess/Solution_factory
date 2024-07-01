@@ -110,7 +110,7 @@ public class ReturnGareWithOrder {
     public static HashMap<String,List<LieuWithLineAndOrder>> ReturnVue_lieu_with_line_and_order()  {
         HashMap<String,List<LieuWithLineAndOrder>> listFinalOfLines = new HashMap<>();
         for (Line line : linesMap.values()) {
-            if (Arrays.asList("0", "A", "B", "C", "D", "E","10").contains(line.getName().strip())){
+            if (Arrays.asList("0", "A", "B", "C", "D", "E" ).contains(line.getName().strip())){
                 continue;
             }
             List<LieuWithLineAndOrder> lieuxWithLinesAndOrder = new ArrayList<>();
@@ -145,8 +145,23 @@ public class ReturnGareWithOrder {
                         } else {
                             VoieToTake = 3;
                         }
-                        if(current.getName().equals("Javel") && terminu.getName().equals("Boulogne Pont de Saint-Cloud")){
-                            VoieToTake=2;
+                        if(current.getName().equals("Javel") && terminu.getName().equals("Boulogne Pont de Saint-Cloud")) {
+                            if (current.getVoie().get(0).getGare2().getName().equals("Charles Michels")) {
+                                VoieToTake = 0;
+                            }
+                            else{
+                                if(current.getVoie().get(1).getGare2().getName().equals("Charles Michels")){
+                                    VoieToTake = 1;
+                                }
+                                else{
+                                    if(current.getVoie().get(2).getGare2().getName().equals("Charles Michels")){
+                                        VoieToTake = 2;
+                                    }
+                                    else{
+                                        VoieToTake = 3;
+                                    }
+                                }
+                            }
                         }
                         System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
