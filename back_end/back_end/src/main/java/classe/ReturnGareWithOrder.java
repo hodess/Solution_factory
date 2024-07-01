@@ -105,7 +105,7 @@ public class ReturnGareWithOrder {
     public static HashMap<String,List<LieuWithLineAndOrder>> ReturnVue_lieu_with_line_and_order()  {
         HashMap<String,List<LieuWithLineAndOrder>> listFinalOfLines = new HashMap<>();
         for (Line line : linesMap.values()) {
-            if (Arrays.asList("0", "A", "B", "C", "D", "E").contains(line.getName().strip())){
+            if (Arrays.asList("0", "A", "B", "C", "D", "E","10").contains(line.getName().strip())){
                 continue;
             }
             List<LieuWithLineAndOrder> lieuxWithLinesAndOrder = new ArrayList<>();
