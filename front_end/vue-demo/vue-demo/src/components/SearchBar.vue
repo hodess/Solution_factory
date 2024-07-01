@@ -52,11 +52,12 @@ const navigateToMap = () => {
     localStorage.setItem('arrivée', messageReçu.value.arrivee);
   }
   else {
-    // départFromStorage.split(";")
-    // ArriveeFromStorage.split(";")
-    // départFromStorage = cleanArray(départFromStorage)
-    // ArriveeFromStorage = cleanArray(ArriveeFromStorage)
-
+    let tab1 = départFromStorage.split(";")
+    let tab2 = ArriveeFromStorage.split(";")
+    let cleanedParts = tab1.filter(part => part && part.trim() !== 'undefined');
+    départFromStorage = cleanedParts.join(';')
+    cleanedParts = tab2.filter(part => part && part.trim() !== 'undefined');
+    ArriveeFromStorage = cleanedParts.join(';')
     départFromStorage += ";" + messageReçu.value.depart
     ArriveeFromStorage += ";" + messageReçu.value.arrivee
     localStorage.setItem('départ', départFromStorage);
