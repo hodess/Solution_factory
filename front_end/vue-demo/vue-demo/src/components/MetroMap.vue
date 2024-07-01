@@ -73,12 +73,12 @@ export default {
         '1': '#FFCD00', // Jaune
         '2': '#003CA6', // Bleu
         '3': '#837902', // Vert
-        '3b': '#6EC4E8', // Bleu clair
+        '3B': '#6EC4E8', // Bleu clair
         '4': '#CF009E', // Fuchsia
         '5': '#FF7E2E', // Orange
         '6': '#6ECA97', // Vert clair
         '7': '#FA9ABA', // Rose
-        '7b': '#6ECA97', // Vert clair
+        '7B': '#6ECA97', // Vert clair
         '8': '#E19BDF', // Lilas
         '9': '#B4A630', // Olive
         '10': '#C9910D', // Jaune foncé
@@ -126,6 +126,7 @@ export default {
     }
   },
   methods: {
+    // initialisation de la map
     initMap() {
       this.map = L.map('map', {
         center: [48.8566, 2.3522],
@@ -157,6 +158,28 @@ export default {
 
     },
 
+    // les fonctions générales pour gérer des choses sur la map
+    zoomToBounds(bounds) {
+      if (bounds && bounds.isValid && bounds.isValid()) {
+        this.map.fitBounds(bounds, { paddingTopLeft: [window.innerWidth * 0.2, 0] });
+      }
+    },
+
+    clearMap() {
+      // Effacer toutes les couches de lignes
+      this.linesLayerGroup.clearLayers();
+
+      // Effacer tous les marqueurs
+      this.markersLayer.clearLayers();
+
+      // Réinitialiser la liste des marqueurs de métro
+      this.metroMarkers = [];
+
+      // Réinitialiser d'autres structures de données si nécessaire
+      // Exemple : this.currentLine = null; // Réinitialiser la ligne actuelle si nécessaire
+    },
+
+    // récupérer les données
     async fetchAndLogResult() {
       try {
         const response = await axios.get('http://localhost:8081/garesMap');
@@ -177,6 +200,7 @@ export default {
       }
     },
 
+    // carte avec tout les points
     addMarkersAsCircles(metroData) {
       for (const key in metroData) {
         const line = key.trim(); // Supprimer les espaces éventuels autour de la clé
@@ -200,67 +224,6 @@ export default {
           this.metroMarkers.push({ line, marker });
         });
       }
-    },
-
-    addMetroLines(stations, line) {
-      const lineColor = this.lineColors[line] || 'black';
-      let bounds = [];
-
-      const polyline = L.polyline(
-          stations.map(station => {
-            const { coord } = station;
-            const [longitude, latitude] = JSON.parse(coord);
-            return [latitude, longitude];
-          }),
-          { color: lineColor }
-      );
-
-      this.linesLayerGroup.addLayer(polyline);
-      bounds = polyline.getBounds();
-
-      return bounds;
-    },
-
-
-    async toggleLine(line) {
-      this.currentLine = line;
-      this.linesLayerGroup.clearLayers();
-      this.markersLayer.clearLayers();
-
-      try {
-        const metroData = await this.fetchAndLogResult();
-
-        if (this.currentLine && metroData) {
-          const bounds = this.addMetroLines(this.chemin, this.currentLine);
-          this.addMarkersWithColor(this.chemin, this.currentLine);
-
-          this.zoomToBounds(bounds);
-        }
-      } catch (error) {
-        console.error('Error toggling line:', error);
-      }
-    },
-
-    addMarkersWithColor(stations, line) {
-      this.clearMap()
-      const lineColor = this.lineColors[line] || 'black';
-
-      stations.forEach(station => {
-        const { coord, name } = station;
-        const [longitude, latitude] = JSON.parse(coord);
-
-        const marker = L.circleMarker([latitude, longitude], {
-          radius: 6,
-          fillColor: lineColor,
-          color: lineColor,
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 1
-        }).bindPopup(name);
-
-        this.markersLayer.addLayer(marker);
-        this.metroMarkers.push({ line, marker });
-      });
     },
 
     async showAllLines() {
@@ -336,8 +299,6 @@ export default {
       }
     },
 
-
-
     async toggleLinesWithColor() {
       this.linesLayerGroup.clearLayers();
       this.markersLayer.clearLayers();
@@ -350,7 +311,7 @@ export default {
       }
     },
 
-
+    // Dropdown button
     selectLine(line) {
       if (this.currentLine === line) {
         this.showAllLines(); // Si la ligne est déjà sélectionnée, afficher toutes les stations
@@ -359,25 +320,110 @@ export default {
       }
     },
 
-    zoomToBounds(bounds) {
-      if (bounds && bounds.isValid && bounds.isValid()) {
-        this.map.fitBounds(bounds, { paddingTopLeft: [window.innerWidth * 0.2, 0] });
+    toggleLine(line) {
+      // Retirer le préfixe "ligne_" et ajouter un espace pour correspondre au JSON
+      const selectedLine = ` ${line.replace('ligne_', '')}`;
+
+      if (this.currentLine === selectedLine) {
+        // Si l'utilisateur re-clique sur la ligne actuelle, réinitialisez la carte
+        this.showAllLines();
+        this.currentLine = null; // Réinitialise la ligne actuelle
+      } else {
+        // Sinon, affichez la nouvelle ligne sélectionnée
+        this.currentLine = selectedLine;
+        this.clearMap(); // Effacer la carte avant d'ajouter la nouvelle ligne
+        this.fetchAndDisplayLine(selectedLine);
       }
     },
-    clearMap() {
-      // Effacer toutes les couches de lignes
-      this.linesLayerGroup.clearLayers();
 
-      // Effacer tous les marqueurs
-      this.markersLayer.clearLayers();
 
-      // Réinitialiser la liste des marqueurs de métro
-      this.metroMarkers = [];
+    async fetchAndDisplayLine(line) {
+      try {
+        const response = await axios.get('http://localhost:8081/garesMap');
+        const metroData = response.data;
 
-      // Réinitialiser d'autres structures de données si nécessaire
-      // Exemple : this.currentLine = null; // Réinitialiser la ligne actuelle si nécessaire
+        // Effacer toutes les couches existantes
+        this.linesLayerGroup.clearLayers();
+        this.markersLayer.clearLayers();
+
+        // Vérifiez si la ligne sélectionnée existe dans les données
+        if (metroData[line]) {
+          // Ajouter les lignes de métro
+          const bounds = this.addMetroLines(metroData[line], line);
+
+          // Ajouter les marqueurs avec couleur
+          this.addMarkersWithColor(metroData[line], line);
+
+          // Zoomer sur les limites de la nouvelle ligne
+          this.zoomToBounds(bounds);
+        } else {
+          console.error(`No data found for line: ${line}`);
+        }
+      } catch (error) {
+        console.error('Error fetching and displaying line:', error);
+      }
     },
 
+
+    addMetroLines(stations, line) {
+      const lineColor = this.metroColors[line.trim()] || 'black'; // Supprimez les espaces pour obtenir la couleur correcte
+      let bounds = [];
+
+      const polyline = L.polyline(
+          stations.map(station => {
+            const { coord } = station;
+
+            // Debug: Afficher le type et la valeur de coord
+            console.log(`coord type: ${typeof coord}`, coord);
+
+            let longitude, latitude;
+            if (Array.isArray(coord)) {
+              [longitude, latitude] = coord;
+            } else {
+              [longitude, latitude] = JSON.parse(coord.replace(/'/g, '"'));
+            }
+
+            return [latitude, longitude];
+          }),
+          { color: lineColor }
+      );
+
+      this.linesLayerGroup.addLayer(polyline);
+      bounds = polyline.getBounds();
+
+      return bounds;
+    },
+
+    addMarkersWithColor(stations, line) {
+      console.log(line.trim())
+      const lineColor = this.metroColors[line.trim()] || 'black'; // Supprimez les espaces pour obtenir la couleur correcte
+
+      stations.forEach(station => {
+        const { coord } = station;
+
+        // Vérifiez si coord est déjà un tableau
+        let longitude, latitude;
+        if (Array.isArray(coord)) {
+          [longitude, latitude] = coord;
+        } else {
+          // Supposons que coord soit une chaîne de caractères, essayez de la parser
+          [longitude, latitude] = JSON.parse(coord.replace(/'/g, '"'));
+        }
+
+        // Créer un cercle avec la couleur de la ligne
+        const circle = L.circle([latitude, longitude], {
+          color: lineColor,
+          fillColor: lineColor,
+          fillOpacity: 0.8,
+          radius: 30
+        }).addTo(this.markersLayer);
+
+        // Ajouter un popup avec le nom de la station
+        circle.bindPopup(station.name);
+      });
+    },
+
+    // trace le trajet de l'utilisateur
     traceChemin(cheminIndex) {
       // console.log("fonction trace chemin");
       // console.log(chemin_json.value);
@@ -457,6 +503,7 @@ export default {
         this.map.fitBounds(bounds, { padding: [0, window.innerWidth * 0.1] });
       }
     },
+
     },
   watch: {
     '$parent': {
@@ -475,12 +522,11 @@ export default {
   <div>
     <div id="map"></div>
     <div>
-      <button @click="showAllLines">Afficher toutes les stations</button>
-      <button @click="toggleLinesWithColor">Afficher toutes les lignes d'un coup</button>
-
       <div class="dropdown">
         <button class="dropbtn"></button>
         <div class="dropdown-content">
+          <button class="all-lines" @click="toggleLinesWithColor"></button>
+
           <div v-for="(imagePath, line) in lineImages" :key="line" @click="selectLine(line)">
             <img :src="imagePath" alt="Icone ligne de métro" style="width: 30px; height: 30px;">
           </div>
@@ -503,44 +549,15 @@ select {
   width: 100vw;
   flex-grow: 1;
 }
-
-.line-button {
-  margin-top: -10rem;
-}
-
-.marker-point {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  transition: transform 0.2s ease-in-out;
-}
-
-.marker-point:hover {
-  transform: scale(1.8);
-}
-
-.triangle-icon {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 10px solid grey;
-}
-
-.custom-div-icon {
-  cursor: pointer;
-}
-
 .dropdown {
   position: fixed;
-  /* Utiliser relative au lieu de absolute */
-  margin-top: -4rem;
-  margin-left: 50vw;
-  display: inline-block;
+  top: 93vh;
+  left: 50vw;
   z-index: 100000;
 }
 
 .dropbtn {
+
   width: 3rem;
   height: 3rem;
   background-image: url("../components/lines/logo-metro.png");
@@ -557,15 +574,14 @@ select {
   position: absolute;
   background-color: #f9f9f9;
   min-width: fit-content;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 2;
-  /* Augmenter le z-index pour que le dropdown soit au-dessus du bouton */
-  top: -40.3rem;
-  /* Positionner le dropdown au-dessus du bouton */
+  top: -20rem;
   left: 50%;
-  /* Centrer horizontalement par rapport au bouton */
   transform: translateX(-50%);
   border-radius: 15px;
+  max-height: 20rem; /* Ajoutez une hauteur maximale */
+  overflow-y: auto; /* Ajoutez défilement vertical */
 }
 
 
@@ -588,18 +604,17 @@ select {
   background-color: #f1f1f1;
 }
 
-.custom-div-icon {
+.all-lines {
   position: relative;
-  background: #fff;
-  border: 1px solid #333;
-  text-align: center;
-  font-size: 0.6rem;
-  padding: 2px;
-  border-radius: 5px;
+  width: 3.3rem;
+  height: 3.3rem;
+  background-image: url("icons/map.png");
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  background-color: white;
+  border-style: solid;
+  box-shadow: white;
 }
 
-.marker-point {
-  width: auto;
-  height: auto;
-}
 </style>
