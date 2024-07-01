@@ -56,7 +56,6 @@ const rotateButton = () => {
 //   return arr.filter(element => element !== undefined && element !== "");
 // }
 const navigateToMap = () => {
-<<<<<<< HEAD
   if (messageReçu.value.depart == messageReçu.value.arrivee) {
     probleme.value = true;
     return;
@@ -87,26 +86,6 @@ const navigateToMap = () => {
     if (window.location.pathname === '/map') {
       window.location.reload();
     }
-=======
-  console.log(messageReçu.value);
-  let départFromStorage = localStorage.getItem("départ");
-  let ArriveeFromStorage = localStorage.getItem("arrivée");
-  if (départFromStorage == null || ArriveeFromStorage == null) {
-    localStorage.setItem('départ', messageReçu.value.depart);
-    localStorage.setItem('arrivée', messageReçu.value.arrivee);
-  } else {
-    départFromStorage += ";" + messageReçu.value.depart;
-    ArriveeFromStorage += ";" + messageReçu.value.arrivee;
-    localStorage.setItem('départ', départFromStorage);
-    localStorage.setItem('arrivée', ArriveeFromStorage);
-  }
-  localStorage.setItem('currentDepart', messageReçu.value.depart);
-  localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
-  showDepartDestination.value = false; // Cacher DepartDestination
-  router.push('/map');
-  if (window.location.pathname === '/map') {
-    window.location.reload();
->>>>>>> ecolo
   }
 };
 
