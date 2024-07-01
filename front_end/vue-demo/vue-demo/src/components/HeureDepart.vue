@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch  } from "vue";
 
 
 // Fonction pour obtenir la date actuelle au format ISO (YYYY-MM-DD)
@@ -47,6 +47,8 @@ const navigateToHomeRoute = () => {
 };
 
 // Fonction pour obtenir l'heure actuelle au format HH:MM
+
+// Fonction pour obtenir l'heure actuelle au format HH:MM
 const getCurrentTime = () => {
   const now = new Date();
   const hour = String(now.getHours()).padStart(2, '0');
@@ -56,8 +58,16 @@ const getCurrentTime = () => {
 
 // Variable réactive pour stocker l'heure actuelle
 const currentTime = ref(getCurrentTime());
+sessionStorage.setItem('currentTime', currentTime.value);
+sessionStorage.setItem('type_Time', 0);
 
+// Mettre à jour sessionStorage lorsque l'heure change
+watch(currentTime, (newTime) => {
+  sessionStorage.setItem('currentTime', newTime);
+  sessionStorage.setItem('type_Time',0);
+});
 </script>
+
 
 
 <template>
@@ -81,15 +91,15 @@ const currentTime = ref(getCurrentTime());
     <div class="flèche-droite" @click="addOneDay"></div>
   </div>
   <div class="small-title">Heure de départ :</div>
-  <input
+    <input
       ref="timeInput"
       @input="updateHomeRouteQuery"
       @keypress.enter="navigateToHomeRoute"
       type="time"
       class="search"
       placeholder="Heure"
-      :value="currentTime"
-  />
+      v-model="currentTime"
+    />
   </div>
 
 </template>

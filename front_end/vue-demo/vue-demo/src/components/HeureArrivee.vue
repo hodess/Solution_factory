@@ -56,7 +56,14 @@ const getCurrentTime = () => {
 
 // Variable réactive pour stocker l'heure actuelle
 const currentTime = ref(getCurrentTime());
+sessionStorage.setItem('currentTime', currentTime.value);
+sessionStorage.setItem('type_Time', 1);
 
+// Mettre à jour sessionStorage lorsque l'heure change
+watch(currentTime, (newTime) => {
+  sessionStorage.setItem('currentTime', newTime);
+  sessionStorage.setItem('type_Time', 1);
+});
 </script>
 
 
@@ -84,13 +91,13 @@ const currentTime = ref(getCurrentTime());
     </div>
     <div class="small-title">Heure d'arrivée :</div>
     <input
-        ref="timeInput"
-        @input="updateHomeRouteQuery"
-        @keypress.enter="navigateToHomeRoute"
-        type="time"
-        class="search"
-        placeholder="Heure"
-        :value="currentTime"
+      ref="timeInput"
+      @input="updateHomeRouteQuery"
+      @keypress.enter="navigateToHomeRoute"
+      type="time"
+      class="search"
+      placeholder="Heure"
+      v-model="currentTime"
     />
     <!--
     <div class="small-title">Heure d'arrivée</div>
