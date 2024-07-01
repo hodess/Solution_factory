@@ -88,9 +88,7 @@ public class ReturnGareNoTraited {
 
                 // Appel de la fonction ReturnVue_lieu_with_line
                 List<LieuWithLine> lieuWithLines = ReturnVue_lieu_with_line(statement);
-
-                // Affichage des résultats
-                lieuWithLines.forEach(lieuWithLine -> System.out.println(lieuWithLine));
+                
                 return FromListToJson(lieuWithLines);
             } catch (SQLException e) {
                 e.printStackTrace();
