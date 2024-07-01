@@ -45,7 +45,7 @@ export default {
 
 
     emettreEvenement(numChemin) {
-      console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
+      // console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
       eventBus.emit('cheminClique', numChemin);
 
     },
@@ -70,12 +70,11 @@ export default {
 
 
 
-
     const updateCheminJson = () => {
       chemin_json.value = cheminJsonValue.value;
     };
     const emettreEvenement = (numChemin) => {
-      console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
+      // console.log(`Événement cheminClique émis avec numéro : ${numChemin}`);
       eventBus.emit('cheminClique', numChemin);
     }
 
@@ -86,7 +85,7 @@ export default {
 
     const selectStation = (index) => {
       selectedStationIndex.value = index;
-      console.log(index)
+      // console.log(index)
     };
 
     const getLignes = (chemin) => {
@@ -102,12 +101,12 @@ export default {
       axios.get(`http://localhost:8081/find_gare?start=${start}&end=${end}`)
         .then(response => {
           chemin_json.value = response.data;  // Update the reference
-          console.log(chemin_json.value.chemins);
-          console.log("distance :"+chemin_json.value.chemins[0].distance);
+          //console.log(chemin_json.value.chemins);
+          // console.log("distance :"+chemin_json.value.chemins[0].distance);
 
         })
         .catch(error => {
-          console.error('Error fetching data:', error);
+          //  console. error('Error fetching data:', error);
         });
     }
 
@@ -180,7 +179,7 @@ export default {
 
 // On component mount, select the first station by default
     onMounted(() => {
-      console.log('Le composant Paths est monté');
+      // console.log('Le composant Paths est monté');
       selectStation(0);
       fetchAndLogResult();
     });
@@ -231,7 +230,7 @@ export default {
         </div>
         <div class="divider"></div>
       </template>
-      <button class="print-button" @click="PrintThePage"><span class="print-icon"></span></button>
+      <!-- <button class="print-button" @click="PrintThePage"><span class="print-icon"></span></button> -->
     </div>
   </div>
 </template>
