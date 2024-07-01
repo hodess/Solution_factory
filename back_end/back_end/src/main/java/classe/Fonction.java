@@ -23,7 +23,6 @@ public class Fonction {
             return null;
         }
         List<Line> filtreLine = new ArrayList<>();
-        YenKSP.affichage(start, end, filtreLine);
         YenKSP.Result result = YenKSP.ret_yens(start, end, filtreLine);
         return JsonConverter.convert_chemin(result);
     }
