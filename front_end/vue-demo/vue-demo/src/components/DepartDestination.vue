@@ -104,10 +104,12 @@ function getStationLines(lines) {
     '1': 'src/components/lines/metro-1.png',
     '2': 'src/components/lines/metro-2.png',
     '3': 'src/components/lines/metro-3.png',
+    '3B': 'src/components/lines/metro-3-bis.png',
     '4': 'src/components/lines/metro-4.png',
     '5': 'src/components/lines/metro-5.png',
     '6': 'src/components/lines/metro-6.png',
     '7': 'src/components/lines/metro-7.png',
+    '7B': 'src/components/lines/metro-7-bis.png',
     '8': 'src/components/lines/metro-8.png',
     '9': 'src/components/lines/metro-9.png',
     '10': 'src/components/lines/metro-10.png',
@@ -133,7 +135,7 @@ function getStationLines(lines) {
   lines.split(', ').forEach(line => {
     const formattedLine = line.trim();
     if (lineMap[formattedLine]) {
-      if (/^\d+$/.test(formattedLine)) { // Commence par un chiffre de 1 à 9 (métro)
+      if (/^\d+/.test(formattedLine)) { // Commence par un chiffre de 1 à 9 (métro)
         metroLines.push(lineMap[formattedLine]);
       } else if (/^[A-Z]$/.test(formattedLine)) { // Commence par une lettre majuscule (RER)
         rerLines.push(lineMap[formattedLine]);
