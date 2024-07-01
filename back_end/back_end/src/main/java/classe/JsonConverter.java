@@ -57,7 +57,10 @@ public class JsonConverter {
             for (Map.Entry<String, Map<String, List<Map<String, Object>>>> entry : lignesGares.entrySet()) {
                 String nomLigne = entry.getKey();
                 Map<String, List<Map<String, Object>>> ligneMap = entry.getValue();
-                chemin.put(nomLigne, ligneMap);
+                // Vérifier que la ligne contient plus d'une gare
+                if (ligneMap.get("Gare").size() > 1) {
+                    chemin.put(nomLigne, ligneMap);
+                }
             }
             chemin.put("temps", temps);
             chemin.put("distance", distance);
@@ -74,6 +77,7 @@ public class JsonConverter {
 
         return jsonBuilder.toString();
     }
+
 
     public static String convertObjectToJson(Object object) {
         try {
