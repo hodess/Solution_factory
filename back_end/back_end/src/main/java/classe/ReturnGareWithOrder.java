@@ -69,14 +69,16 @@ public class ReturnGareWithOrder {
     private static Map<String, Line> linesMap;
 
     public static class LieuWithLineAndOrder {
+        private final String coord;
         private String name;
         private String nameLigne;
         private int order;
 
-        public LieuWithLineAndOrder(String name, String nameLigne, int order) {
+        public LieuWithLineAndOrder(String name, String nameLigne, int order,String coord) {
             this.name = name;
             this.nameLigne = nameLigne;
             this.order = order;
+            this.coord = coord;
         }
 
         public String getName() {
@@ -91,7 +93,9 @@ public class ReturnGareWithOrder {
             return order;
         }
 
-
+        public String getCoord() {
+            return coord;
+        }
 
         @Override
         public String toString() {
@@ -99,6 +103,7 @@ public class ReturnGareWithOrder {
                     "name='" + name + '\'' +
                     ", nameLigne='" + nameLigne + '\'' +
                     ", order=" + order +
+                    ", coord='" + coord + '\'' +
                     '}';
         }
     }
@@ -115,7 +120,7 @@ public class ReturnGareWithOrder {
                 int i=0;
                 for(Gare terminu :terminus){
                     i++;
-                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(terminu.getName(),terminu.getLigne().getName(),1));
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(terminu.getName(),terminu.getLigne().getName(),1,terminu.getCoord().toString()));
                     Gare current=terminu;
                     List<String> gareDone = new ArrayList<>();
                     gareDone.add(current.getName());
@@ -146,7 +151,7 @@ public class ReturnGareWithOrder {
                         System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
-                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
+                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
                     }
                 listFinalOfLines.put(line.getName()+"/"+i,lieuxWithLinesAndOrder);
                 }
@@ -157,7 +162,7 @@ public class ReturnGareWithOrder {
                     //fourchette
                     List<Gare> terminusTraited= new ArrayList<>();
                     terminusTraited.add(terminus.get(0));
-                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(terminus.get(0).getName(), terminus.get(0).getLigne().getName(), 1));
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(terminus.get(0).getName(), terminus.get(0).getLigne().getName(), 1,terminus.get(0).getCoord().toString()));
                     Gare current=terminus.get(0);
                     List<String> gareDone = new ArrayList<>();
                     gareDone.add(current.getName());
@@ -175,7 +180,7 @@ public class ReturnGareWithOrder {
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
                         System.out.println(current.getName());
-                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
+                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
                     }
                     listFinalOfLines.put(line.getName()+"/1",lieuxWithLinesAndOrder);
                     terminusTraited.add(current);
@@ -190,7 +195,7 @@ public class ReturnGareWithOrder {
                     List<String> gareDoneInPart2 = new ArrayList<>();
                     gareDone.add(current.getName());
                     gareDoneInPart2.add(current.getName());
-                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), 1));
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), 1, current.getCoord().toString()));
                     while(gareDone.size()<line.getListeGare().size()){
                         int VoieToTake ;
 
@@ -213,7 +218,7 @@ public class ReturnGareWithOrder {
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         gareDoneInPart2.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
-                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));;
+                        lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));;
                     }
                     //add to lieuwithlinethenext
                     int VoieToTake;
@@ -234,12 +239,12 @@ public class ReturnGareWithOrder {
                     }
                     gareDoneInPart2.add(current.getVoie().get(VoieToTake).getGare2().getName());
                     current = current.getVoie().get(VoieToTake).getGare2();
-                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1, current.getCoord().toString()));
                     listFinalOfLines.put(line.getName()+"/2",lieuxWithLinesAndOrder);
                 }
 //
                 else{
-            lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(terminus.get(0).getName(), terminus.get(0).getLigne().getName(), 1));
+            lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(terminus.get(0).getName(), terminus.get(0).getLigne().getName(), 1,terminus.get(0).getCoord().toString()));
             Gare current=terminus.get(0);
             List<String> gareDone = new ArrayList<>();
             gareDone.add(current.getName());
@@ -272,7 +277,7 @@ public class ReturnGareWithOrder {
 ////                    System.out.println(current.getName());
 //                } else {
                     current = current.getVoie().get(VoieToTake).getGare2();
-                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1));
+                    lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
                     gareDone.add(current.getName());
 //                    System.out.println(current.getName());
 //                }
