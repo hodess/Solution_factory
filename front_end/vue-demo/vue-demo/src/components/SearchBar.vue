@@ -14,6 +14,7 @@ const handleClick = () => {
 };
 let messageReçu = ref("");
 let probleme = ref(false);
+let problemehours = ref(false);
 function handleMessageForCookies(message) {
   messageReçu.value = message;
 }
@@ -58,7 +59,20 @@ const navigateToMap = () => {
     probleme.value = true;
     return;
   }
+  let currentTime = sessionStorage.getItem('currentTime');
+  let now = new Date();
+  let currentHour = now.getHours();
+  let currentMinute = now.getMinutes();
+  let [inputHour, inputMinute] = currentTime.split(':').map(Number);
+  console.log(inputHour, inputMinute, currentHour, currentMinute)
+  if (inputHour < currentHour || (inputHour === currentHour && inputMinute < currentMinute)) {
+    console.log("heure invalide");
+    problemehours.value = true;
+    return;
+  }
   else {
+    problemehours.value = false;
+    probleme.value = false;
     console.log(messageReçu.value);
     let départFromStorage = localStorage.getItem("départ")
     let ArriveeFromStorage = localStorage.getItem("arrivée")
@@ -109,6 +123,7 @@ const navigateToMap = () => {
       </transition>
       <div id="problemepapa">
         <div v-if="probleme" id="Probleme"> Mettre deux gares différentes</div>
+        <div id="Probleme" v-if="problemehours">Mettre une heure possible</div>
       </div>
       <div class="wrapper-button">
         <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
