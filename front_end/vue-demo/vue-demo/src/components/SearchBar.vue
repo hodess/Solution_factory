@@ -104,6 +104,8 @@ const navigateToMap = () => {
 };
 
 const GoToMaps = () => {
+  localStorage.removeItem('currentDepart');
+  localStorage.removeItem('currentArrivee');
   router.push('/map');
   if (window.location.pathname === '/map') {
     window.location.reload();
