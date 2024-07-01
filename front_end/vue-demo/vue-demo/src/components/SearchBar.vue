@@ -89,6 +89,13 @@ const navigateToMap = () => {
   }
 };
 
+const GoToMaps = () => {
+  router.push('/map');
+  if (window.location.pathname === '/map') {
+    window.location.reload();
+  }
+};
+
 
 </script>
 
@@ -114,7 +121,7 @@ const navigateToMap = () => {
       </div>
       <div class="wrapper-button">
         <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
-        <button @click="navigateToMap" class="btn-maps">Maps</button>
+        <button @click="GoToMaps" class="btn-maps">Maps</button>
 
       </div>
     </div>
