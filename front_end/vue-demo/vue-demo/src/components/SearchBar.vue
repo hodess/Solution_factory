@@ -13,7 +13,7 @@ const handleClick = () => {
   rotateButton();
 };
 let messageReçu = ref("");
-
+let probleme = ref(false);
 function handleMessageForCookies(message) {
   messageReçu.value = message;
 }
@@ -40,6 +40,9 @@ const rotateButton = () => {
     }
   }
 };
+// function cleanArray(arr) {
+//   return arr.filter(element => element !== undefined && element !== "");
+// }
 const navigateToMap = () => {
   console.log(messageReçu.value);
   let départFromStorage = localStorage.getItem("départ")
@@ -49,16 +52,27 @@ const navigateToMap = () => {
     localStorage.setItem('arrivée', messageReçu.value.arrivee);
   }
   else {
+    // départFromStorage.split(";")
+    // ArriveeFromStorage.split(";")
+    // départFromStorage = cleanArray(départFromStorage)
+    // ArriveeFromStorage = cleanArray(ArriveeFromStorage)
+
     départFromStorage += ";" + messageReçu.value.depart
     ArriveeFromStorage += ";" + messageReçu.value.arrivee
     localStorage.setItem('départ', départFromStorage);
     localStorage.setItem('arrivée', ArriveeFromStorage);
   }
-  localStorage.setItem('currentDepart', messageReçu.value.depart);
-  localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
-  router.push('/map');
-  if (window.location.pathname === '/map') {
-    window.location.reload();
+  if (messageReçu.value.depart == messageReçu.value.arrivee) {
+    probleme.value = true;
+    return;
+  }
+  else {
+    localStorage.setItem('currentDepart', messageReçu.value.depart);
+    localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
+    router.push('/map');
+    if (window.location.pathname === '/map') {
+      window.location.reload();
+    }
   }
 };
 
@@ -82,6 +96,9 @@ const navigateToMap = () => {
       <transition name="fade">
         <HeureDepartArrivee v-if="showHeureDepartArrivee" />
       </transition>
+      <div id="problemepapa">
+        <div v-if="probleme" id="Probleme"> Mettre deux gares différentes</div>
+      </div>
       <div class="wrapper-button">
         <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
       </div>
@@ -91,6 +108,24 @@ const navigateToMap = () => {
 
 
 <style scoped>
+#Probleme {
+  background-color: red;
+  width: fit-content;
+  padding: 0.3rem;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+}
+
+/* Style de l'élément parent */
+#problemepapa {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
 .container {
   display: flex;
   flex-direction: column;
