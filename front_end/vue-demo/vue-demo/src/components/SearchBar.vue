@@ -1,11 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed  } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 
 import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
 
+const route = useRoute();
+const showButton = computed(() => {
+  return route.name !== 'map';
+});
 const router = useRouter();
 const dropdownButton = ref(null);
 const handleClick = () => {
@@ -138,7 +142,7 @@ const GoToMaps = () => {
       </div>
       <div class="wrapper-button">
         <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
-        <button @click="GoToMaps" class="btn-maps">Maps</button>
+        <button @click="GoToMaps" class="btn-maps" v-if="showButton">Maps</button>
 
       </div>
     </div>
