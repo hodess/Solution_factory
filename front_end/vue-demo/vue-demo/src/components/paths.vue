@@ -49,10 +49,6 @@ export default {
       eventBus.emit('cheminClique', numChemin);
 
     },
-    PrintThePage() {
-      print("cc");
-    }
-
   },
 
   setup() {
@@ -63,10 +59,6 @@ export default {
     const selectedStationIndex = ref(null); // State to track selected station index
     chemin_json.value = ref({ chemins: [] }); // Enfaite ct chat qui avait changé en mettant [] dedans
     const cheminJsonValue = ref(chemin_json.value);
-
-
-
-
 
 
 
