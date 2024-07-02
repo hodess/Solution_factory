@@ -8,7 +8,7 @@
 
   onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8081/init');
+    const response = await axios.get('http://localhost:8081/init/1');
     message.value = response.data;
   } catch (error) {
     console.error('Error fetching data', error);
