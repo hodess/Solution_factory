@@ -15,6 +15,15 @@ public class Line {
         this.listeGare = new ArrayList<>();
     }
 
+    public void clear() {
+        this.name = null;
+        if (this.listeGare != null) {
+            this.listeGare.clear();
+        }
+    }
+
+
+
     public void addGare(Gare newGare) {
         if (!listeGare.contains(newGare)) {
             listeGare.add(newGare);

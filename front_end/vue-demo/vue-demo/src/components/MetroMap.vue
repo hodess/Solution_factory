@@ -344,22 +344,6 @@ export default {
 <template>
   <div>
     <div id="map"></div>
-    <div>
-      <button @click="showAllLines">Afficher toutes les stations</button>
-      <button @click="showAllMetroLines">Afficher toutes les lignes d'un coup</button>
-      <button @click="traceChemin(0)">Tracer le premier chemin</button>
-      <button @click="traceChemin(1)">Tracer le deuxième chemin</button> <!-- Dropdown menu -->
-      <button @click="traceChemin(2)">Tracer le troisième chemin</button> <!-- Dropdown menu -->
-      
-      <div class="dropdown">
-        <button class="dropbtn"></button>
-        <div class="dropdown-content">
-          <div v-for="(imagePath, line) in lineImages" :key="line" @click="selectLine(line)">
-            <img :src="imagePath" alt="Icone ligne de métro" style="width: 30px; height: 30px;">
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

@@ -41,6 +41,10 @@ const rotateButton = (isSearchBarVisible) => {
   }
 };
 
+const Mapordemarre = localStorage.getItem('currentDepart')
+console.log("Map demarre : ",Mapordemarre)
+
+
 const handleSearchBarSimpleClick = () => {
   if (!showSearchBar.value) {
     toggleSearchBar();
@@ -50,12 +54,15 @@ const handleSearchBarSimpleClick = () => {
 
 <template>
   <div id="all_nav_components">
-    <div class="left-component" >
+    <div class="left-component" v-if="Mapordemarre" >
       <SearchBarSimple v-if="!showSearchBar" @click="handleSearchBarSimpleClick"/>
       <SearchBar v-else />
       <div class="left-button-component-container">
         <button ref="dropdownButton" @click="handleClick" class="left-button-component" />
       </div>
+    </div>
+    <div class="left-component" v-else >
+      <SearchBar/>
     </div>
 
     <!-- <location /> -->
