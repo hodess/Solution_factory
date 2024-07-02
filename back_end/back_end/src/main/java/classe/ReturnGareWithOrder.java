@@ -143,17 +143,17 @@ public class ReturnGareWithOrder {
                                     break;
                                 }
                         }}
-                        if((current.getName().equals("Mirabeau")) && terminu.getName().equals("Boulogne Pont de Saint-Cloud")){
+                        if((current.getName().equals("Chardon Lagache")) && terminu.getName().equals("Boulogne Pont de Saint-Cloud")){
                             int VoieToTake ;
-                            if (current.getVoie().get(0).getGare2().getName().equals("Javel")) {
+                            if (current.getVoie().get(0).getGare2().getName().equals("Mirabeau")) {
                                 VoieToTake = 0;
                             }
                             else{
-                                if(current.getVoie().get(1).getGare2().getName().equals("Javel")){
+                                if(current.getVoie().get(1).getGare2().getName().equals("Mirabeau")){
                                     VoieToTake = 1;
                                 }
                                 else {
-                                    if (current.getVoie().get(2).getGare2().getName().equals("Javel")) {
+                                    if (current.getVoie().get(2).getGare2().getName().equals("Mirabeau")) {
                                         VoieToTake = 2;
                                     } else {
                                         VoieToTake = 3;
