@@ -30,8 +30,12 @@ const suprOneDay = () => {
   currentDate.value = date.toISOString().split('T')[0];
 };
 
+
+sessionStorage.setItem('currentDate', currentDate.value);
 // Empêcher de définir une date antérieure à la date actuelle
 watch(currentDate, (newDate, oldDate) => {
+  console.log(newDate, currentDate.value)
+  sessionStorage.setItem('currentDate', newDate);
   if (newDate < minDate) {
     currentDate.value = minDate;
   }
@@ -58,6 +62,9 @@ const getCurrentTime = () => {
 const currentTime = ref(getCurrentTime());
 sessionStorage.setItem('currentTime', currentTime.value);
 sessionStorage.setItem('type_Time', 1);
+
+
+
 
 
 watch(currentTime, (newTime) => {
