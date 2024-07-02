@@ -68,6 +68,7 @@ public class Fonction {
             Create_class.create_all_class();
             String start = "Aimé Césaire";
             String end = "Bibliothèque François Mitterrand";
-            System.out.println(find_chemin_start_end(start, end));
+            System.out.println("connexité BFS : " + connexite.is_connected_bfs(YenKSP.findGare(linesMap, start, end).get(0).get(0), linesMap));
+            System.out.println("connexité DFS : " + connexite.is_connected_dfs(YenKSP.findGare(linesMap, start, end).get(0).get(0), linesMap));
         }
 }

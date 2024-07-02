@@ -30,9 +30,19 @@ const getCurrentTime = () => {
   return `${hour}:${minute}`;
 };
 
+const getCurrentDate = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const currentTime = ref(getCurrentTime());
 sessionStorage.setItem('currentTime', currentTime.value);
 sessionStorage.setItem('type_Time', 0);
+const currentDate = ref(getCurrentDate());
+sessionStorage.setItem('currentDate', currentDate.value);
 
 const showHeureDepartArrivee = ref(false);
 const showDepartDestination = ref(true); // Nouvelle variable réactive
