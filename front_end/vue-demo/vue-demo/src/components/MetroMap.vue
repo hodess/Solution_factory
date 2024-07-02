@@ -121,7 +121,7 @@ export default {
   methods: {
     // initialisation de la map
     initMap() {
-      this.map = L.map('map').setView([48.8566, 2.3522], 13); // Coordonnées pour centrer la carte sur Paris
+      this.map = L.map('map', { zoomControl: false }).setView([48.8566, 2.3522], 13); // Coordonnées pour centrer la carte sur Paris
 
 
       L.tileLayer('https://api.maptiler.com/maps/positron/{z}/{x}/{y}.png?key=kGzEOK5vmVP8dEjh59c5', {

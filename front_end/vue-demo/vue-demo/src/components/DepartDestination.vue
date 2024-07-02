@@ -316,7 +316,7 @@ li:last-child {
 }
 
 strong {
-  max-width: 60%;
+  max-width: 15rem;
 }
 
 .logo-line {
