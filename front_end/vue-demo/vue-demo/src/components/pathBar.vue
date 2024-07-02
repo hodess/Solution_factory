@@ -63,9 +63,6 @@ const handleSearchBarSimpleClick = () => {
     </div>
     <div class="left-component" v-else >
       <SearchBar/>
-      <div class="left-button-component-container">
-        <button ref="dropdownButton" @click="handleClick" class="left-button-component" />
-      </div>
     </div>
 
     <!-- <location /> -->

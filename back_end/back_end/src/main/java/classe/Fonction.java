@@ -42,6 +42,28 @@ public class Fonction {
         return connexite.is_connected_dfs(start_gare,linesMap);
     }
 
+    public static int deja_init(){
+        return Gare.nbGare;
+    }
+
+    public static void clear_all() {
+        for (Line line : linesMap.values()) {
+            if (line.getListeGare() != null) {
+                for (Gare gare : line.getListeGare()) {
+                    if (gare.getVoie() != null) {
+                        for (Voie voie : gare.getVoie()) {
+                            voie.clear();
+                        }
+                    }
+                    gare.clear();
+                }
+            }
+            line.clear();
+        }
+        linesMap.clear(); // Optionally clear the map itself
+        System.gc();
+    }
+
     public static void main(String[] args) {
             Create_class.create_all_class();
             String start = "Aimé Césaire";

@@ -1,11 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed  } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 
 import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
 
+const route = useRoute();
+const showButton = computed(() => {
+  return route.name !== 'map';
+});
 const router = useRouter();
 const dropdownButton = ref(null);
 const handleClick = () => {
@@ -66,42 +70,50 @@ const navigateToMap = () => {
   let currentHour = now.getHours();
   let currentMinute = now.getMinutes();
   let [inputHour, inputMinute] = currentTime.split(':').map(Number);
+  let currentDate = sessionStorage.getItem('currentDate');
+  let [inputYear, inputMonth, inputDay] = currentDate.split('-').map(Number);
   console.log(inputHour, inputMinute, currentHour, currentMinute)
-  if (inputHour < currentHour || (inputHour === currentHour && inputMinute < currentMinute)) {
-    console.log("heure invalide");
-    problemehours.value = true;
-    return;
+  //checker si date supérieur à la date actuelle
+  if (inputYear > now.getFullYear() || (inputYear === now.getFullYear() && inputMonth > now.getMonth() + 1) || (inputYear === now.getFullYear() && inputMonth === now.getMonth() + 1 && inputDay > now.getDate())) {
+    console.log("date du futur");
   }
   else {
-    problemehours.value = false;
-    probleme.value = false;
-    console.log(messageReçu.value);
-    let départFromStorage = localStorage.getItem("départ")
-    let ArriveeFromStorage = localStorage.getItem("arrivée")
-    if (départFromStorage == null || ArriveeFromStorage == null) {
-      localStorage.setItem('départ', messageReçu.value.depart);
-      localStorage.setItem('arrivée', messageReçu.value.arrivee);
-    }
-    else {
-      let tab1 = départFromStorage.split(";")
-      let tab2 = ArriveeFromStorage.split(";")
-      let cleanedParts = tab1.filter(part => part && part.trim() !== 'undefined');
-      départFromStorage = cleanedParts.join(';')
-      cleanedParts = tab2.filter(part => part && part.trim() !== 'undefined');
-      ArriveeFromStorage = cleanedParts.join(';')
-      départFromStorage += ";" + messageReçu.value.depart
-      ArriveeFromStorage += ";" + messageReçu.value.arrivee
-      localStorage.setItem('départ', départFromStorage);
-      localStorage.setItem('arrivée', ArriveeFromStorage);
-    }
-    localStorage.setItem('currentDepart', messageReçu.value.depart);
-    localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
-    router.push('/map');
-    if (window.location.pathname === '/map') {
-      window.location.reload();
+    if (inputHour < currentHour || (inputHour === currentHour && inputMinute < currentMinute)) {
+      console.log("heure invalide");
+      problemehours.value = true;
+      return;
     }
   }
-};
+
+  problemehours.value = false;
+  probleme.value = false;
+  console.log(messageReçu.value);
+  let départFromStorage = localStorage.getItem("départ")
+  let ArriveeFromStorage = localStorage.getItem("arrivée")
+  if (départFromStorage == null || ArriveeFromStorage == null) {
+    localStorage.setItem('départ', messageReçu.value.depart);
+    localStorage.setItem('arrivée', messageReçu.value.arrivee);
+  }
+  else {
+    let tab1 = départFromStorage.split(";")
+    let tab2 = ArriveeFromStorage.split(";")
+    let cleanedParts = tab1.filter(part => part && part.trim() !== 'undefined');
+    départFromStorage = cleanedParts.join(';')
+    cleanedParts = tab2.filter(part => part && part.trim() !== 'undefined');
+    ArriveeFromStorage = cleanedParts.join(';')
+    départFromStorage += ";" + messageReçu.value.depart
+    ArriveeFromStorage += ";" + messageReçu.value.arrivee
+    localStorage.setItem('départ', départFromStorage);
+    localStorage.setItem('arrivée', ArriveeFromStorage);
+  }
+  localStorage.setItem('currentDepart', messageReçu.value.depart);
+  localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
+  router.push('/map');
+  if (window.location.pathname === '/map') {
+    window.location.reload();
+  }
+}
+  ;
 
 const GoToMaps = () => {
   localStorage.removeItem('currentDepart');
@@ -122,7 +134,8 @@ const GoToMaps = () => {
       <div class="title-trip-wrapper">
         <div class="title-trip">Où voulez-vous aller ?</div>
       </div>
-      <DepartDestination v-if="showDepartDestination" ref="departDestination" @update-stations="handleMessageForCookies" />
+      <DepartDestination v-if="showDepartDestination" ref="departDestination"
+        @update-stations="handleMessageForCookies" />
       <div class=" dropdown-button-container">
         <div class="dropdown-button-container-sticky">
           <div class="dropdown-button-text">Quand :</div>
@@ -138,7 +151,7 @@ const GoToMaps = () => {
       </div>
       <div class="wrapper-button">
         <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
-        <button @click="GoToMaps" class="btn-maps">Maps</button>
+        <button @click="GoToMaps" class="btn-maps" v-if="showButton">Maps</button>
 
       </div>
     </div>
@@ -359,7 +372,7 @@ body {
   cursor: pointer;
   transition: background-color 0.2s, transform 0.2s;
   margin-left: 1rem;
-} 
+}
 
 .btn-maps:hover {
   background-color: black;
