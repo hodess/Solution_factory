@@ -11,7 +11,7 @@ const message = ref('Loading...');
 // Utilisez le hook onMounted pour effectuer la requête API au chargement du composant
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8081/init/0');
+    const response = await axios.get('http://localhost:8081/init');
     message.value = response.data;
   } catch (error) {
     console.error('Error fetching data', error);
