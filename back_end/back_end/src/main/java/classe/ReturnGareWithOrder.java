@@ -143,7 +143,7 @@ public class ReturnGareWithOrder {
 
                                 }
                         }
-                            System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
+                            //System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                             gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                             current = current.getVoie().get(VoieToTake).getGare2();
                             lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
@@ -165,7 +165,7 @@ public class ReturnGareWithOrder {
                                     }
                                 }
                             }
-                            System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
+                            //System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                             gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                             current = current.getVoie().get(VoieToTake).getGare2();
                             lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
@@ -224,7 +224,7 @@ public class ReturnGareWithOrder {
                             }
                         }
 
-                        System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
+                        //System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
                         lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
@@ -234,7 +234,7 @@ public class ReturnGareWithOrder {
             }
             else{
                 if(terminus.size()>=3){
-                    System.out.println("Ligne "+line.getName());
+                    //System.out.println("Ligne "+line.getName());
                     //fourchette
                     List<Gare> terminusTraited= new ArrayList<>();
                     terminusTraited.add(terminus.get(0));
@@ -255,7 +255,7 @@ public class ReturnGareWithOrder {
                         }
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
-                        System.out.println(current.getName());
+                        //System.out.println(current.getName());
                         lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
                     }
                     listFinalOfLines.put(line.getName()+"/1",lieuxWithLinesAndOrder);
@@ -290,7 +290,7 @@ public class ReturnGareWithOrder {
                         } else {
                             VoieToTake = 3;
                         }
-                        System.out.println(current.getName());
+                        //System.out.println(current.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         gareDoneInPart2.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
