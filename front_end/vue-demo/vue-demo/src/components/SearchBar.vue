@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted,computed  } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { useRouter,useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
@@ -77,12 +77,19 @@ const navigateToMap = () => {
   if (inputYear > now.getFullYear() || (inputYear === now.getFullYear() && inputMonth > now.getMonth() + 1) || (inputYear === now.getFullYear() && inputMonth === now.getMonth() + 1 && inputDay > now.getDate())) {
     console.log("date du futur");
   }
+  //checker si la date inférieur à la date actuelle
+  // else if (inputYear < now.getFullYear() || (inputYear === now.getFullYear() && inputMonth < now.getMonth() + 1) || (inputYear === now.getFullYear() && inputMonth === now.getMonth() + 1 && inputDay < now.getDate())) {
+  //   console.log("date du passé");
+  //   currentTime = currentHour + ":" + currentMinute;
+  // }
   else {
-    if (inputHour < currentHour || (inputHour === currentHour && inputMinute < currentMinute)) {
-      console.log("heure invalide");
-      problemehours.value = true;
-      return;
+    console.log("in else")
+    if (inputYear < now.getFullYear() || (inputYear === now.getFullYear() && inputMonth < now.getMonth() + 1) || (inputYear === now.getFullYear() && inputMonth === now.getMonth() + 1 && inputDay < now.getDate())) {
+      currentTime = currentHour + ":" + currentMinute;
+      sessionStorage.setItem('currentTime', currentTime);
+      console.log("Heure fixed ..")
     }
+    return;
   }
 
   problemehours.value = false;
