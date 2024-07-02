@@ -30,10 +30,10 @@ const suprOneDay = () => {
   currentDate.value = date.toISOString().split('T')[0];
 };
 
-
+const Date = ref(getCurrentDate());
 sessionStorage.setItem('currentDate', currentDate.value);
-// Empêcher de définir une date antérieure à la date actuelle
-watch(currentDate, (newDate, oldDate) => {
+
+watch(currentDate, (newDate) => {
   console.log(newDate, currentDate.value)
   sessionStorage.setItem('currentDate', newDate);
   if (newDate < minDate) {
@@ -86,7 +86,7 @@ watch(currentTime, (newTime) => {
     <div class="conteneur-fleche">
       <div class="flèche-gauche" @click="suprOneDay"></div>
       <input ref="dateInput" @input="updateHomeRouteQuery" @keypress.enter="navigateToHomeRoute" type="date"
-        class="search" placeholder="Date" :value="currentDate" :min="minDate" />
+        class="search" placeholder="Date" v-model="currentDate"  />
       <div class="flèche-droite" @click="addOneDay"></div>
     </div>
     <div class="small-title">Heure d'arrivée :</div>

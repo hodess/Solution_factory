@@ -89,7 +89,6 @@ const navigateToMap = () => {
       sessionStorage.setItem('currentTime', currentTime);
       console.log("Heure fixed ..")
     }
-    return;
   }
 
   problemehours.value = false;
