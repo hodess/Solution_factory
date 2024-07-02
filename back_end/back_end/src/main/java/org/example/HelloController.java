@@ -29,17 +29,24 @@ public class HelloController {
         return response;
     }
 
-    @GetMapping("/init")
-    public String callGareDatabase() {
+    @GetMapping("/init/{num}")
+    public String callGareDatabase(@PathVariable int num) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-
+        if (num==1){
+            num=Fonction.deja_init();
+        }else{
+            Fonction.clear_all();
+        }
+        if(num!=0){
+            return "Already initialized";
+        }
         logger.info("init");
         Create_class.create_all_class();
         String response = "create_all_class() initialized";
 
         stopWatch.stop();
-        logger.info("Execution time of callGareDatabase: {} ms", stopWatch.getTotalTimeMillis());
+        logger.info("Execution time of init all gare: {} ms", stopWatch.getTotalTimeMillis());
 
         return response;
     }
@@ -48,10 +55,11 @@ public class HelloController {
     public String find_chemin(@RequestParam String start, @RequestParam String end) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+        if (Fonction.deja_init()==0){
+            Create_class.create_all_class();
+        }
 
-        System.out.println("start: " + start + " end: " + end);
-        Create_class.create_all_class();
-        logger.info("find gare");
+        logger.info("start: " + start + " end: " + end);
         String response = Fonction.find_chemin_start_end(start, end);
 
         stopWatch.stop();
@@ -92,8 +100,6 @@ public class HelloController {
     public String all_garesMap() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-
-        Create_class.create_all_class();
         logger.info("toute les gares");
         String response = JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
 
@@ -102,19 +108,4 @@ public class HelloController {
 
         return response;
     }
-
-    @GetMapping("/multiply/{num1}/{num2}")
-    public double multiplyNumbers(@PathVariable double num1, @PathVariable double num2) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        logger.info("Multiplying numbers: {} and {}", num1, num2);
-        double result = num1 * num2;
-
-        stopWatch.stop();
-        logger.info("Execution time of multiplyNumbers: {} ms", stopWatch.getTotalTimeMillis());
-
-        return result;
-    }
-
 }

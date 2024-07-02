@@ -26,6 +26,19 @@ public class Gare {
         nbGare++;
     }
 
+    public void clear() {
+        this.id = null;
+        this.name = null;
+        this.ligne = null;
+        if (this.coord != null) {
+            this.coord.clear();
+        }
+        if (this.voie != null) {
+            this.voie.clear();
+        }
+        nbGare=0;
+    }
+
     public void addVoie(Voie newVoie) {
         voie.add(newVoie);
     }
@@ -82,6 +95,7 @@ public class Gare {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }
+
 
     public Voie findVoie(Gare gare2) {
         for (Voie v : voie) {

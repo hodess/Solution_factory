@@ -21,17 +21,6 @@ public class Voie {
         nombreDElements++;
     }
 
-    public Voie(Line ligne, int temps, int bidirectionnel) {
-        this.gare1 = null;
-        this.gare2 = null;
-        this.ligne = ligne;
-        this.temps = temps;
-        this.bidirectionnel = bidirectionnel;
-        gare1.addVoie(this);
-        gare2.addVoie(this);
-        nombreDElements++;
-    }
-
     public Gare getOther(Gare gare) {
         if (gare == gare1) {
             return gare2;
@@ -40,6 +29,15 @@ public class Voie {
         } else {
             return null;
         }
+    }
+
+    public void clear() {
+        this.gare1 = null;
+        this.gare2 = null;
+        this.ligne = null;
+        this.temps = 0;
+        this.bidirectionnel = 0;
+        nombreDElements=0;
     }
 
     @Override
