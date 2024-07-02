@@ -126,9 +126,24 @@ public class ReturnGareWithOrder {
                     gareDone.add(current.getName());
                     while (current==terminu || !terminus.contains(current) ) {
                         if((current.getName().equals("Porte d'Auteuil")) && terminu.getName().equals("Gare d'Austerlitz")){
-                            break;
-                        }
-                        int VoieToTake ; // Initialisation par défaut à -1
+                            int VoieToTake ;
+                            if (current.getVoie().get(0).getGare2().getName().equals("Boulogne Jean Jaurès")) {
+                                VoieToTake = 0;
+                            }
+                            else{
+                                if(current.getVoie().get(1).getGare2().getName().equals("Boulogne Jean Jaurès")){
+                                    VoieToTake = 1;
+                                }
+                                else {
+                                    if (current.getVoie().get(2).getGare2().getName().equals("Boulogne Jean Jaurès")) {
+                                        VoieToTake = 2;
+                                    } else {
+                                        VoieToTake = 3;
+                                    }
+                                    break;
+                                }
+                        }}
+                       int VoieToTake ; // Initialisation par défaut à -1
 
                         if (!gareDone.contains(current.getVoie().get(0).getGare2().getName())) {
 
