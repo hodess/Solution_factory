@@ -30,12 +30,19 @@ const suprOneDay = () => {
   currentDate.value = date.toISOString().split('T')[0];
 };
 
+
+
+
+sessionStorage.setItem('currentDate', currentDate.value);
 // Empêcher de définir une date antérieure à la date actuelle
 watch(currentDate, (newDate, oldDate) => {
+  console.log(newDate, currentDate.value)
+  sessionStorage.setItem('currentDate', newDate);
   if (newDate < minDate) {
     currentDate.value = minDate;
   }
 });
+
 
 // Fonctions pour les événements de mise à jour de la route et de navigation
 const updateHomeRouteQuery = () => {
@@ -47,6 +54,8 @@ const navigateToHomeRoute = () => {
 };
 
 // Fonction pour obtenir l'heure actuelle au format HH:MM
+
+// Fonction pour obtenir l'heure actuelle au format HH:MM
 const getCurrentTime = () => {
   const now = new Date();
   const hour = String(now.getHours()).padStart(2, '0');
@@ -56,47 +65,40 @@ const getCurrentTime = () => {
 
 // Variable réactive pour stocker l'heure actuelle
 const currentTime = ref(getCurrentTime());
+sessionStorage.setItem('currentTime', currentTime.value);
+sessionStorage.setItem('type_Time', 0);
 
+// Mettre à jour sessionStorage lorsque l'heure change
+watch(currentTime, (newTime) => {
+  sessionStorage.setItem('currentTime', newTime);
+  sessionStorage.setItem('type_Time', 0);
+});
 </script>
+
 
 
 <template>
 
 
   <div class="block_input_2">
-  <div class="small-title">Date de départ :</div>
+    <div class="small-title">Date de départ :</div>
 
-  <div class="conteneur-fleche">
-    <div class="flèche-gauche" @click="suprOneDay"></div>
-    <input
-        ref="dateInput"
-        @input="updateHomeRouteQuery"
-        @keypress.enter="navigateToHomeRoute"
-        type="date"
-        class="search"
-        placeholder="Date"
-        :value="currentDate"
-
-    />
-    <div class="flèche-droite" @click="addOneDay"></div>
-  </div>
-  <div class="small-title">Heure de départ :</div>
-  <input
-      ref="timeInput"
-      @input="updateHomeRouteQuery"
-      @keypress.enter="navigateToHomeRoute"
-      type="time"
-      class="search"
-      placeholder="Heure"
-      :value="currentTime"
-  />
+    <div class="conteneur-fleche">
+      <div class="flèche-gauche" @click="suprOneDay"></div>
+      <input ref="dateInput" @input="updateHomeRouteQuery" @keypress.enter="navigateToHomeRoute" type="date"
+        class="search" placeholder="Date" :value="currentDate" />
+      <div class="flèche-droite" @click="addOneDay"></div>
+    </div>
+    <div class="small-title">Heure de départ :</div>
+    <input ref="timeInput" @input="updateHomeRouteQuery" @keypress.enter="navigateToHomeRoute" type="time"
+      class="search" placeholder="Heure" v-model="currentTime" />
   </div>
 
 </template>
 
 
 <style scoped>
-.block_input_2{
+.block_input_2 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -104,7 +106,7 @@ const currentTime = ref(getCurrentTime());
   margin-bottom: 3rem;
 }
 
-.date-button{
+.date-button {
   border-radius: 10px;
   font-size: 1rem;
   background-color: whitesmoke;
@@ -113,7 +115,7 @@ const currentTime = ref(getCurrentTime());
   border: 0;
 }
 
-.block_input{
+.block_input {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -124,7 +126,7 @@ const currentTime = ref(getCurrentTime());
 
 button {
   background-color: var(--vt-c-white);
-  color: var( --vt-c-black);
+  color: var(--vt-c-black);
   padding: 1rem 2rem;
   border-radius: 2rem;
   margin-top: 1rem;
@@ -140,18 +142,19 @@ button {
   height: 3.5rem;
   margin-top: 1rem;
   font-size: 1rem;
-  color: var( --vt-c-black);
+  color: var(--vt-c-black);
   align-items: center;
   width: 20rem;
   border-width: 0;
 }
-.small-title{
+
+.small-title {
   margin-top: 1rem;
   margin-bottom: -0.8rem;
   color: #f8f8f8;
 }
 
-.conteneur-fleche{
+.conteneur-fleche {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -182,7 +185,7 @@ button {
     transform: scale(1.2) rotate(-90deg);
   }
 
-  .flèche-gauche{
+  .flèche-gauche {
     background-color: #6a9cf5;
     height: 2rem;
     width: 2rem;
@@ -201,12 +204,8 @@ button {
     transform: scale(1.2) rotate(90deg);
   }
 
-  input{
+  input {
     width: 50%;
   }
 }
-
-
-
-
 </style>

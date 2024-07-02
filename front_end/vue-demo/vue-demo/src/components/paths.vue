@@ -112,7 +112,10 @@ export default {
 
     // Mettre à jour l'heure de départ
     formatHeureDepart.value = (() => {
-      const now = new Date();
+      const nowString = sessionStorage.getItem('currentTime');
+      let [hours_string, minutes_string] = nowString.split(':').map(Number);
+      let now = new Date();
+      now.setHours(hours_string, minutes_string);
       const hours = now.getHours().toString().padStart(2, '0');
       const minutes = now.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
@@ -120,7 +123,10 @@ export default {
 
     // Mettre à jour l'heure d'arrivée
     formatHeureArrivee.value = (() => {
-      const now = new Date();
+      const nowString = sessionStorage.getItem('currentTime');
+      let [hours_string, minutes_string] = nowString.split(':').map(Number);
+      let now = new Date();
+      now.setHours(hours_string, minutes_string);
       const timeInMinutes = tempsEnMinutes();
       now.setMinutes(now.getMinutes() + timeInMinutes);
       const hours = now.getHours().toString().padStart(2, '0');
@@ -135,8 +141,17 @@ export default {
     }
 
     // Fonction pour obtenir l'heure de départ pour un chemin spécifique
-    const getHeureDepart = () => {
-      const now = new Date();
+    const getHeureDepart = (chemin) => {
+      const nowString = sessionStorage.getItem('currentTime');
+      let [hours_string, minutes_string] = nowString.split(':').map(Number);
+      let now = new Date();
+      now.setHours(hours_string, minutes_string);
+
+      const type_time = sessionStorage.getItem('type_Time');
+      const timeInMinutes = tempsEnMinutes(chemin);
+      if (type_time==1){
+        now.setMinutes(now.getMinutes() - timeInMinutes);
+      }
       const hours = now.getHours().toString().padStart(2, '0');
       const minutes = now.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
@@ -145,9 +160,16 @@ export default {
     // Fonction pour obtenir l'heure d'arrivée pour un chemin spécifique
 
     const getHeureArrivee = (chemin) => {
-      const now = new Date();
+      const nowString = sessionStorage.getItem('currentTime');
+      let [hours_string, minutes_string] = nowString.split(':').map(Number);
+      let now = new Date();
+      now.setHours(hours_string, minutes_string);
+
+      const type_time = sessionStorage.getItem('type_Time');
       const timeInMinutes = tempsEnMinutes(chemin);
-      now.setMinutes(now.getMinutes() + timeInMinutes);
+      if (type_time==0){
+        now.setMinutes(now.getMinutes() + timeInMinutes);
+      }
       const hours = now.getHours().toString().padStart(2, '0');
       const minutes = now.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
@@ -206,7 +228,7 @@ export default {
         <div class="chemin" :class="{ 'selected': cheminIndex === selectedStationIndex }"
           @click="emettreEvenement(cheminIndex + 1); selectStation(cheminIndex);">
           <div class="heure">
-            <div class="hda">{{ getHeureDepart() }} - {{ getHeureArrivee(chemin) }}</div>
+            <div class="hda">{{ getHeureDepart(chemin) }} - {{ getHeureArrivee(chemin) }}</div>
             <div class="duree">{{ tempsEnMinutes(chemin) }} min</div>
           </div>
           <div class="trajet">

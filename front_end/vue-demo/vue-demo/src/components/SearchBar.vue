@@ -1,11 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed  } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 
 import DepartDestination from "@/components/DepartDestination.vue";
 import HeureDepartArrivee from "@/components/HeureDepartArrivee.vue";
 
+const route = useRoute();
+const showButton = computed(() => {
+  return route.name !== 'map';
+});
 const router = useRouter();
 const dropdownButton = ref(null);
 const handleClick = () => {
@@ -13,13 +17,26 @@ const handleClick = () => {
   rotateButton();
 };
 let messageReçu = ref("");
-
+let probleme = ref(false);
+let problemehours = ref(false);
 function handleMessageForCookies(message) {
   messageReçu.value = message;
 }
 
+const getCurrentTime = () => {
+  const now = new Date();
+  const hour = String(now.getHours()).padStart(2, '0');
+  const minute = String(now.getMinutes()).padStart(2, '0');
+  return `${hour}:${minute}`;
+};
+
+const currentTime = ref(getCurrentTime());
+sessionStorage.setItem('currentTime', currentTime.value);
+sessionStorage.setItem('type_Time', 0);
 
 const showHeureDepartArrivee = ref(false);
+const showDepartDestination = ref(true); // Nouvelle variable réactive
+
 const toggleHeureDepartArrivee = () => {
   showHeureDepartArrivee.value = !showHeureDepartArrivee.value;
 };
@@ -40,7 +57,36 @@ const rotateButton = () => {
     }
   }
 };
+// function cleanArray(arr) {
+//   return arr.filter(element => element !== undefined && element !== "");
+// }
 const navigateToMap = () => {
+  if (messageReçu.value.depart == messageReçu.value.arrivee) {
+    probleme.value = true;
+    return;
+  }
+  let currentTime = sessionStorage.getItem('currentTime');
+  let now = new Date();
+  let currentHour = now.getHours();
+  let currentMinute = now.getMinutes();
+  let [inputHour, inputMinute] = currentTime.split(':').map(Number);
+  let currentDate = sessionStorage.getItem('currentDate');
+  let [inputYear, inputMonth, inputDay] = currentDate.split('-').map(Number);
+  console.log(inputHour, inputMinute, currentHour, currentMinute)
+  //checker si date supérieur à la date actuelle
+  if (inputYear > now.getFullYear() || (inputYear === now.getFullYear() && inputMonth > now.getMonth() + 1) || (inputYear === now.getFullYear() && inputMonth === now.getMonth() + 1 && inputDay > now.getDate())) {
+    console.log("date du futur");
+  }
+  else {
+    if (inputHour < currentHour || (inputHour === currentHour && inputMinute < currentMinute)) {
+      console.log("heure invalide");
+      problemehours.value = true;
+      return;
+    }
+  }
+
+  problemehours.value = false;
+  probleme.value = false;
   console.log(messageReçu.value);
   let départFromStorage = localStorage.getItem("départ")
   let ArriveeFromStorage = localStorage.getItem("arrivée")
@@ -49,6 +95,12 @@ const navigateToMap = () => {
     localStorage.setItem('arrivée', messageReçu.value.arrivee);
   }
   else {
+    let tab1 = départFromStorage.split(";")
+    let tab2 = ArriveeFromStorage.split(";")
+    let cleanedParts = tab1.filter(part => part && part.trim() !== 'undefined');
+    départFromStorage = cleanedParts.join(';')
+    cleanedParts = tab2.filter(part => part && part.trim() !== 'undefined');
+    ArriveeFromStorage = cleanedParts.join(';')
     départFromStorage += ";" + messageReçu.value.depart
     ArriveeFromStorage += ";" + messageReçu.value.arrivee
     localStorage.setItem('départ', départFromStorage);
@@ -56,6 +108,16 @@ const navigateToMap = () => {
   }
   localStorage.setItem('currentDepart', messageReçu.value.depart);
   localStorage.setItem('currentArrivee', messageReçu.value.arrivee);
+  router.push('/map');
+  if (window.location.pathname === '/map') {
+    window.location.reload();
+  }
+}
+  ;
+
+const GoToMaps = () => {
+  localStorage.removeItem('currentDepart');
+  localStorage.removeItem('currentArrivee');
   router.push('/map');
   if (window.location.pathname === '/map') {
     window.location.reload();
@@ -72,7 +134,8 @@ const navigateToMap = () => {
       <div class="title-trip-wrapper">
         <div class="title-trip">Où voulez-vous aller ?</div>
       </div>
-      <DepartDestination ref="departDestination" @update-stations="handleMessageForCookies" />
+      <DepartDestination v-if="showDepartDestination" ref="departDestination"
+        @update-stations="handleMessageForCookies" />
       <div class=" dropdown-button-container">
         <div class="dropdown-button-container-sticky">
           <div class="dropdown-button-text">Quand :</div>
@@ -82,8 +145,14 @@ const navigateToMap = () => {
       <transition name="fade">
         <HeureDepartArrivee v-if="showHeureDepartArrivee" />
       </transition>
+      <div id="problemepapa">
+        <div v-if="probleme" id="Probleme"> Mettre deux gares différentes</div>
+        <div id="Probleme" v-if="problemehours">Mettre une heure possible</div>
+      </div>
       <div class="wrapper-button">
         <button @click="navigateToMap" class="btn-neutral">Démarrer</button>
+        <button @click="GoToMaps" class="btn-maps" v-if="showButton">Maps</button>
+
       </div>
     </div>
   </div>
@@ -91,33 +160,35 @@ const navigateToMap = () => {
 
 
 <style scoped>
+#Probleme {
+  background-color: red;
+  width: fit-content;
+  padding: 0.3rem;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+}
+
+/* Style de l'élément parent */
+#problemepapa {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 15px;
-  /*
-  background-color: var(--vt-c-container-color) ;
-  background-color: rgba(255, 137, 0, 0.62);
-  background-color: rgba(106, 156, 245, 0.89);
-  background: #6a9cf5;*/
-
   width: fit-content;
   z-index: 1;
   height: fit-content;
-
   margin: 0;
   justify-content: center;
   background: linear-gradient(135deg, rgb(40, 123, 255, 0.6), rgba(4, 7, 90, 0.78));
-  /*
-  background-color: linear-gradient(135deg, #00b4db, #0083b0);
-  background-color: rgb(40, 123, 255, 0.1);
-  backdrop-filter: blur(5px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgb(255, 255, 255);
-  color: rgba(255, 137, 0, 0.74);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);*/
-
 }
 
 
@@ -185,9 +256,6 @@ const navigateToMap = () => {
 body {
   font-family: 'Lato', sans-serif;
 }
-
-
-
 
 
 .green-button {
@@ -282,6 +350,39 @@ body {
 }
 
 .btn-neutral:active {
+  background-color: black;
+  border-color: black;
+  transition: border-color 0.2s, transform 0.2s;
+  transform: scale(0.95);
+}
+
+.btn-maps {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 550;
+  text-align: center;
+  color: #ffffff;
+  background-color: #6a9cf5;
+
+  border-radius: 0.475rem;
+  border-color: white;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  margin-left: 1rem;
+}
+
+.btn-maps:hover {
+  background-color: black;
+  border-color: black;
+  transition: border-color 0.2s, transform 0.2s;
+
+
+}
+
+.btn-maps:active {
   background-color: black;
   border-color: black;
   transition: border-color 0.2s, transform 0.2s;

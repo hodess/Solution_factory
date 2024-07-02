@@ -23,7 +23,6 @@ public class Fonction {
             return null;
         }
         List<Line> filtreLine = new ArrayList<>();
-        YenKSP.affichage(start, end, filtreLine);
         YenKSP.Result result = YenKSP.ret_yens(start, end, filtreLine);
         return JsonConverter.convert_chemin(result);
     }
@@ -41,6 +40,28 @@ public class Fonction {
         List<List<Gare>> gares = YenKSP.findGare(linesMap, start, end);
         Gare start_gare = gares.get(0).get(0);
         return connexite.is_connected_dfs(start_gare,linesMap);
+    }
+
+    public static int deja_init(){
+        return Gare.nbGare;
+    }
+
+    public static void clear_all() {
+        for (Line line : linesMap.values()) {
+            if (line.getListeGare() != null) {
+                for (Gare gare : line.getListeGare()) {
+                    if (gare.getVoie() != null) {
+                        for (Voie voie : gare.getVoie()) {
+                            voie.clear();
+                        }
+                    }
+                    gare.clear();
+                }
+            }
+            line.clear();
+        }
+        linesMap.clear(); // Optionally clear the map itself
+        System.gc();
     }
 
     public static void main(String[] args) {

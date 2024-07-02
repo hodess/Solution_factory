@@ -2,8 +2,24 @@
 import SearchBar from '../components/SearchBar.vue';
 import metroWorldMap from '../assets/metro-world-map.jpg';
 import Favori from '../components/favori.vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
+// Déclarez une variable réactive pour le message
+const message = ref('Loading...');
+
+// Utilisez le hook onMounted pour effectuer la requête API au chargement du composant
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8081/init');
+    message.value = response.data;
+  } catch (error) {
+    console.error('Error fetching data', error);
+    message.value = 'Error loading data';
+  }
+});
 console.log(metroWorldMap); // Vérifiez si le chemin est correct
+
 </script>
 
 <template >
