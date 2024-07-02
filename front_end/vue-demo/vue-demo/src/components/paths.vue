@@ -486,10 +486,18 @@ button.print-button:hover .print-icon::after {
   transition: height .2s .15s, border-width 0s .16s;
 }
 
-.eco {
-  font-size: 1rem;
+.eco{
+  font-size: 0.8rem;
   color: rgb(25, 143, 14);
   margin-top: 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 5rem;
+  width: fit-content;
+  padding: 0.1rem;
+  padding-left: 1rem ;
+  padding-right: 1rem ;
+  margin-bottom: 0.5rem;
+
 }
 
 span.eco-separator {

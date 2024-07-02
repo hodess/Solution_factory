@@ -100,6 +100,9 @@ const handleSearchBarSimpleClick = () => {
   position: relative;
   padding: 1.2rem 1.2rem;
   color: white;
+  left: 2rem;
+  bottom: 1.4rem;
+
   border-radius: 2rem;
   border-width: 0;
   background-color: rgb(0, 90, 255);
@@ -111,8 +114,7 @@ const handleSearchBarSimpleClick = () => {
   filter: invert(1);
   width: 1rem;
   transition: transform 0.3s, background-color 0.3s;
-  left: 2vw;
-  bottom: 2vh;
+
   z-index: 1000000000;
 }
 

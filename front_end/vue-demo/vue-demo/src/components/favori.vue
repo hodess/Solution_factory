@@ -1,8 +1,13 @@
 <template>
   <div class="container" v-on:click="handleClick">
     <div class="glass-effect">
-      <div class="title">favori</div>
+      <div class="title-container">
+        <img class="étoile-fav" src="./icons/star.png">
+        <div class="title">Favori</div>
+      </div>
+
       <div class="lieu-a">{{ mostDepartUsed }}</div>
+      <div class="separator"></div>
       <div class="lieu-b">{{ mostArriveeUsed }}</div>
     </div>
   </div>
@@ -89,6 +94,26 @@ function handleClick() {
   border: 2px solid rgba(255, 255, 255, 1);
 }
 
+.étoile-fav{
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.title-container{
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin-top: -0.2rem;
+  margin-left: 0.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+  flex: 1;
+}
+
 .glass-effect {
   border-radius: 15px;
   padding: 2rem;
@@ -103,13 +128,22 @@ function handleClick() {
 .lieu-a,
 .lieu-b {
   color: white;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   text-align: left;
 }
 
-.title {
-  text-align: center;
-  font-size: 1.8rem;
-  flex: 1;
+.separator {
+  color: red;
+  display: inline-block;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+  margin-left: 1rem;
+  border-radius: 1rem;
+  width: 4%;
+  height: 2rem;
+  background-color: white; /* Couleur de la barre blanche */
+  vertical-align: middle;
 }
+
+
 </style>
