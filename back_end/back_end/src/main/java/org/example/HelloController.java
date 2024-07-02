@@ -20,7 +20,7 @@ public class HelloController {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        logger.info("hello");
+        logger.info("Call hello");
         String response = "hello world!";
 
         stopWatch.stop();
@@ -33,6 +33,7 @@ public class HelloController {
     public String callGareDatabase(@PathVariable int num) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+        logger.info("Call init");
         if (num==1){
             num=Fonction.deja_init();
         }else{
@@ -41,12 +42,11 @@ public class HelloController {
         if(num!=0){
             return "Already initialized";
         }
-        logger.info("init");
         Create_class.create_all_class();
         String response = "create_all_class() initialized";
 
         stopWatch.stop();
-        logger.info("Execution time of init all gare: {} ms", stopWatch.getTotalTimeMillis());
+        logger.info("Execution time of init all class in java : {} ms", stopWatch.getTotalTimeMillis());
 
         return response;
     }
@@ -55,6 +55,7 @@ public class HelloController {
     public String find_chemin(@RequestParam String start, @RequestParam String end) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+        logger.info("Call find chemin");
         if (Fonction.deja_init()==0){
             Create_class.create_all_class();
         }
@@ -63,7 +64,7 @@ public class HelloController {
         String response = Fonction.find_chemin_start_end(start, end);
 
         stopWatch.stop();
-        logger.info("Execution time of find_chemin: {} ms", stopWatch.getTotalTimeMillis());
+        logger.info("Execution time for find a chemin : {} ms", stopWatch.getTotalTimeMillis());
 
         return response;
     }
@@ -73,11 +74,11 @@ public class HelloController {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        logger.info("toute les gares");
+        logger.info("Call all_gares");
         String response = ReturnGareNoTraited.CallFunctions();
 
         stopWatch.stop();
-        logger.info("Execution time of all_gares: {} ms", stopWatch.getTotalTimeMillis());
+        logger.info("Execution time for return all gares: {} ms", stopWatch.getTotalTimeMillis());
 
         return response;
     }
@@ -87,7 +88,7 @@ public class HelloController {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        logger.info("connexité");
+        logger.info("Call connexité");
         boolean response = Fonction.main_connexite();
 
         stopWatch.stop();
@@ -100,11 +101,11 @@ public class HelloController {
     public String all_garesMap() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        logger.info("toute les gares");
+        logger.info("Call all_garesMap");
         String response = JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
 
         stopWatch.stop();
-        logger.info("Execution time of all_garesMap: {} ms", stopWatch.getTotalTimeMillis());
+        logger.info("Execution time for all agres in good order: {} ms", stopWatch.getTotalTimeMillis());
 
         return response;
     }
