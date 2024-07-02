@@ -140,9 +140,14 @@ public class ReturnGareWithOrder {
                                     } else {
                                         VoieToTake = 3;
                                     }
-                                    break;
+
                                 }
-                        }}
+                        }
+                            System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
+                            gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
+                            current = current.getVoie().get(VoieToTake).getGare2();
+                            lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
+                        }
                         if((current.getName().equals("Chardon Lagache")) && terminu.getName().equals("Boulogne Pont de Saint-Cloud")){
                             int VoieToTake ;
                             if (current.getVoie().get(0).getGare2().getName().equals("Mirabeau")) {
@@ -158,9 +163,13 @@ public class ReturnGareWithOrder {
                                     } else {
                                         VoieToTake = 3;
                                     }
-                                    break;
                                 }
-                            }}
+                            }
+                            System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
+                            gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
+                            current = current.getVoie().get(VoieToTake).getGare2();
+                            lieuxWithLinesAndOrder.add(new LieuWithLineAndOrder(current.getName(), current.getLigne().getName(), lieuxWithLinesAndOrder.size() + 1,current.getCoord().toString()));
+                        }
                        int VoieToTake ; // Initialisation par défaut à -1
 
                         if (!gareDone.contains(current.getVoie().get(0).getGare2().getName())) {
@@ -196,6 +205,25 @@ public class ReturnGareWithOrder {
                                 }
                             }
                         }
+                        if(current.getName().equals("Boulogne Jean Jaurès") && terminu.getName().equals("Gare d'Austerlitz")) {
+                            if (current.getVoie().get(0).getGare2().getName().equals("Boulogne Pont de Saint-Cloud")) {
+                                VoieToTake = 0;
+                            }
+                            else{
+                                if(current.getVoie().get(1).getGare2().getName().equals("Boulogne Pont de Saint-Cloud")){
+                                    VoieToTake = 1;
+                                }
+                                else{
+                                    if(current.getVoie().get(2).getGare2().getName().equals("Boulogne Pont de Saint-Cloud")){
+                                        VoieToTake = 2;
+                                    }
+                                    else{
+                                        VoieToTake = 3;
+                                    }
+                                }
+                            }
+                        }
+
                         System.out.println("current : "+current.getName()+" VoieToTake : "+VoieToTake+"line : "+line.getName());
                         gareDone.add(current.getVoie().get(VoieToTake).getGare2().getName());
                         current = current.getVoie().get(VoieToTake).getGare2();
