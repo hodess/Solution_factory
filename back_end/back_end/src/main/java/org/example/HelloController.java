@@ -105,7 +105,7 @@ public class HelloController {
         String response = JsonConverter.convertObjectToJson(ReturnGareWithOrder.ReturnVue_lieu_with_line_and_order_());
 
         stopWatch.stop();
-        logger.info("Execution time for all agres in good order: {} ms", stopWatch.getTotalTimeMillis());
+        logger.info("Execution time for all gares in good order: {} ms", stopWatch.getTotalTimeMillis());
 
         return response;
     }
