@@ -113,6 +113,10 @@ export default {
   },
   async mounted() {
     this.initMap();
+    const Mapordemarre = localStorage.getItem('currentDepart');
+    if (!Mapordemarre){
+      this.ShowAllLineWithColor();
+    }
   },
   methods: {
     // initialisation de la map
