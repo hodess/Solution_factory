@@ -1,6 +1,4 @@
 package classe;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class Line {
 
     public Gare findGare_with_id(String id) {
         for (Gare g : listeGare) {
-            if (g.getId().equals(id)) {
+            if (g.getid().equals(id)) {
                 return g;
             }
         }

@@ -49,7 +49,7 @@ public class Gare {
                 id, name, ligne.getName(), voie.size());
     }
     @JsonProperty("id")
-    public String getId() {
+    public String getid() {
         return id;
     }
     @JsonIgnore
