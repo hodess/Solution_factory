@@ -35,7 +35,7 @@ const ShowConnexite = () => {
 
     <div class="div2"><MetroMap/></div>
 
-  <button class = "div1" id ="logo" @click="ShowConnexite">Fetch Data</button>
+  <div class = "div1" id ="logo" @click="ShowConnexite"/>
   </main>
 
 </template>
@@ -54,12 +54,13 @@ const ShowConnexite = () => {
   }
 
   #logo{
-    background-color: #f8f8f8;
+    background-image: url("@/assets/logo-locomotive.gif");
+    background-size: cover; /* Pour ajuster la taille de l'image à la fenêtre */
+    background-position: center;
     color: #000;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
     cursor: pointer;
-    left: 190vh;
-    top: 1rem; /* Ajoutez cette ligne pour ajouter un espace entre le bouton et le bord droit */
-    }
+    left: 200vh;
+    height: 5rem;
+    width: 5rem;
+  }
 </style>
