@@ -30,9 +30,11 @@ const suprOneDay = () => {
   currentDate.value = date.toISOString().split('T')[0];
 };
 
-const Date = ref(getCurrentDate());
-sessionStorage.setItem('currentDate', currentDate.value);
 
+
+
+sessionStorage.setItem('currentDate', currentDate.value);
+// Empêcher de définir une date antérieuare à la date actuelle
 watch(currentDate, (newDate) => {
   console.log(newDate, currentDate.value)
   sessionStorage.setItem('currentDate', newDate);
@@ -40,6 +42,7 @@ watch(currentDate, (newDate) => {
     currentDate.value = minDate;
   }
 });
+
 
 // Fonctions pour les événements de mise à jour de la route et de navigation
 const updateHomeRouteQuery = () => {
@@ -49,6 +52,8 @@ const updateHomeRouteQuery = () => {
 const navigateToHomeRoute = () => {
   // Naviguer vers la route d'accueil ou effectuer d'autres actions lorsque la touche Entrée est enfoncée
 };
+
+// Fonction pour obtenir l'heure actuelle au format HH:MM
 
 // Fonction pour obtenir l'heure actuelle au format HH:MM
 const getCurrentTime = () => {
@@ -63,15 +68,10 @@ const currentTime = ref(getCurrentTime());
 sessionStorage.setItem('currentTime', currentTime.value);
 sessionStorage.setItem('type_Time', 1);
 
-
-
-
-
+// Mettre à jour sessionStorage lorsque l'heure change
 watch(currentTime, (newTime) => {
-  console.log(newTime, currentTime.value)
   sessionStorage.setItem('currentTime', newTime);
   sessionStorage.setItem('type_Time', 1);
-
 });
 </script>
 
@@ -86,22 +86,12 @@ watch(currentTime, (newTime) => {
     <div class="conteneur-fleche">
       <div class="flèche-gauche" @click="suprOneDay"></div>
       <input ref="dateInput" @input="updateHomeRouteQuery" @keypress.enter="navigateToHomeRoute" type="date"
-        class="search" placeholder="Date" v-model="currentDate"  />
+        class="search" placeholder="Date" v-model="currentDate" />
       <div class="flèche-droite" @click="addOneDay"></div>
     </div>
     <div class="small-title">Heure d'arrivée :</div>
     <input ref="timeInput" @input="updateHomeRouteQuery" @keypress.enter="navigateToHomeRoute" type="time"
       class="search" placeholder="Heure" v-model="currentTime" />
-    <!--
-    <div class="small-title">Heure d'arrivée</div>
-    <input
-        ref="timeInput"
-        @input="updateHomeRouteQuery"
-        @keypress.enter="navigateToHomeRoute"
-        type="time"
-        class="search"
-        placeholder="Heure"
-    />-->
   </div>
 
 </template>

@@ -34,7 +34,7 @@ const suprOneDay = () => {
 
 
 sessionStorage.setItem('currentDate', currentDate.value);
-// Empêcher de définir une date antérieure à la date actuelle
+// Empêcher de définir une date antérieuare à la date actuelle
 watch(currentDate, (newDate) => {
   console.log(newDate, currentDate.value)
   sessionStorage.setItem('currentDate', newDate);

@@ -140,16 +140,38 @@ export default {
       return lineMap[ligne] || '';
     }
 
+    const getCurrentTime = () => {
+      const now = new Date();
+      const hour = String(now.getHours()).padStart(2, '0');
+      const minute = String(now.getMinutes()).padStart(2, '0');
+      return `${hour}:${minute}`;
+    };
+
     // Fonction pour obtenir l'heure de départ pour un chemin spécifique
     const getHeureDepart = (chemin) => {
       const nowString = sessionStorage.getItem('currentTime');
       let [hours_string, minutes_string] = nowString.split(':').map(Number);
+      const nowDateString = sessionStorage.getItem('currentDate');
+      let [year, month, day] = nowDateString.split('-').map(Number);
       let now = new Date();
       now.setHours(hours_string, minutes_string);
+      now.setDate(day);
+      now.setMonth(month - 1);
+      now.setFullYear(year);
+      let today = new Date();
+      console.log(today)
+      console.log(now)
+      if (now.getDate() == today.getDate() && now.getMonth() == today.getMonth() && now.getFullYear() == today.getFullYear()) {
+        if (now.getHours() < today.getHours() || (now.getHours() == today.getHours() && now.getMinutes() < today.getMinutes())) {
+          now = new Date();
+          const currentTime = getCurrentTime();
+          sessionStorage.setItem('currentTime', currentTime);
+        }
+      }
 
       const type_time = sessionStorage.getItem('type_Time');
       const timeInMinutes = tempsEnMinutes(chemin);
-      if (type_time==1){
+      if (type_time == 1) {
         now.setMinutes(now.getMinutes() - timeInMinutes);
       }
       const hours = now.getHours().toString().padStart(2, '0');
@@ -162,12 +184,26 @@ export default {
     const getHeureArrivee = (chemin) => {
       const nowString = sessionStorage.getItem('currentTime');
       let [hours_string, minutes_string] = nowString.split(':').map(Number);
+      const nowDateString = sessionStorage.getItem('currentDate');
+      let [year, month, day] = nowDateString.split('-').map(Number);
       let now = new Date();
       now.setHours(hours_string, minutes_string);
-
+      now.setDate(day);
+      now.setMonth(month - 1);
+      now.setFullYear(year);
+      let today = new Date();
+      console.log(today)
+      console.log(now)
+      if (now.getDate() == today.getDate() && now.getMonth() == today.getMonth() && now.getFullYear() == today.getFullYear()) {
+        if (now.getHours() < today.getHours() || (now.getHours() == today.getHours() && now.getMinutes() < today.getMinutes())) {
+          now = new Date();
+          const currentTime = getCurrentTime();
+          sessionStorage.setItem('currentTime', currentTime);
+        }
+      }
       const type_time = sessionStorage.getItem('type_Time');
       const timeInMinutes = tempsEnMinutes(chemin);
-      if (type_time==0){
+      if (type_time == 0) {
         now.setMinutes(now.getMinutes() + timeInMinutes);
       }
       const hours = now.getHours().toString().padStart(2, '0');
@@ -188,10 +224,10 @@ export default {
       <span class="eco-separator"></span>
       <img src="${logoVoiture}" class ="logoVoiture" alt="Car logo" style="width: 20px; height: 20px;" /> ${voitureCO2} gCO2 
     </span>
-  `; 
-};
+  `;
+    };
 
-// On component mount, select the first station by default
+    // On component mount, select the first station by default
     onMounted(() => {
       // console.log('Le composant Paths est monté');
       selectStation(0);
@@ -235,7 +271,8 @@ export default {
             <template v-for="(ligne, index) in getLignes(chemin)" :key="index">
               <div class="lignes">
                 <img :src="getLineImage(ligne)" :alt="ligne" class="ligne-image" />
-                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image" class="fleche" />
+                <img v-if="index < getLignes(chemin).length - 1" src="./icons/arrow.png" alt="Arrow Image"
+                  class="fleche" />
               </div>
             </template>
           </div>
@@ -449,13 +486,14 @@ button.print-button:hover .print-icon::after {
   transition: height .2s .15s, border-width 0s .16s;
 }
 
-.eco{
+.eco {
   font-size: 1rem;
   color: rgb(25, 143, 14);
   margin-top: 0.5rem;
 }
 
 span.eco-separator {
-  width: 1rem; /* Adjust this value to simulate a tab space */
+  width: 1rem;
+  /* Adjust this value to simulate a tab space */
 }
 </style>
