@@ -26,7 +26,7 @@ Ce qui est requis pour commencer avec votre projet...
 1. Aller au fichier `back_end/back_end/src/main/resources/application.properties`
 2. Changer la ligne `spring.datasource.password=` et mettre votre mot de passe pour accéder à votre base de données
 
-**Option 1 :**
+**Option 1 avec Visual Studio Code :**
 
 1. Ouvrir un terminal
 2. Vérifier que vous avez l'extension Java + Spring Boot
