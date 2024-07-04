@@ -14,6 +14,11 @@ Ce qui est requis pour commencer avec votre projet...
 
 ## Installation
 
+### Base de données
+
+1. Ouvrir le fichier `BDD`
+2. Exécuter le fichier `locomotive` sur MySQL
+
 ### Ouvrir le projet avec Visual Studio Code
 
 #### Back-end
@@ -40,11 +45,6 @@ Ce qui est requis pour commencer avec votre projet...
 4. Ensuite, exécutez les commandes :
    - `npm install`
    - `npm run dev`
-
-#### Base de données
-
-1. Ouvrir le fichier `BDD`
-2. Exécuter le fichier `locomotive` sur MySQL
 
 #### Final
 
