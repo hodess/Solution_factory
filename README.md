@@ -43,7 +43,7 @@ Ce qui est requis pour commencer avec votre projet...
 2. Exécutez la commande `cd .\front_end\vue-demo\vue-demo\`
 3. Vérifier que vous avez l'extension Vue.js
 4. Ensuite, exécutez les commandes :
-   - `npm install`
+   - `npm install --legacy-peer-deps`
    - `npm run dev`
 
 #### Final
